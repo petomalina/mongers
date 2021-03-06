@@ -17,7 +17,19 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WorldServiceClient interface {
-	WorldInfo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+	WorldInfo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*World, error)
+	// Connect validates the connecting player and registers their UUID internally
+	// if the server has enough capacity. Players will otherwise be disconnected via
+	// errors to other RPC calls.
+	Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (*ConnectResponse, error)
+	// Play encapsulates streaming messages for all actions that would otherwise
+	// be unary, as well as provides ad-hoc messages of in-game updates
+	Play(ctx context.Context, opts ...grpc.CallOption) (WorldService_PlayClient, error)
+	// Watch only streams gameplay broadcasts and is suitable for observing clients.
+	// This method makes best effort to catch up connecting clients with the game objects,
+	// however, clients are responsible for syncing objects via unary RPC in case of secondary
+	// world objects such as leaderboard
+	Watch(ctx context.Context, in *Empty, opts ...grpc.CallOption) (WorldService_WatchClient, error)
 }
 
 type worldServiceClient struct {
@@ -28,8 +40,8 @@ func NewWorldServiceClient(cc grpc.ClientConnInterface) WorldServiceClient {
 	return &worldServiceClient{cc}
 }
 
-func (c *worldServiceClient) WorldInfo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *worldServiceClient) WorldInfo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*World, error) {
+	out := new(World)
 	err := c.cc.Invoke(ctx, "/v1.WorldService/WorldInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -37,11 +49,95 @@ func (c *worldServiceClient) WorldInfo(ctx context.Context, in *Empty, opts ...g
 	return out, nil
 }
 
+func (c *worldServiceClient) Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (*ConnectResponse, error) {
+	out := new(ConnectResponse)
+	err := c.cc.Invoke(ctx, "/v1.WorldService/Connect", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *worldServiceClient) Play(ctx context.Context, opts ...grpc.CallOption) (WorldService_PlayClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_WorldService_serviceDesc.Streams[0], "/v1.WorldService/Play", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &worldServicePlayClient{stream}
+	return x, nil
+}
+
+type WorldService_PlayClient interface {
+	Send(*ClientPlayMessage) error
+	Recv() (*ServerPlayMessage, error)
+	grpc.ClientStream
+}
+
+type worldServicePlayClient struct {
+	grpc.ClientStream
+}
+
+func (x *worldServicePlayClient) Send(m *ClientPlayMessage) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *worldServicePlayClient) Recv() (*ServerPlayMessage, error) {
+	m := new(ServerPlayMessage)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *worldServiceClient) Watch(ctx context.Context, in *Empty, opts ...grpc.CallOption) (WorldService_WatchClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_WorldService_serviceDesc.Streams[1], "/v1.WorldService/Watch", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &worldServiceWatchClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type WorldService_WatchClient interface {
+	Recv() (*ServerPlayMessage, error)
+	grpc.ClientStream
+}
+
+type worldServiceWatchClient struct {
+	grpc.ClientStream
+}
+
+func (x *worldServiceWatchClient) Recv() (*ServerPlayMessage, error) {
+	m := new(ServerPlayMessage)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // WorldServiceServer is the server API for WorldService service.
 // All implementations must embed UnimplementedWorldServiceServer
 // for forward compatibility
 type WorldServiceServer interface {
-	WorldInfo(context.Context, *Empty) (*Empty, error)
+	WorldInfo(context.Context, *Empty) (*World, error)
+	// Connect validates the connecting player and registers their UUID internally
+	// if the server has enough capacity. Players will otherwise be disconnected via
+	// errors to other RPC calls.
+	Connect(context.Context, *ConnectRequest) (*ConnectResponse, error)
+	// Play encapsulates streaming messages for all actions that would otherwise
+	// be unary, as well as provides ad-hoc messages of in-game updates
+	Play(WorldService_PlayServer) error
+	// Watch only streams gameplay broadcasts and is suitable for observing clients.
+	// This method makes best effort to catch up connecting clients with the game objects,
+	// however, clients are responsible for syncing objects via unary RPC in case of secondary
+	// world objects such as leaderboard
+	Watch(*Empty, WorldService_WatchServer) error
 	mustEmbedUnimplementedWorldServiceServer()
 }
 
@@ -49,8 +145,17 @@ type WorldServiceServer interface {
 type UnimplementedWorldServiceServer struct {
 }
 
-func (UnimplementedWorldServiceServer) WorldInfo(context.Context, *Empty) (*Empty, error) {
+func (UnimplementedWorldServiceServer) WorldInfo(context.Context, *Empty) (*World, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WorldInfo not implemented")
+}
+func (UnimplementedWorldServiceServer) Connect(context.Context, *ConnectRequest) (*ConnectResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Connect not implemented")
+}
+func (UnimplementedWorldServiceServer) Play(WorldService_PlayServer) error {
+	return status.Errorf(codes.Unimplemented, "method Play not implemented")
+}
+func (UnimplementedWorldServiceServer) Watch(*Empty, WorldService_WatchServer) error {
+	return status.Errorf(codes.Unimplemented, "method Watch not implemented")
 }
 func (UnimplementedWorldServiceServer) mustEmbedUnimplementedWorldServiceServer() {}
 
@@ -83,6 +188,71 @@ func _WorldService_WorldInfo_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _WorldService_Connect_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConnectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WorldServiceServer).Connect(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.WorldService/Connect",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WorldServiceServer).Connect(ctx, req.(*ConnectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WorldService_Play_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(WorldServiceServer).Play(&worldServicePlayServer{stream})
+}
+
+type WorldService_PlayServer interface {
+	Send(*ServerPlayMessage) error
+	Recv() (*ClientPlayMessage, error)
+	grpc.ServerStream
+}
+
+type worldServicePlayServer struct {
+	grpc.ServerStream
+}
+
+func (x *worldServicePlayServer) Send(m *ServerPlayMessage) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *worldServicePlayServer) Recv() (*ClientPlayMessage, error) {
+	m := new(ClientPlayMessage)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _WorldService_Watch_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(WorldServiceServer).Watch(m, &worldServiceWatchServer{stream})
+}
+
+type WorldService_WatchServer interface {
+	Send(*ServerPlayMessage) error
+	grpc.ServerStream
+}
+
+type worldServiceWatchServer struct {
+	grpc.ServerStream
+}
+
+func (x *worldServiceWatchServer) Send(m *ServerPlayMessage) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 var _WorldService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "v1.WorldService",
 	HandlerType: (*WorldServiceServer)(nil),
@@ -91,7 +261,23 @@ var _WorldService_serviceDesc = grpc.ServiceDesc{
 			MethodName: "WorldInfo",
 			Handler:    _WorldService_WorldInfo_Handler,
 		},
+		{
+			MethodName: "Connect",
+			Handler:    _WorldService_Connect_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Play",
+			Handler:       _WorldService_Play_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "Watch",
+			Handler:       _WorldService_Watch_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "apis/world/v1/world_service.proto",
 }

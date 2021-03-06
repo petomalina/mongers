@@ -3,7 +3,50 @@ package v1;
 option go_package = ".;v1";
 
 service WorldService {
-  rpc WorldInfo(Empty) returns (Empty) {}
+  rpc WorldInfo(Empty) returns (World) {}
+
+  // Connect validates the connecting player and registers their UUID internally
+  // if the server has enough capacity. Players will otherwise be disconnected via
+  // errors to other RPC calls.
+  rpc Connect(ConnectRequest) returns (ConnectResponse) {}
+
+  // Play encapsulates streaming messages for all actions that would otherwise
+  // be unary, as well as provides ad-hoc messages of in-game updates
+  rpc Play(stream ClientPlayMessage) returns (stream ServerPlayMessage) {}
+
+  // Watch only streams gameplay broadcasts and is suitable for observing clients.
+  // This method makes best effort to catch up connecting clients with the game objects,
+  // however, clients are responsible for syncing objects via unary RPC in case of secondary
+  // world objects such as leaderboard
+  rpc Watch(Empty) returns (stream ServerPlayMessage) {}
+}
+
+message ConnectRequest {
+  string connect_type = 1; // "play" or "observe"
+}
+
+message ConnectResponse {
+  bool approved = 1;
+}
+
+// ClientPlayMessage are messages sent by the clients to the server
+message ClientPlayMessage {
+}
+
+// ServerPlayMessage are messages sent from the server to the clients
+message ServerPlayMessage {
+}
+
+message World {
+  string world_id = 1;
+  string world_name = 2;
+
+  int32 player_count = 10;
+}
+
+message Player {
+  string player_id = 1;
+  string player_name = 2;
 }
 
 message Empty{}

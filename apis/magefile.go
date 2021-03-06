@@ -1,6 +1,7 @@
 package apis
 
 import (
+	"fmt"
 	"github.com/magefile/mage/sh"
 	"os"
 	"path/filepath"
@@ -9,9 +10,14 @@ import (
 
 var (
 	DefinitionDir = "apis"
-	OutputDir     = "genapis"
 	Targets       []string
+	Plugins       []ProtocPlugin
 )
+
+type ProtocPlugin interface {
+	MakeArgs(target string) []string
+	OutDir(target string) string
+}
 
 // getAllServices returns the list of all available services
 func getAllServices() string {
@@ -24,26 +30,20 @@ func Build() {
 		svcs = getAllServices()
 	}
 
-	for _, svc := range strings.Split(svcs, ",") {
+	for _, target := range strings.Split(svcs, ",") {
 		// includes all in the current folder
 		args := []string{"-I."}
 
-		flags := map[string]string{
-			"--go_out":      "",
-			"--go-grpc_out": "",
-		}
+		for _, plug := range Plugins {
+			_ = os.MkdirAll(plug.OutDir(target), os.ModePerm)
 
-		for flag, arg := range flags {
-			outDir := filepath.Join(OutputDir, filepath.Dir(svc))
-			os.MkdirAll(outDir, os.ModePerm)
-
-			// add the relative path to the argument for protoc. The output path
-			// for protoc is generated after the `:` character
-			args = append(args, flag+"="+arg+":"+outDir)
+			args = append(args, plug.MakeArgs(target)...)
 		}
 
 		// append the target file as the last argument
-		args = append(args, filepath.Join(DefinitionDir, svc))
+		args = append(args, filepath.Join(DefinitionDir, target))
+
+		fmt.Println(args)
 
 		sh.RunV("protoc", args...)
 	}

@@ -9,10 +9,13 @@ import (
 )
 
 type AuthInterceptor struct {
+	playerManager *PlayerManager
 }
 
-func NewAuthInterceptor() *AuthInterceptor {
-	return &AuthInterceptor{}
+func NewAuthInterceptor(pm *PlayerManager) *AuthInterceptor {
+	return &AuthInterceptor{
+		playerManager: pm,
+	}
 }
 
 func (ai *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {

@@ -8,8 +8,18 @@ import (
 )
 
 func init() {
-	apis.OutputDir = "mongersapis/pkg"
 	apis.Targets = []string{
 		"world/v1/world_service.proto",
+	}
+	apis.Plugins = []apis.ProtocPlugin{
+		apis.ProtocPluginGo{
+			Out: "mongersapis/pkg",
+		},
+		apis.ProtocPluginGoGRPC{
+			Out: "mongersapis/pkg",
+		},
+		apis.ProtocPluginDart{
+			Out: "app/lib",
+		},
 	}
 }

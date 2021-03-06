@@ -26,7 +26,11 @@ func main() {
 		panic(err)
 	}
 
-	authInterceptor := world.NewAuthInterceptor()
+	// playerManager is an umbrella service that shares player info with interceptors
+	playerManager := world.NewPlayerManager(40)
+
+	// interceptor definitions
+	authInterceptor := world.NewAuthInterceptor(playerManager)
 
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
@@ -43,7 +47,7 @@ func main() {
 		}),
 	)
 
-	worldService := world.NewService(logger)
+	worldService := world.NewService(logger, playerManager)
 	v1.RegisterWorldServiceServer(grpcServer, worldService)
 
 	srv := http.Server{
