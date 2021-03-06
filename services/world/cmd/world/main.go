@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/blendle/zapdriver"
+	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
 	"github.com/petomalina/mongers/services/world/internal/world"
 	"github.com/petomalina/xrpc/pkg/multiplexer"
@@ -35,6 +36,13 @@ func main() {
 			authInterceptor.Stream(),
 		),
 	)
+
+	grpcWebServer := grpcweb.WrapServer(grpcServer,
+		grpcweb.WithOriginFunc(func(origin string) bool {
+			return true
+		}),
+	)
+
 	worldService := world.NewService(logger)
 	v1.RegisterWorldServiceServer(grpcServer, worldService)
 
@@ -42,6 +50,7 @@ func main() {
 		Addr: ":" + os.Getenv("PORT"),
 		Handler: multiplexer.Make(nil,
 			multiplexer.GRPCHandler(grpcServer),
+			multiplexer.GRPCWebTextHandler(grpcWebServer),
 		),
 	}
 
