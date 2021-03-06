@@ -17,7 +17,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WorldServiceClient interface {
-	Search(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+	WorldInfo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type worldServiceClient struct {
@@ -28,9 +28,9 @@ func NewWorldServiceClient(cc grpc.ClientConnInterface) WorldServiceClient {
 	return &worldServiceClient{cc}
 }
 
-func (c *worldServiceClient) Search(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+func (c *worldServiceClient) WorldInfo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/v1.WorldService/Search", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.WorldService/WorldInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (c *worldServiceClient) Search(ctx context.Context, in *Empty, opts ...grpc
 // All implementations must embed UnimplementedWorldServiceServer
 // for forward compatibility
 type WorldServiceServer interface {
-	Search(context.Context, *Empty) (*Empty, error)
+	WorldInfo(context.Context, *Empty) (*Empty, error)
 	mustEmbedUnimplementedWorldServiceServer()
 }
 
@@ -49,8 +49,8 @@ type WorldServiceServer interface {
 type UnimplementedWorldServiceServer struct {
 }
 
-func (UnimplementedWorldServiceServer) Search(context.Context, *Empty) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
+func (UnimplementedWorldServiceServer) WorldInfo(context.Context, *Empty) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WorldInfo not implemented")
 }
 func (UnimplementedWorldServiceServer) mustEmbedUnimplementedWorldServiceServer() {}
 
@@ -65,20 +65,20 @@ func RegisterWorldServiceServer(s *grpc.Server, srv WorldServiceServer) {
 	s.RegisterService(&_WorldService_serviceDesc, srv)
 }
 
-func _WorldService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _WorldService_WorldInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WorldServiceServer).Search(ctx, in)
+		return srv.(WorldServiceServer).WorldInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.WorldService/Search",
+		FullMethod: "/v1.WorldService/WorldInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WorldServiceServer).Search(ctx, req.(*Empty))
+		return srv.(WorldServiceServer).WorldInfo(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -88,8 +88,8 @@ var _WorldService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*WorldServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Search",
-			Handler:    _WorldService_Search_Handler,
+			MethodName: "WorldInfo",
+			Handler:    _WorldService_WorldInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

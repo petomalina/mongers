@@ -6,16 +6,16 @@ steps:
         '--builder=gcr.io/buildpacks/builder',
         '--env', 'GOOGLE_BUILDABLE=./services/world/cmd/world',
         '--publish',
-        'europe-west4-docker.pkg.dev/petermalina/mongers/world-${BRANCH_NAME}'
+        'europe-west3-docker.pkg.dev/petermalina/mongers/world-${BRANCH_NAME}'
     ]
   - name: 'gcr.io/cloud-builders/gcloud'
     args: [
         'beta', 'run',
         'deploy', 'user',
-        '--image', 'europe-west4-docker.pkg.dev/petermalina/mongers/world-${BRANCH_NAME}',
+        '--image', 'europe-west3-docker.pkg.dev/petermalina/mongers/world-${BRANCH_NAME}',
         '--platform', 'managed',
         '--allow-unauthenticated',
-        '--region', 'europe-west4',
+        '--region', 'europe-west3',
 #        '--service-account', 'application@petermalina.iam.gserviceaccount.com',
     ]
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -23,6 +23,6 @@ steps:
         'run',
         'services','update-traffic',
         '--platform', 'managed',
-        '--region', 'europe-west4',
+        '--region', 'europe-west3',
         'mongers-world', '--to-latest'
     ]
