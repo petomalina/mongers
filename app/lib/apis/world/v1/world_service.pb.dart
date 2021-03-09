@@ -19,15 +19,20 @@ export 'world_service.pbenum.dart';
 
 class ConnectRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ConnectRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'connectType')
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'playerId')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'connectType')
     ..hasRequiredFields = false
   ;
 
   ConnectRequest._() : super();
   factory ConnectRequest({
+    $core.String? playerId,
     $core.String? connectType,
   }) {
     final _result = create();
+    if (playerId != null) {
+      _result.playerId = playerId;
+    }
     if (connectType != null) {
       _result.connectType = connectType;
     }
@@ -55,13 +60,22 @@ class ConnectRequest extends $pb.GeneratedMessage {
   static ConnectRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get connectType => $_getSZ(0);
+  $core.String get playerId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set connectType($core.String v) { $_setString(0, v); }
+  set playerId($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasConnectType() => $_has(0);
+  $core.bool hasPlayerId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearConnectType() => clearField(1);
+  void clearPlayerId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get connectType => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set connectType($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasConnectType() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearConnectType() => clearField(2);
 }
 
 class ConnectResponse extends $pb.GeneratedMessage {
@@ -669,6 +683,7 @@ class Expedition extends $pb.GeneratedMessage {
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditionId')
     ..e<ExpeditionCategory>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'category', $pb.PbFieldType.OE, defaultOrMaker: ExpeditionCategory.EXPEDITION_CATEGORY_UNSPECIFIED, valueOf: ExpeditionCategory.valueOf, enumValues: ExpeditionCategory.values)
     ..e<ExpeditionStatus>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: ExpeditionStatus.EXPEDITION_STATUS_UNSPECIFIED, valueOf: ExpeditionStatus.valueOf, enumValues: ExpeditionStatus.values)
+    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
     ..aOM<$2.Timestamp>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'startedAt', subBuilder: $2.Timestamp.create)
     ..aOM<$3.Duration>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'duration', subBuilder: $3.Duration.create)
     ..aInt64(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'powerCost')
@@ -680,6 +695,7 @@ class Expedition extends $pb.GeneratedMessage {
     $core.String? expeditionId,
     ExpeditionCategory? category,
     ExpeditionStatus? status,
+    $core.String? name,
     $2.Timestamp? startedAt,
     $3.Duration? duration,
     $fixnum.Int64? powerCost,
@@ -693,6 +709,9 @@ class Expedition extends $pb.GeneratedMessage {
     }
     if (status != null) {
       _result.status = status;
+    }
+    if (name != null) {
+      _result.name = name;
     }
     if (startedAt != null) {
       _result.startedAt = startedAt;
@@ -753,34 +772,43 @@ class Expedition extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearStatus() => clearField(3);
 
+  @$pb.TagNumber(4)
+  $core.String get name => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set name($core.String v) { $_setString(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasName() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearName() => clearField(4);
+
   @$pb.TagNumber(10)
-  $2.Timestamp get startedAt => $_getN(3);
+  $2.Timestamp get startedAt => $_getN(4);
   @$pb.TagNumber(10)
   set startedAt($2.Timestamp v) { setField(10, v); }
   @$pb.TagNumber(10)
-  $core.bool hasStartedAt() => $_has(3);
+  $core.bool hasStartedAt() => $_has(4);
   @$pb.TagNumber(10)
   void clearStartedAt() => clearField(10);
   @$pb.TagNumber(10)
-  $2.Timestamp ensureStartedAt() => $_ensure(3);
+  $2.Timestamp ensureStartedAt() => $_ensure(4);
 
   @$pb.TagNumber(11)
-  $3.Duration get duration => $_getN(4);
+  $3.Duration get duration => $_getN(5);
   @$pb.TagNumber(11)
   set duration($3.Duration v) { setField(11, v); }
   @$pb.TagNumber(11)
-  $core.bool hasDuration() => $_has(4);
+  $core.bool hasDuration() => $_has(5);
   @$pb.TagNumber(11)
   void clearDuration() => clearField(11);
   @$pb.TagNumber(11)
-  $3.Duration ensureDuration() => $_ensure(4);
+  $3.Duration ensureDuration() => $_ensure(5);
 
   @$pb.TagNumber(12)
-  $fixnum.Int64 get powerCost => $_getI64(5);
+  $fixnum.Int64 get powerCost => $_getI64(6);
   @$pb.TagNumber(12)
-  set powerCost($fixnum.Int64 v) { $_setInt64(5, v); }
+  set powerCost($fixnum.Int64 v) { $_setInt64(6, v); }
   @$pb.TagNumber(12)
-  $core.bool hasPowerCost() => $_has(5);
+  $core.bool hasPowerCost() => $_has(6);
   @$pb.TagNumber(12)
   void clearPowerCost() => clearField(12);
 }

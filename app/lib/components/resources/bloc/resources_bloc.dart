@@ -25,7 +25,7 @@ class ResourcesBloc extends Bloc<ResourcesEvent, ResourcesState> {
 
         final resp = await _repository.listResources(ListResourcesRequest(
           ids: event.resourceIDs,
-          playerId: '1',
+          playerId: 'peto',
         ));
 
         add(ResourcesUpdate(resp.resources));

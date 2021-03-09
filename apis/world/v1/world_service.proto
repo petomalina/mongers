@@ -39,7 +39,8 @@ service WorldService {
 }
 
 message ConnectRequest {
-  string connect_type = 1; // "play" or "observe"
+  string player_id = 1;
+  string connect_type = 2; // "play" or "observe"
 }
 
 message ConnectResponse {
@@ -127,6 +128,7 @@ message Expedition {
 
   ExpeditionCategory category = 2;
   ExpeditionStatus status = 3;
+  string name = 4;
 
   // The time expedition started if it's currently EXPEDITION_STATUS_IN_PROGRESS
   google.protobuf.Timestamp started_at = 10;

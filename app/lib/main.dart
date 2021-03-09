@@ -1,13 +1,14 @@
 import 'dart:io';
 
+import 'package:app/components/expeditions/bloc/expeditions_bloc.dart';
 import 'package:app/components/resources/bloc/resources_bloc.dart';
-import 'package:app/components/resources/bloc/resources_repository.dart';
 import 'package:app/views/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:grpc/grpc.dart' as grpc;
+
 // import 'package:grpc/grpc_web.dart' as grpcweb;
 import 'package:app/apis/world/v1/world_service.pbgrpc.dart' as world;
 import 'package:app/apis/world/v1/world_service.pb.dart' as worldpb;
@@ -27,15 +28,14 @@ class SimpleBlocObserver extends BlocObserver {
   }
 }
 
-void main() {
+void main() async {
   Bloc.observer = SimpleBlocObserver();
 
   // final channel =
   //     grpcweb.GrpcWebClientChannel.xhr(Uri.parse('http://localhost:8080'));
 
   final channel = grpc.ClientChannel(
-    InternetAddress('92.236.122.65',
-        type: InternetAddressType.IPv4),
+    InternetAddress('92.236.122.65', type: InternetAddressType.IPv4),
     port: 8080,
     options: const grpc.ChannelOptions(
       credentials: grpc.ChannelCredentials.insecure(),
@@ -49,13 +49,24 @@ void main() {
     ],
   );
 
-  runApp(MyApp(ResourcesBloc(repository: worldServerClient)));
+  final connectResult = await worldServerClient.connect(worldpb.ConnectRequest(
+    playerId: 'peto',
+    connectType: 'play',
+  ));
+
+  print(connectResult);
+
+  runApp(MyApp(
+    ResourcesBloc(repository: worldServerClient),
+    ExpeditionsBloc(repository: worldServerClient),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final ResourcesBloc resourcesBloc;
+  final ExpeditionsBloc expeditionsBloc;
 
-  MyApp(this.resourcesBloc);
+  MyApp(this.resourcesBloc, this.expeditionsBloc);
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +97,7 @@ class AuthInterceptor extends grpc.ClientInterceptor {
       grpc.CallOptions(
         metadata: {
           'authorization': 'heslo',
-          'user_id': 'peter',
+          'user_id': 'peto',
           ...options.metadata,
         },
       ).mergedWith(options),
