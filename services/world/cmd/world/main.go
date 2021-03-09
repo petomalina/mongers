@@ -6,12 +6,14 @@ import (
 	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
 	"github.com/petomalina/mongers/services/world/internal/world"
 	"github.com/petomalina/xrpc/pkg/multiplexer"
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 )
 
 func main() {
@@ -25,6 +27,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	viper.AutomaticEnv()
+
+	viper.SetDefault("port", "8080")
 
 	// playerManager is an umbrella service that shares player info with interceptors
 	playerManager := world.NewPlayerManager(40)

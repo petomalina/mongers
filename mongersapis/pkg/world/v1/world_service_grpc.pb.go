@@ -22,6 +22,7 @@ type WorldServiceClient interface {
 	// if the server has enough capacity. Players will otherwise be disconnected via
 	// errors to other RPC calls.
 	Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (*ConnectResponse, error)
+	GetResources(ctx context.Context, in *ResourcesRequest, opts ...grpc.CallOption) (*ResourcesResponse, error)
 	// Play encapsulates streaming messages for all actions that would otherwise
 	// be unary, as well as provides ad-hoc messages of in-game updates
 	Play(ctx context.Context, opts ...grpc.CallOption) (WorldService_PlayClient, error)
@@ -52,6 +53,15 @@ func (c *worldServiceClient) WorldInfo(ctx context.Context, in *Empty, opts ...g
 func (c *worldServiceClient) Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (*ConnectResponse, error) {
 	out := new(ConnectResponse)
 	err := c.cc.Invoke(ctx, "/v1.WorldService/Connect", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *worldServiceClient) GetResources(ctx context.Context, in *ResourcesRequest, opts ...grpc.CallOption) (*ResourcesResponse, error) {
+	out := new(ResourcesResponse)
+	err := c.cc.Invoke(ctx, "/v1.WorldService/GetResources", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -130,6 +140,7 @@ type WorldServiceServer interface {
 	// if the server has enough capacity. Players will otherwise be disconnected via
 	// errors to other RPC calls.
 	Connect(context.Context, *ConnectRequest) (*ConnectResponse, error)
+	GetResources(context.Context, *ResourcesRequest) (*ResourcesResponse, error)
 	// Play encapsulates streaming messages for all actions that would otherwise
 	// be unary, as well as provides ad-hoc messages of in-game updates
 	Play(WorldService_PlayServer) error
@@ -150,6 +161,9 @@ func (UnimplementedWorldServiceServer) WorldInfo(context.Context, *Empty) (*Worl
 }
 func (UnimplementedWorldServiceServer) Connect(context.Context, *ConnectRequest) (*ConnectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Connect not implemented")
+}
+func (UnimplementedWorldServiceServer) GetResources(context.Context, *ResourcesRequest) (*ResourcesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetResources not implemented")
 }
 func (UnimplementedWorldServiceServer) Play(WorldService_PlayServer) error {
 	return status.Errorf(codes.Unimplemented, "method Play not implemented")
@@ -202,6 +216,24 @@ func _WorldService_Connect_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(WorldServiceServer).Connect(ctx, req.(*ConnectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WorldService_GetResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResourcesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WorldServiceServer).GetResources(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.WorldService/GetResources",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WorldServiceServer).GetResources(ctx, req.(*ResourcesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -264,6 +296,10 @@ var _WorldService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Connect",
 			Handler:    _WorldService_Connect_Handler,
+		},
+		{
+			MethodName: "GetResources",
+			Handler:    _WorldService_GetResources_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

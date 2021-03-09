@@ -19,7 +19,8 @@ func init() {
 			Out: "mongersapis/pkg",
 		},
 		apis.ProtocPluginDart{
-			Out: "app/lib",
+			Out:  "app/lib",
+			Opts: "grpc",
 		},
 	}
 }

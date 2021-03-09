@@ -1,11 +1,12 @@
 package apis
 
 type ProtocPluginDart struct {
-	Out string
+	Out  string
+	Opts string
 }
 
 func (p ProtocPluginDart) MakeArgs(target string) []string {
-	args := []string{"--dart_out=" + ":" + p.OutDir(target)}
+	args := []string{"--dart_out=" + p.Opts + ":" + p.OutDir(target)}
 
 	return args
 }

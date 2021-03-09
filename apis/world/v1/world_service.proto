@@ -10,6 +10,15 @@ service WorldService {
   // errors to other RPC calls.
   rpc Connect(ConnectRequest) returns (ConnectResponse) {}
 
+  rpc ListResources(ListResourcesRequest) returns (ListResourcesResponse) {}
+
+  // ListExpeditions returns all expeditions based on the filter: all, player_owned, available
+  // where:
+  // - all are player_owned and available
+  // - player_owned are only expeditions that the player is currently on
+  // - available are only expeditions currently available
+  rpc ListExpeditions(ListExpeditionsRequest) returns (ListExpeditionsResponse) {}
+
   // Play encapsulates streaming messages for all actions that would otherwise
   // be unary, as well as provides ad-hoc messages of in-game updates
   rpc Play(stream ClientPlayMessage) returns (stream ServerPlayMessage) {}
@@ -31,10 +40,18 @@ message ConnectResponse {
 
 // ClientPlayMessage are messages sent by the clients to the server
 message ClientPlayMessage {
+  oneof req {
+      ListResourcesRequest resources = 1;
+      ListExpeditionsRequest expeditions = 2;
+  }
 }
 
 // ServerPlayMessage are messages sent from the server to the clients
 message ServerPlayMessage {
+  oneof res {
+    ListResourcesResponse resources = 1;
+    ListExpeditionsResponse expeditions = 2;
+  }
 }
 
 message World {
@@ -47,6 +64,62 @@ message World {
 message Player {
   string player_id = 1;
   string player_name = 2;
+
+  repeated Resource resources = 10;
+  repeated Expedition active_expeditions = 11;
+}
+
+// Resource is a structure that encapsulates various types of resources and
+// their value for a particular player, e.g. iron, clay, oil, bricks, money, etc.
+message Resource {
+  string resource_id = 1;
+  int64 value = 2;
+
+  // timestamp of the value. This is used to calculate how much resource was generated
+  // in the meantime while the resource was not updated.
+  int64 timestamp = 3;
+  // current known resource per minute. Frontends use this to automatically update the resources
+  // from the last known timestamp.
+  int64 rpm = 4;
+}
+
+message ListResourcesRequest {
+  // id of the player to fetch resources for
+  string player_id = 1;
+  // ids to fetch. If empty, all resources will be returned
+  repeated string ids = 2;
+}
+
+message ListResourcesResponse {
+  repeated Resource resources = 1;
+}
+
+enum ExpeditionType {
+  EXPEDITION_TYPE_UNSPECIFIED = 0;
+  EXPEDITION_TYPE_QUICK_SEARCH = 1;
+  EXPEDITION_TYPE_NEARBY_EXPLORATION = 2;
+  EXPEDITION_TYPE_NEW_HORIZONS = 3;
+}
+
+enum ExpeditionStatus {
+  EXPEDITION_STATUS_UNSPECIFIED = 0;
+  EXPEDITION_STATUS_AVAILABLE = 1;
+  EXPEDITION_STATUS_IN_PROGRESS = 2;
+  EXPEDITION_STATUS_DONE = 3;
+
+  EXPEDITION_STATUS_FAILED = 100;
+}
+
+message Expedition {
+  string expedition_id = 1;
+}
+
+message ListExpeditionsRequest {
+
+}
+
+message ListExpeditionsResponse {
+
 }
 
 message Empty{}
