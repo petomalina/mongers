@@ -18,19 +18,23 @@ func init() {
 			Targets: []string{
 				"apis/world/v1/world_service.proto",
 			},
+			StripPath: "apis",
 		},
 		apis.ProtocPluginGoGRPC{
 			Out: "mongersapis/pkg",
 			Targets: []string{
 				"apis/world/v1/world_service.proto",
 			},
+			StripPath: "apis",
 		},
 		apis.ProtocPluginDart{
 			Out:  "app/lib",
 			Opts: "grpc",
 			Targets: []string{
 				"apis/world/v1/world_service.proto",
-				"apis/3rdparty/protobuf/src/google/protobuf/empty.proto",
+				"google/protobuf/empty.proto",
+				"google/protobuf/duration.proto",
+				"google/protobuf/timestamp.proto",
 			},
 		},
 	}

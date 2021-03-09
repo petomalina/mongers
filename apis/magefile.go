@@ -1,6 +1,7 @@
 package apis
 
 import (
+	"fmt"
 	"github.com/magefile/mage/sh"
 	"os"
 )
@@ -24,6 +25,8 @@ func Build() {
 
 		args := append([]string{}, includes...)
 		args = append(args, plug.MakeArgs()...)
+
+		fmt.Println(args)
 
 		sh.RunV("protoc", args...)
 	}

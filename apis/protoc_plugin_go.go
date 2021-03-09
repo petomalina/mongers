@@ -1,15 +1,19 @@
 package apis
 
-import "path/filepath"
+import (
+	"path/filepath"
+	"strings"
+)
 
 type ProtocPluginGo struct {
-	Out     string
-	Opts    string
-	Targets []string
+	Out       string
+	Opts      string
+	Targets   []string
+	StripPath string
 }
 
 func (p ProtocPluginGo) MakeArgs() []string {
-	args := []string{"--go_out=" + filepath.Join(p.Out, filepath.Dir(p.Targets[0]))}
+	args := []string{"--go_out=" + p.OutDir()}
 
 	if p.Opts != "" {
 		args = append(args, "--go_opt="+p.Opts)
@@ -19,13 +23,14 @@ func (p ProtocPluginGo) MakeArgs() []string {
 }
 
 func (p ProtocPluginGo) OutDir() string {
-	return filepath.Join(p.Out, p.Targets[0])
+	return filepath.Join(p.Out, filepath.Dir(strings.TrimPrefix(p.Targets[0], p.StripPath)))
 }
 
 type ProtocPluginGoGRPC struct {
-	Out     string
-	Opts    string
-	Targets []string
+	Out       string
+	Opts      string
+	Targets   []string
+	StripPath string
 }
 
 func (p ProtocPluginGoGRPC) MakeArgs() []string {
@@ -39,5 +44,5 @@ func (p ProtocPluginGoGRPC) MakeArgs() []string {
 }
 
 func (p ProtocPluginGoGRPC) OutDir() string {
-	return filepath.Join(p.Out, p.Targets[0])
+	return filepath.Join(p.Out, filepath.Dir(strings.TrimPrefix(p.Targets[0], p.StripPath)))
 }
