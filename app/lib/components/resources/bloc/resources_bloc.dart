@@ -23,7 +23,7 @@ class ResourcesBloc extends Bloc<ResourcesEvent, ResourcesState> {
       try {
         yield ResourcesState.loading();
 
-        final resp = await _repository.getResources(ResourcesRequest(
+        final resp = await _repository.listResources(ListResourcesRequest(
           ids: event.resourceIDs,
           playerId: '1',
         ));

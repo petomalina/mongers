@@ -80,7 +80,7 @@ class _SingleResourceStatusState extends State<SingleResourceStatus> {
           width: 4,
         ),
         Text(
-          widget.resource.id,
+          widget.resource.resourceId,
         ),
       ],
     ); 

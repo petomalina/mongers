@@ -48,7 +48,7 @@ void main() {
       AuthInterceptor(),
     ],
   );
-  
+
   runApp(MyApp(ResourcesBloc(repository: worldServerClient)));
 }
 
@@ -86,6 +86,7 @@ class AuthInterceptor extends grpc.ClientInterceptor {
       grpc.CallOptions(
         metadata: {
           'authorization': 'heslo',
+          'user_id': 'peter',
           ...options.metadata,
         },
       ).mergedWith(options),

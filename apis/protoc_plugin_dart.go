@@ -1,16 +1,17 @@
 package apis
 
 type ProtocPluginDart struct {
-	Out  string
-	Opts string
+	Out     string
+	Opts    string
+	Targets []string
 }
 
-func (p ProtocPluginDart) MakeArgs(target string) []string {
-	args := []string{"--dart_out=" + p.Opts + ":" + p.OutDir(target)}
+func (p ProtocPluginDart) MakeArgs() []string {
+	args := []string{"--dart_out=" + p.Opts + ":" + p.OutDir()}
 
-	return args
+	return append(args, p.Targets...)
 }
 
-func (p ProtocPluginDart) OutDir(target string) string {
+func (p ProtocPluginDart) OutDir() string {
 	return p.Out
 }

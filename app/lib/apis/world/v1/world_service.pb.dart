@@ -10,6 +10,13 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../../google/protobuf/timestamp.pb.dart' as $2;
+import '../../../google/protobuf/duration.pb.dart' as $3;
+
+import 'world_service.pbenum.dart';
+
+export 'world_service.pbenum.dart';
+
 class ConnectRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ConnectRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'connectType')
@@ -105,28 +112,49 @@ class ConnectResponse extends $pb.GeneratedMessage {
 }
 
 enum ClientPlayMessage_Req {
-  resources, 
+  listResources, 
+  listExpeditions, 
+  startExpedition, 
+  collectExpedition, 
   notSet
 }
 
 class ClientPlayMessage extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, ClientPlayMessage_Req> _ClientPlayMessage_ReqByTag = {
-    1 : ClientPlayMessage_Req.resources,
+    1 : ClientPlayMessage_Req.listResources,
+    2 : ClientPlayMessage_Req.listExpeditions,
+    3 : ClientPlayMessage_Req.startExpedition,
+    4 : ClientPlayMessage_Req.collectExpedition,
     0 : ClientPlayMessage_Req.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ClientPlayMessage', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
-    ..oo(0, [1])
-    ..aOM<ResourcesRequest>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resources', subBuilder: ResourcesRequest.create)
+    ..oo(0, [1, 2, 3, 4])
+    ..aOM<ListResourcesRequest>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'listResources', subBuilder: ListResourcesRequest.create)
+    ..aOM<ListExpeditionsRequest>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'listExpeditions', subBuilder: ListExpeditionsRequest.create)
+    ..aOM<StartExpeditionRequest>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'startExpedition', subBuilder: StartExpeditionRequest.create)
+    ..aOM<CollectExpeditionRequest>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'collectExpedition', subBuilder: CollectExpeditionRequest.create)
     ..hasRequiredFields = false
   ;
 
   ClientPlayMessage._() : super();
   factory ClientPlayMessage({
-    ResourcesRequest? resources,
+    ListResourcesRequest? listResources,
+    ListExpeditionsRequest? listExpeditions,
+    StartExpeditionRequest? startExpedition,
+    CollectExpeditionRequest? collectExpedition,
   }) {
     final _result = create();
-    if (resources != null) {
-      _result.resources = resources;
+    if (listResources != null) {
+      _result.listResources = listResources;
+    }
+    if (listExpeditions != null) {
+      _result.listExpeditions = listExpeditions;
+    }
+    if (startExpedition != null) {
+      _result.startExpedition = startExpedition;
+    }
+    if (collectExpedition != null) {
+      _result.collectExpedition = collectExpedition;
     }
     return _result;
   }
@@ -155,40 +183,94 @@ class ClientPlayMessage extends $pb.GeneratedMessage {
   void clearReq() => clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
-  ResourcesRequest get resources => $_getN(0);
+  ListResourcesRequest get listResources => $_getN(0);
   @$pb.TagNumber(1)
-  set resources(ResourcesRequest v) { setField(1, v); }
+  set listResources(ListResourcesRequest v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasResources() => $_has(0);
+  $core.bool hasListResources() => $_has(0);
   @$pb.TagNumber(1)
-  void clearResources() => clearField(1);
+  void clearListResources() => clearField(1);
   @$pb.TagNumber(1)
-  ResourcesRequest ensureResources() => $_ensure(0);
+  ListResourcesRequest ensureListResources() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  ListExpeditionsRequest get listExpeditions => $_getN(1);
+  @$pb.TagNumber(2)
+  set listExpeditions(ListExpeditionsRequest v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasListExpeditions() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearListExpeditions() => clearField(2);
+  @$pb.TagNumber(2)
+  ListExpeditionsRequest ensureListExpeditions() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  StartExpeditionRequest get startExpedition => $_getN(2);
+  @$pb.TagNumber(3)
+  set startExpedition(StartExpeditionRequest v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasStartExpedition() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearStartExpedition() => clearField(3);
+  @$pb.TagNumber(3)
+  StartExpeditionRequest ensureStartExpedition() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  CollectExpeditionRequest get collectExpedition => $_getN(3);
+  @$pb.TagNumber(4)
+  set collectExpedition(CollectExpeditionRequest v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasCollectExpedition() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCollectExpedition() => clearField(4);
+  @$pb.TagNumber(4)
+  CollectExpeditionRequest ensureCollectExpedition() => $_ensure(3);
 }
 
 enum ServerPlayMessage_Res {
-  resources, 
+  listResources, 
+  listExpeditions, 
+  startExpedition, 
+  collectExpedition, 
   notSet
 }
 
 class ServerPlayMessage extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, ServerPlayMessage_Res> _ServerPlayMessage_ResByTag = {
-    2 : ServerPlayMessage_Res.resources,
+    1 : ServerPlayMessage_Res.listResources,
+    2 : ServerPlayMessage_Res.listExpeditions,
+    3 : ServerPlayMessage_Res.startExpedition,
+    4 : ServerPlayMessage_Res.collectExpedition,
     0 : ServerPlayMessage_Res.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ServerPlayMessage', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
-    ..oo(0, [2])
-    ..aOM<ResourcesResponse>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resources', subBuilder: ResourcesResponse.create)
+    ..oo(0, [1, 2, 3, 4])
+    ..aOM<ListResourcesResponse>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'listResources', subBuilder: ListResourcesResponse.create)
+    ..aOM<ListExpeditionsResponse>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'listExpeditions', subBuilder: ListExpeditionsResponse.create)
+    ..aOM<StartExpeditionResponse>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'startExpedition', subBuilder: StartExpeditionResponse.create)
+    ..aOM<CollectExpeditionResponse>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'collectExpedition', subBuilder: CollectExpeditionResponse.create)
     ..hasRequiredFields = false
   ;
 
   ServerPlayMessage._() : super();
   factory ServerPlayMessage({
-    ResourcesResponse? resources,
+    ListResourcesResponse? listResources,
+    ListExpeditionsResponse? listExpeditions,
+    StartExpeditionResponse? startExpedition,
+    CollectExpeditionResponse? collectExpedition,
   }) {
     final _result = create();
-    if (resources != null) {
-      _result.resources = resources;
+    if (listResources != null) {
+      _result.listResources = listResources;
+    }
+    if (listExpeditions != null) {
+      _result.listExpeditions = listExpeditions;
+    }
+    if (startExpedition != null) {
+      _result.startExpedition = startExpedition;
+    }
+    if (collectExpedition != null) {
+      _result.collectExpedition = collectExpedition;
     }
     return _result;
   }
@@ -216,16 +298,49 @@ class ServerPlayMessage extends $pb.GeneratedMessage {
   ServerPlayMessage_Res whichRes() => _ServerPlayMessage_ResByTag[$_whichOneof(0)]!;
   void clearRes() => clearField($_whichOneof(0));
 
+  @$pb.TagNumber(1)
+  ListResourcesResponse get listResources => $_getN(0);
+  @$pb.TagNumber(1)
+  set listResources(ListResourcesResponse v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasListResources() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearListResources() => clearField(1);
+  @$pb.TagNumber(1)
+  ListResourcesResponse ensureListResources() => $_ensure(0);
+
   @$pb.TagNumber(2)
-  ResourcesResponse get resources => $_getN(0);
+  ListExpeditionsResponse get listExpeditions => $_getN(1);
   @$pb.TagNumber(2)
-  set resources(ResourcesResponse v) { setField(2, v); }
+  set listExpeditions(ListExpeditionsResponse v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasResources() => $_has(0);
+  $core.bool hasListExpeditions() => $_has(1);
   @$pb.TagNumber(2)
-  void clearResources() => clearField(2);
+  void clearListExpeditions() => clearField(2);
   @$pb.TagNumber(2)
-  ResourcesResponse ensureResources() => $_ensure(0);
+  ListExpeditionsResponse ensureListExpeditions() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  StartExpeditionResponse get startExpedition => $_getN(2);
+  @$pb.TagNumber(3)
+  set startExpedition(StartExpeditionResponse v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasStartExpedition() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearStartExpedition() => clearField(3);
+  @$pb.TagNumber(3)
+  StartExpeditionResponse ensureStartExpedition() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  CollectExpeditionResponse get collectExpedition => $_getN(3);
+  @$pb.TagNumber(4)
+  set collectExpedition(CollectExpeditionResponse v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasCollectExpedition() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCollectExpedition() => clearField(4);
+  @$pb.TagNumber(4)
+  CollectExpeditionResponse ensureCollectExpedition() => $_ensure(3);
 }
 
 class World extends $pb.GeneratedMessage {
@@ -366,7 +481,7 @@ class Player extends $pb.GeneratedMessage {
 
 class Resource extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Resource', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resourceId')
     ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'value')
     ..aInt64(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'timestamp')
     ..aInt64(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rpm')
@@ -375,14 +490,14 @@ class Resource extends $pb.GeneratedMessage {
 
   Resource._() : super();
   factory Resource({
-    $core.String? id,
+    $core.String? resourceId,
     $fixnum.Int64? value,
     $fixnum.Int64? timestamp,
     $fixnum.Int64? rpm,
   }) {
     final _result = create();
-    if (id != null) {
-      _result.id = id;
+    if (resourceId != null) {
+      _result.resourceId = resourceId;
     }
     if (value != null) {
       _result.value = value;
@@ -417,13 +532,13 @@ class Resource extends $pb.GeneratedMessage {
   static Resource? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get id => $_getSZ(0);
+  $core.String get resourceId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set id($core.String v) { $_setString(0, v); }
+  set resourceId($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasResourceId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => clearField(1);
+  void clearResourceId() => clearField(1);
 
   @$pb.TagNumber(2)
   $fixnum.Int64 get value => $_getI64(1);
@@ -453,15 +568,15 @@ class Resource extends $pb.GeneratedMessage {
   void clearRpm() => clearField(4);
 }
 
-class ResourcesRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ResourcesRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+class ListResourcesRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListResourcesRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'playerId')
     ..pPS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ids')
     ..hasRequiredFields = false
   ;
 
-  ResourcesRequest._() : super();
-  factory ResourcesRequest({
+  ListResourcesRequest._() : super();
+  factory ListResourcesRequest({
     $core.String? playerId,
     $core.Iterable<$core.String>? ids,
   }) {
@@ -474,26 +589,26 @@ class ResourcesRequest extends $pb.GeneratedMessage {
     }
     return _result;
   }
-  factory ResourcesRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ResourcesRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory ListResourcesRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ListResourcesRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  ResourcesRequest clone() => ResourcesRequest()..mergeFromMessage(this);
+  ListResourcesRequest clone() => ListResourcesRequest()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  ResourcesRequest copyWith(void Function(ResourcesRequest) updates) => super.copyWith((message) => updates(message as ResourcesRequest)) as ResourcesRequest; // ignore: deprecated_member_use
+  ListResourcesRequest copyWith(void Function(ListResourcesRequest) updates) => super.copyWith((message) => updates(message as ListResourcesRequest)) as ListResourcesRequest; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static ResourcesRequest create() => ResourcesRequest._();
-  ResourcesRequest createEmptyInstance() => create();
-  static $pb.PbList<ResourcesRequest> createRepeated() => $pb.PbList<ResourcesRequest>();
+  static ListResourcesRequest create() => ListResourcesRequest._();
+  ListResourcesRequest createEmptyInstance() => create();
+  static $pb.PbList<ListResourcesRequest> createRepeated() => $pb.PbList<ListResourcesRequest>();
   @$core.pragma('dart2js:noInline')
-  static ResourcesRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ResourcesRequest>(create);
-  static ResourcesRequest? _defaultInstance;
+  static ListResourcesRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ListResourcesRequest>(create);
+  static ListResourcesRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get playerId => $_getSZ(0);
@@ -508,14 +623,14 @@ class ResourcesRequest extends $pb.GeneratedMessage {
   $core.List<$core.String> get ids => $_getList(1);
 }
 
-class ResourcesResponse extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ResourcesResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+class ListResourcesResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListResourcesResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
     ..pc<Resource>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resources', $pb.PbFieldType.PM, subBuilder: Resource.create)
     ..hasRequiredFields = false
   ;
 
-  ResourcesResponse._() : super();
-  factory ResourcesResponse({
+  ListResourcesResponse._() : super();
+  factory ListResourcesResponse({
     $core.Iterable<Resource>? resources,
   }) {
     final _result = create();
@@ -524,57 +639,534 @@ class ResourcesResponse extends $pb.GeneratedMessage {
     }
     return _result;
   }
-  factory ResourcesResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ResourcesResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory ListResourcesResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ListResourcesResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  ResourcesResponse clone() => ResourcesResponse()..mergeFromMessage(this);
+  ListResourcesResponse clone() => ListResourcesResponse()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  ResourcesResponse copyWith(void Function(ResourcesResponse) updates) => super.copyWith((message) => updates(message as ResourcesResponse)) as ResourcesResponse; // ignore: deprecated_member_use
+  ListResourcesResponse copyWith(void Function(ListResourcesResponse) updates) => super.copyWith((message) => updates(message as ListResourcesResponse)) as ListResourcesResponse; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static ResourcesResponse create() => ResourcesResponse._();
-  ResourcesResponse createEmptyInstance() => create();
-  static $pb.PbList<ResourcesResponse> createRepeated() => $pb.PbList<ResourcesResponse>();
+  static ListResourcesResponse create() => ListResourcesResponse._();
+  ListResourcesResponse createEmptyInstance() => create();
+  static $pb.PbList<ListResourcesResponse> createRepeated() => $pb.PbList<ListResourcesResponse>();
   @$core.pragma('dart2js:noInline')
-  static ResourcesResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ResourcesResponse>(create);
-  static ResourcesResponse? _defaultInstance;
+  static ListResourcesResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ListResourcesResponse>(create);
+  static ListResourcesResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.List<Resource> get resources => $_getList(0);
 }
 
-class Empty extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Empty', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+class Expedition extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Expedition', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditionId')
+    ..e<ExpeditionCategory>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'category', $pb.PbFieldType.OE, defaultOrMaker: ExpeditionCategory.EXPEDITION_CATEGORY_UNSPECIFIED, valueOf: ExpeditionCategory.valueOf, enumValues: ExpeditionCategory.values)
+    ..e<ExpeditionStatus>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: ExpeditionStatus.EXPEDITION_STATUS_UNSPECIFIED, valueOf: ExpeditionStatus.valueOf, enumValues: ExpeditionStatus.values)
+    ..aOM<$2.Timestamp>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'startedAt', subBuilder: $2.Timestamp.create)
+    ..aOM<$3.Duration>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'duration', subBuilder: $3.Duration.create)
+    ..aInt64(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'powerCost')
     ..hasRequiredFields = false
   ;
 
-  Empty._() : super();
-  factory Empty() => create();
-  factory Empty.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Empty.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Expedition._() : super();
+  factory Expedition({
+    $core.String? expeditionId,
+    ExpeditionCategory? category,
+    ExpeditionStatus? status,
+    $2.Timestamp? startedAt,
+    $3.Duration? duration,
+    $fixnum.Int64? powerCost,
+  }) {
+    final _result = create();
+    if (expeditionId != null) {
+      _result.expeditionId = expeditionId;
+    }
+    if (category != null) {
+      _result.category = category;
+    }
+    if (status != null) {
+      _result.status = status;
+    }
+    if (startedAt != null) {
+      _result.startedAt = startedAt;
+    }
+    if (duration != null) {
+      _result.duration = duration;
+    }
+    if (powerCost != null) {
+      _result.powerCost = powerCost;
+    }
+    return _result;
+  }
+  factory Expedition.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Expedition.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  Empty clone() => Empty()..mergeFromMessage(this);
+  Expedition clone() => Expedition()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  Empty copyWith(void Function(Empty) updates) => super.copyWith((message) => updates(message as Empty)) as Empty; // ignore: deprecated_member_use
+  Expedition copyWith(void Function(Expedition) updates) => super.copyWith((message) => updates(message as Expedition)) as Expedition; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static Empty create() => Empty._();
-  Empty createEmptyInstance() => create();
-  static $pb.PbList<Empty> createRepeated() => $pb.PbList<Empty>();
+  static Expedition create() => Expedition._();
+  Expedition createEmptyInstance() => create();
+  static $pb.PbList<Expedition> createRepeated() => $pb.PbList<Expedition>();
   @$core.pragma('dart2js:noInline')
-  static Empty getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Empty>(create);
-  static Empty? _defaultInstance;
+  static Expedition getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Expedition>(create);
+  static Expedition? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get expeditionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set expeditionId($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasExpeditionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearExpeditionId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  ExpeditionCategory get category => $_getN(1);
+  @$pb.TagNumber(2)
+  set category(ExpeditionCategory v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasCategory() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCategory() => clearField(2);
+
+  @$pb.TagNumber(3)
+  ExpeditionStatus get status => $_getN(2);
+  @$pb.TagNumber(3)
+  set status(ExpeditionStatus v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasStatus() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearStatus() => clearField(3);
+
+  @$pb.TagNumber(10)
+  $2.Timestamp get startedAt => $_getN(3);
+  @$pb.TagNumber(10)
+  set startedAt($2.Timestamp v) { setField(10, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasStartedAt() => $_has(3);
+  @$pb.TagNumber(10)
+  void clearStartedAt() => clearField(10);
+  @$pb.TagNumber(10)
+  $2.Timestamp ensureStartedAt() => $_ensure(3);
+
+  @$pb.TagNumber(11)
+  $3.Duration get duration => $_getN(4);
+  @$pb.TagNumber(11)
+  set duration($3.Duration v) { setField(11, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasDuration() => $_has(4);
+  @$pb.TagNumber(11)
+  void clearDuration() => clearField(11);
+  @$pb.TagNumber(11)
+  $3.Duration ensureDuration() => $_ensure(4);
+
+  @$pb.TagNumber(12)
+  $fixnum.Int64 get powerCost => $_getI64(5);
+  @$pb.TagNumber(12)
+  set powerCost($fixnum.Int64 v) { $_setInt64(5, v); }
+  @$pb.TagNumber(12)
+  $core.bool hasPowerCost() => $_has(5);
+  @$pb.TagNumber(12)
+  void clearPowerCost() => clearField(12);
+}
+
+class ListExpeditionsRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListExpeditionsRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'playerId')
+    ..e<ListExpeditionFilter>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditionFilter', $pb.PbFieldType.OE, defaultOrMaker: ListExpeditionFilter.LIST_EXPEDITION_FILTER_ALL, valueOf: ListExpeditionFilter.valueOf, enumValues: ListExpeditionFilter.values)
+    ..pPS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditionIds')
+    ..hasRequiredFields = false
+  ;
+
+  ListExpeditionsRequest._() : super();
+  factory ListExpeditionsRequest({
+    $core.String? playerId,
+    ListExpeditionFilter? expeditionFilter,
+    $core.Iterable<$core.String>? expeditionIds,
+  }) {
+    final _result = create();
+    if (playerId != null) {
+      _result.playerId = playerId;
+    }
+    if (expeditionFilter != null) {
+      _result.expeditionFilter = expeditionFilter;
+    }
+    if (expeditionIds != null) {
+      _result.expeditionIds.addAll(expeditionIds);
+    }
+    return _result;
+  }
+  factory ListExpeditionsRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ListExpeditionsRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ListExpeditionsRequest clone() => ListExpeditionsRequest()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ListExpeditionsRequest copyWith(void Function(ListExpeditionsRequest) updates) => super.copyWith((message) => updates(message as ListExpeditionsRequest)) as ListExpeditionsRequest; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ListExpeditionsRequest create() => ListExpeditionsRequest._();
+  ListExpeditionsRequest createEmptyInstance() => create();
+  static $pb.PbList<ListExpeditionsRequest> createRepeated() => $pb.PbList<ListExpeditionsRequest>();
+  @$core.pragma('dart2js:noInline')
+  static ListExpeditionsRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ListExpeditionsRequest>(create);
+  static ListExpeditionsRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get playerId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set playerId($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasPlayerId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlayerId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  ListExpeditionFilter get expeditionFilter => $_getN(1);
+  @$pb.TagNumber(2)
+  set expeditionFilter(ListExpeditionFilter v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasExpeditionFilter() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearExpeditionFilter() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.List<$core.String> get expeditionIds => $_getList(2);
+}
+
+class ListExpeditionsResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListExpeditionsResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+    ..pc<Expedition>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditions', $pb.PbFieldType.PM, subBuilder: Expedition.create)
+    ..aOM<PlayerPower>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'power', subBuilder: PlayerPower.create)
+    ..hasRequiredFields = false
+  ;
+
+  ListExpeditionsResponse._() : super();
+  factory ListExpeditionsResponse({
+    $core.Iterable<Expedition>? expeditions,
+    PlayerPower? power,
+  }) {
+    final _result = create();
+    if (expeditions != null) {
+      _result.expeditions.addAll(expeditions);
+    }
+    if (power != null) {
+      _result.power = power;
+    }
+    return _result;
+  }
+  factory ListExpeditionsResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ListExpeditionsResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ListExpeditionsResponse clone() => ListExpeditionsResponse()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ListExpeditionsResponse copyWith(void Function(ListExpeditionsResponse) updates) => super.copyWith((message) => updates(message as ListExpeditionsResponse)) as ListExpeditionsResponse; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ListExpeditionsResponse create() => ListExpeditionsResponse._();
+  ListExpeditionsResponse createEmptyInstance() => create();
+  static $pb.PbList<ListExpeditionsResponse> createRepeated() => $pb.PbList<ListExpeditionsResponse>();
+  @$core.pragma('dart2js:noInline')
+  static ListExpeditionsResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ListExpeditionsResponse>(create);
+  static ListExpeditionsResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<Expedition> get expeditions => $_getList(0);
+
+  @$pb.TagNumber(2)
+  PlayerPower get power => $_getN(1);
+  @$pb.TagNumber(2)
+  set power(PlayerPower v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasPower() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPower() => clearField(2);
+  @$pb.TagNumber(2)
+  PlayerPower ensurePower() => $_ensure(1);
+}
+
+class PlayerPower extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'PlayerPower', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'current', $pb.PbFieldType.O3)
+    ..aOM<$2.Timestamp>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastChange', subBuilder: $2.Timestamp.create)
+    ..aOM<$3.Duration>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'refill', subBuilder: $3.Duration.create)
+    ..hasRequiredFields = false
+  ;
+
+  PlayerPower._() : super();
+  factory PlayerPower({
+    $core.int? current,
+    $2.Timestamp? lastChange,
+    $3.Duration? refill,
+  }) {
+    final _result = create();
+    if (current != null) {
+      _result.current = current;
+    }
+    if (lastChange != null) {
+      _result.lastChange = lastChange;
+    }
+    if (refill != null) {
+      _result.refill = refill;
+    }
+    return _result;
+  }
+  factory PlayerPower.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory PlayerPower.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  PlayerPower clone() => PlayerPower()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  PlayerPower copyWith(void Function(PlayerPower) updates) => super.copyWith((message) => updates(message as PlayerPower)) as PlayerPower; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static PlayerPower create() => PlayerPower._();
+  PlayerPower createEmptyInstance() => create();
+  static $pb.PbList<PlayerPower> createRepeated() => $pb.PbList<PlayerPower>();
+  @$core.pragma('dart2js:noInline')
+  static PlayerPower getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PlayerPower>(create);
+  static PlayerPower? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get current => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set current($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasCurrent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCurrent() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.Timestamp get lastChange => $_getN(1);
+  @$pb.TagNumber(2)
+  set lastChange($2.Timestamp v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasLastChange() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLastChange() => clearField(2);
+  @$pb.TagNumber(2)
+  $2.Timestamp ensureLastChange() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $3.Duration get refill => $_getN(2);
+  @$pb.TagNumber(3)
+  set refill($3.Duration v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasRefill() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearRefill() => clearField(3);
+  @$pb.TagNumber(3)
+  $3.Duration ensureRefill() => $_ensure(2);
+}
+
+class StartExpeditionRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'StartExpeditionRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'playerId')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditionId')
+    ..hasRequiredFields = false
+  ;
+
+  StartExpeditionRequest._() : super();
+  factory StartExpeditionRequest({
+    $core.String? playerId,
+    $core.String? expeditionId,
+  }) {
+    final _result = create();
+    if (playerId != null) {
+      _result.playerId = playerId;
+    }
+    if (expeditionId != null) {
+      _result.expeditionId = expeditionId;
+    }
+    return _result;
+  }
+  factory StartExpeditionRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory StartExpeditionRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  StartExpeditionRequest clone() => StartExpeditionRequest()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  StartExpeditionRequest copyWith(void Function(StartExpeditionRequest) updates) => super.copyWith((message) => updates(message as StartExpeditionRequest)) as StartExpeditionRequest; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static StartExpeditionRequest create() => StartExpeditionRequest._();
+  StartExpeditionRequest createEmptyInstance() => create();
+  static $pb.PbList<StartExpeditionRequest> createRepeated() => $pb.PbList<StartExpeditionRequest>();
+  @$core.pragma('dart2js:noInline')
+  static StartExpeditionRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<StartExpeditionRequest>(create);
+  static StartExpeditionRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get playerId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set playerId($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasPlayerId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlayerId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get expeditionId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set expeditionId($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasExpeditionId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearExpeditionId() => clearField(2);
+}
+
+class StartExpeditionResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'StartExpeditionResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+    ..hasRequiredFields = false
+  ;
+
+  StartExpeditionResponse._() : super();
+  factory StartExpeditionResponse() => create();
+  factory StartExpeditionResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory StartExpeditionResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  StartExpeditionResponse clone() => StartExpeditionResponse()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  StartExpeditionResponse copyWith(void Function(StartExpeditionResponse) updates) => super.copyWith((message) => updates(message as StartExpeditionResponse)) as StartExpeditionResponse; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static StartExpeditionResponse create() => StartExpeditionResponse._();
+  StartExpeditionResponse createEmptyInstance() => create();
+  static $pb.PbList<StartExpeditionResponse> createRepeated() => $pb.PbList<StartExpeditionResponse>();
+  @$core.pragma('dart2js:noInline')
+  static StartExpeditionResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<StartExpeditionResponse>(create);
+  static StartExpeditionResponse? _defaultInstance;
+}
+
+class CollectExpeditionRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CollectExpeditionRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'playerId')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditionId')
+    ..hasRequiredFields = false
+  ;
+
+  CollectExpeditionRequest._() : super();
+  factory CollectExpeditionRequest({
+    $core.String? playerId,
+    $core.String? expeditionId,
+  }) {
+    final _result = create();
+    if (playerId != null) {
+      _result.playerId = playerId;
+    }
+    if (expeditionId != null) {
+      _result.expeditionId = expeditionId;
+    }
+    return _result;
+  }
+  factory CollectExpeditionRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CollectExpeditionRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  CollectExpeditionRequest clone() => CollectExpeditionRequest()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CollectExpeditionRequest copyWith(void Function(CollectExpeditionRequest) updates) => super.copyWith((message) => updates(message as CollectExpeditionRequest)) as CollectExpeditionRequest; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static CollectExpeditionRequest create() => CollectExpeditionRequest._();
+  CollectExpeditionRequest createEmptyInstance() => create();
+  static $pb.PbList<CollectExpeditionRequest> createRepeated() => $pb.PbList<CollectExpeditionRequest>();
+  @$core.pragma('dart2js:noInline')
+  static CollectExpeditionRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CollectExpeditionRequest>(create);
+  static CollectExpeditionRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get playerId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set playerId($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasPlayerId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlayerId() => clearField(1);
+
+  @$pb.TagNumber(3)
+  $core.String get expeditionId => $_getSZ(1);
+  @$pb.TagNumber(3)
+  set expeditionId($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasExpeditionId() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearExpeditionId() => clearField(3);
+}
+
+class CollectExpeditionResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CollectExpeditionResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+    ..hasRequiredFields = false
+  ;
+
+  CollectExpeditionResponse._() : super();
+  factory CollectExpeditionResponse() => create();
+  factory CollectExpeditionResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CollectExpeditionResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  CollectExpeditionResponse clone() => CollectExpeditionResponse()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CollectExpeditionResponse copyWith(void Function(CollectExpeditionResponse) updates) => super.copyWith((message) => updates(message as CollectExpeditionResponse)) as CollectExpeditionResponse; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static CollectExpeditionResponse create() => CollectExpeditionResponse._();
+  CollectExpeditionResponse createEmptyInstance() => create();
+  static $pb.PbList<CollectExpeditionResponse> createRepeated() => $pb.PbList<CollectExpeditionResponse>();
+  @$core.pragma('dart2js:noInline')
+  static CollectExpeditionResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CollectExpeditionResponse>(create);
+  static CollectExpeditionResponse? _defaultInstance;
 }
 

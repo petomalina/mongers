@@ -7,6 +7,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -17,12 +18,20 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WorldServiceClient interface {
-	WorldInfo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*World, error)
+	WorldInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*World, error)
 	// Connect validates the connecting player and registers their UUID internally
 	// if the server has enough capacity. Players will otherwise be disconnected via
 	// errors to other RPC calls.
 	Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (*ConnectResponse, error)
-	GetResources(ctx context.Context, in *ResourcesRequest, opts ...grpc.CallOption) (*ResourcesResponse, error)
+	ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesResponse, error)
+	StartExpedition(ctx context.Context, in *StartExpeditionRequest, opts ...grpc.CallOption) (*StartExpeditionResponse, error)
+	CollectExpedition(ctx context.Context, in *CollectExpeditionRequest, opts ...grpc.CallOption) (*CollectExpeditionResponse, error)
+	// ListExpeditions returns all expeditions based on the filter: all, player_owned, available
+	// where:
+	// - all are player_owned and available (default option when not set)
+	// - player_owned are only expeditions that the player is currently on
+	// - available are only expeditions currently available
+	ListExpeditions(ctx context.Context, in *ListExpeditionsRequest, opts ...grpc.CallOption) (*ListExpeditionsResponse, error)
 	// Play encapsulates streaming messages for all actions that would otherwise
 	// be unary, as well as provides ad-hoc messages of in-game updates
 	Play(ctx context.Context, opts ...grpc.CallOption) (WorldService_PlayClient, error)
@@ -30,7 +39,7 @@ type WorldServiceClient interface {
 	// This method makes best effort to catch up connecting clients with the game objects,
 	// however, clients are responsible for syncing objects via unary RPC in case of secondary
 	// world objects such as leaderboard
-	Watch(ctx context.Context, in *Empty, opts ...grpc.CallOption) (WorldService_WatchClient, error)
+	Watch(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (WorldService_WatchClient, error)
 }
 
 type worldServiceClient struct {
@@ -41,7 +50,7 @@ func NewWorldServiceClient(cc grpc.ClientConnInterface) WorldServiceClient {
 	return &worldServiceClient{cc}
 }
 
-func (c *worldServiceClient) WorldInfo(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*World, error) {
+func (c *worldServiceClient) WorldInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*World, error) {
 	out := new(World)
 	err := c.cc.Invoke(ctx, "/v1.WorldService/WorldInfo", in, out, opts...)
 	if err != nil {
@@ -59,9 +68,36 @@ func (c *worldServiceClient) Connect(ctx context.Context, in *ConnectRequest, op
 	return out, nil
 }
 
-func (c *worldServiceClient) GetResources(ctx context.Context, in *ResourcesRequest, opts ...grpc.CallOption) (*ResourcesResponse, error) {
-	out := new(ResourcesResponse)
-	err := c.cc.Invoke(ctx, "/v1.WorldService/GetResources", in, out, opts...)
+func (c *worldServiceClient) ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesResponse, error) {
+	out := new(ListResourcesResponse)
+	err := c.cc.Invoke(ctx, "/v1.WorldService/ListResources", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *worldServiceClient) StartExpedition(ctx context.Context, in *StartExpeditionRequest, opts ...grpc.CallOption) (*StartExpeditionResponse, error) {
+	out := new(StartExpeditionResponse)
+	err := c.cc.Invoke(ctx, "/v1.WorldService/StartExpedition", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *worldServiceClient) CollectExpedition(ctx context.Context, in *CollectExpeditionRequest, opts ...grpc.CallOption) (*CollectExpeditionResponse, error) {
+	out := new(CollectExpeditionResponse)
+	err := c.cc.Invoke(ctx, "/v1.WorldService/CollectExpedition", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *worldServiceClient) ListExpeditions(ctx context.Context, in *ListExpeditionsRequest, opts ...grpc.CallOption) (*ListExpeditionsResponse, error) {
+	out := new(ListExpeditionsResponse)
+	err := c.cc.Invoke(ctx, "/v1.WorldService/ListExpeditions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +135,7 @@ func (x *worldServicePlayClient) Recv() (*ServerPlayMessage, error) {
 	return m, nil
 }
 
-func (c *worldServiceClient) Watch(ctx context.Context, in *Empty, opts ...grpc.CallOption) (WorldService_WatchClient, error) {
+func (c *worldServiceClient) Watch(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (WorldService_WatchClient, error) {
 	stream, err := c.cc.NewStream(ctx, &_WorldService_serviceDesc.Streams[1], "/v1.WorldService/Watch", opts...)
 	if err != nil {
 		return nil, err
@@ -135,12 +171,20 @@ func (x *worldServiceWatchClient) Recv() (*ServerPlayMessage, error) {
 // All implementations must embed UnimplementedWorldServiceServer
 // for forward compatibility
 type WorldServiceServer interface {
-	WorldInfo(context.Context, *Empty) (*World, error)
+	WorldInfo(context.Context, *emptypb.Empty) (*World, error)
 	// Connect validates the connecting player and registers their UUID internally
 	// if the server has enough capacity. Players will otherwise be disconnected via
 	// errors to other RPC calls.
 	Connect(context.Context, *ConnectRequest) (*ConnectResponse, error)
-	GetResources(context.Context, *ResourcesRequest) (*ResourcesResponse, error)
+	ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error)
+	StartExpedition(context.Context, *StartExpeditionRequest) (*StartExpeditionResponse, error)
+	CollectExpedition(context.Context, *CollectExpeditionRequest) (*CollectExpeditionResponse, error)
+	// ListExpeditions returns all expeditions based on the filter: all, player_owned, available
+	// where:
+	// - all are player_owned and available (default option when not set)
+	// - player_owned are only expeditions that the player is currently on
+	// - available are only expeditions currently available
+	ListExpeditions(context.Context, *ListExpeditionsRequest) (*ListExpeditionsResponse, error)
 	// Play encapsulates streaming messages for all actions that would otherwise
 	// be unary, as well as provides ad-hoc messages of in-game updates
 	Play(WorldService_PlayServer) error
@@ -148,7 +192,7 @@ type WorldServiceServer interface {
 	// This method makes best effort to catch up connecting clients with the game objects,
 	// however, clients are responsible for syncing objects via unary RPC in case of secondary
 	// world objects such as leaderboard
-	Watch(*Empty, WorldService_WatchServer) error
+	Watch(*emptypb.Empty, WorldService_WatchServer) error
 	mustEmbedUnimplementedWorldServiceServer()
 }
 
@@ -156,19 +200,28 @@ type WorldServiceServer interface {
 type UnimplementedWorldServiceServer struct {
 }
 
-func (UnimplementedWorldServiceServer) WorldInfo(context.Context, *Empty) (*World, error) {
+func (UnimplementedWorldServiceServer) WorldInfo(context.Context, *emptypb.Empty) (*World, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WorldInfo not implemented")
 }
 func (UnimplementedWorldServiceServer) Connect(context.Context, *ConnectRequest) (*ConnectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Connect not implemented")
 }
-func (UnimplementedWorldServiceServer) GetResources(context.Context, *ResourcesRequest) (*ResourcesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetResources not implemented")
+func (UnimplementedWorldServiceServer) ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListResources not implemented")
+}
+func (UnimplementedWorldServiceServer) StartExpedition(context.Context, *StartExpeditionRequest) (*StartExpeditionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartExpedition not implemented")
+}
+func (UnimplementedWorldServiceServer) CollectExpedition(context.Context, *CollectExpeditionRequest) (*CollectExpeditionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CollectExpedition not implemented")
+}
+func (UnimplementedWorldServiceServer) ListExpeditions(context.Context, *ListExpeditionsRequest) (*ListExpeditionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListExpeditions not implemented")
 }
 func (UnimplementedWorldServiceServer) Play(WorldService_PlayServer) error {
 	return status.Errorf(codes.Unimplemented, "method Play not implemented")
 }
-func (UnimplementedWorldServiceServer) Watch(*Empty, WorldService_WatchServer) error {
+func (UnimplementedWorldServiceServer) Watch(*emptypb.Empty, WorldService_WatchServer) error {
 	return status.Errorf(codes.Unimplemented, "method Watch not implemented")
 }
 func (UnimplementedWorldServiceServer) mustEmbedUnimplementedWorldServiceServer() {}
@@ -185,7 +238,7 @@ func RegisterWorldServiceServer(s *grpc.Server, srv WorldServiceServer) {
 }
 
 func _WorldService_WorldInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -197,7 +250,7 @@ func _WorldService_WorldInfo_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/v1.WorldService/WorldInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WorldServiceServer).WorldInfo(ctx, req.(*Empty))
+		return srv.(WorldServiceServer).WorldInfo(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -220,20 +273,74 @@ func _WorldService_Connect_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _WorldService_GetResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResourcesRequest)
+func _WorldService_ListResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListResourcesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WorldServiceServer).GetResources(ctx, in)
+		return srv.(WorldServiceServer).ListResources(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.WorldService/GetResources",
+		FullMethod: "/v1.WorldService/ListResources",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WorldServiceServer).GetResources(ctx, req.(*ResourcesRequest))
+		return srv.(WorldServiceServer).ListResources(ctx, req.(*ListResourcesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WorldService_StartExpedition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StartExpeditionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WorldServiceServer).StartExpedition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.WorldService/StartExpedition",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WorldServiceServer).StartExpedition(ctx, req.(*StartExpeditionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WorldService_CollectExpedition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CollectExpeditionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WorldServiceServer).CollectExpedition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.WorldService/CollectExpedition",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WorldServiceServer).CollectExpedition(ctx, req.(*CollectExpeditionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WorldService_ListExpeditions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListExpeditionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WorldServiceServer).ListExpeditions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.WorldService/ListExpeditions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WorldServiceServer).ListExpeditions(ctx, req.(*ListExpeditionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -265,7 +372,7 @@ func (x *worldServicePlayServer) Recv() (*ClientPlayMessage, error) {
 }
 
 func _WorldService_Watch_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(Empty)
+	m := new(emptypb.Empty)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
@@ -298,8 +405,20 @@ var _WorldService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _WorldService_Connect_Handler,
 		},
 		{
-			MethodName: "GetResources",
-			Handler:    _WorldService_GetResources_Handler,
+			MethodName: "ListResources",
+			Handler:    _WorldService_ListResources_Handler,
+		},
+		{
+			MethodName: "StartExpedition",
+			Handler:    _WorldService_StartExpedition_Handler,
+		},
+		{
+			MethodName: "CollectExpedition",
+			Handler:    _WorldService_CollectExpedition_Handler,
+		},
+		{
+			MethodName: "ListExpeditions",
+			Handler:    _WorldService_ListExpeditions_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

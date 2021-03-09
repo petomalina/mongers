@@ -42,11 +42,26 @@ func (ai *AuthInterceptor) authorizeContext(ctx context.Context) error {
 	md := metautils.ExtractIncoming(ctx)
 
 	authorization := md.Get("authorization")
-	if authorization == "heslo" {
-		return nil
-	} else if authorization == "" {
+	if authorization == "" {
 		return status.Error(codes.Unauthenticated, "no authorization token provided")
-	} else {
+	} else if authorization != "heslo" {
 		return status.Error(codes.Unauthenticated, "authorization token is invalid")
 	}
+
+	method, ok := grpc.Method(ctx)
+	if !ok {
+		return status.Error(codes.NotFound, "could not find the method on the server")
+	}
+
+	// this whitelists the connect function, as it provides the permissions for other calls
+	if method != "/v1.WorldService/Connect" {
+		id := md.Get("user_id")
+		if id == "" {
+			return status.Error(codes.Unauthenticated, "no user_id provided within token")
+		} else if !ai.playerManager.IsAllowed(id) {
+			return status.Error(codes.Unauthenticated, "please Connect() first before you try to reach other endpoints")
+		}
+	}
+
+	return nil
 }

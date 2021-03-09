@@ -4,6 +4,7 @@ import (
 	"context"
 	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
 	"go.uber.org/zap"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"time"
 )
 
@@ -12,13 +13,18 @@ type WorldService struct {
 
 	playerManager *PlayerManager
 
+	resourcesMan   *ResourceService
+	expeditionsMan *ExpeditionService
+
 	log *zap.Logger
 }
 
 func NewService(log *zap.Logger, pm *PlayerManager) *WorldService {
 	return &WorldService{
-		log:           log,
-		playerManager: pm,
+		log:            log,
+		playerManager:  pm,
+		resourcesMan:   NewResourceService(),
+		expeditionsMan: NewExpeditionService(),
 	}
 }
 
@@ -26,7 +32,7 @@ func (ws *WorldService) Dispose() {
 
 }
 
-func (ws *WorldService) WorldInfo(context.Context, *v1.Empty) (*v1.World, error) {
+func (ws *WorldService) WorldInfo(context.Context, *emptypb.Empty) (*v1.World, error) {
 	ws.log.Info(
 		"received a request",
 		zap.String("method", "WorldInfo"),
@@ -39,41 +45,53 @@ func (ws *WorldService) Connect(context.Context, *v1.ConnectRequest) (*v1.Connec
 	return &v1.ConnectResponse{}, nil
 }
 
-func (ws *WorldService) GetResources(ctx context.Context, r *v1.ResourcesRequest) (*v1.ResourcesResponse, error) {
-	return &v1.ResourcesResponse{
+func (ws *WorldService) ListResources(ctx context.Context, r *v1.ListResourcesRequest) (*v1.ListResourcesResponse, error) {
+	return &v1.ListResourcesResponse{
 		Resources: []*v1.Resource{
 			{
-				Id:        "money",
-				Value:     100000,
-				Timestamp: time.Now().Unix(),
-				Rpm:       0,
+				ResourceId: "money",
+				Value:      100000,
+				Timestamp:  time.Now().Unix(),
+				Rpm:        0,
 			},
 			{
-				Id:        "iron",
-				Value:     3000,
-				Timestamp: time.Now().Unix(),
-				Rpm:       60000,
+				ResourceId: "iron",
+				Value:      3000,
+				Timestamp:  time.Now().Unix(),
+				Rpm:        60000,
 			},
 			{
-				Id:        "clay",
-				Value:     2000,
-				Timestamp: time.Now().Unix(),
-				Rpm:       25000,
+				ResourceId: "clay",
+				Value:      2000,
+				Timestamp:  time.Now().Unix(),
+				Rpm:        25000,
 			},
 			{
-				Id:        "oil",
-				Value:     0,
-				Timestamp: time.Now().Unix(),
-				Rpm:       10000,
+				ResourceId: "oil",
+				Value:      0,
+				Timestamp:  time.Now().Unix(),
+				Rpm:        10000,
 			},
 		},
 	}, nil
+}
+
+func (ws *WorldService) StartExpedition(context.Context, *v1.StartExpeditionRequest) (*v1.StartExpeditionResponse, error) {
+	return &v1.StartExpeditionResponse{}, nil
+}
+
+func (ws *WorldService) CollectExpedition(context.Context, *v1.CollectExpeditionRequest) (*v1.CollectExpeditionResponse, error) {
+	return &v1.CollectExpeditionResponse{}, nil
+}
+
+func (ws *WorldService) ListExpeditions(context.Context, *v1.ListExpeditionsRequest) (*v1.ListExpeditionsResponse, error) {
+	return &v1.ListExpeditionsResponse{}, nil
 }
 
 func (ws *WorldService) Play(s v1.WorldService_PlayServer) error {
 	return nil
 }
 
-func (ws *WorldService) Watch(_ *v1.Empty, s v1.WorldService_WatchServer) error {
+func (ws *WorldService) Watch(_ *emptypb.Empty, s v1.WorldService_WatchServer) error {
 	return nil
 }
