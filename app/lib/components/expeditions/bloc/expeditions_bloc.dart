@@ -27,12 +27,12 @@ class ExpeditionsBloc extends Bloc<ExpeditionsEvent, ExpeditionsState> {
           playerId: 'peto',
         ));
 
-        add(ExpeditionsUpdate(resp.expeditions));
+        add(ExpeditionsUpdate(resp));
       } catch (e) {
         print(e);
       }
     } else if (event is ExpeditionsUpdate) {
-      yield ExpeditionsState.full(event.expeditions);
+      yield ExpeditionsState.full(event.update);
     }
   }
 }

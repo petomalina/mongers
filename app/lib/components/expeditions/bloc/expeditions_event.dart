@@ -17,10 +17,10 @@ class RequestExpeditionsUpdate extends ExpeditionsEvent {
 }
 
 class ExpeditionsUpdate extends ExpeditionsEvent {
-  final List<Expedition> expeditions;
+  final ListExpeditionsResponse update;
 
-  ExpeditionsUpdate(this.expeditions);
+  ExpeditionsUpdate(this.update);
 
   @override
-  List<Object> get props => [expeditions];
+  List<Object> get props => [update];
 }

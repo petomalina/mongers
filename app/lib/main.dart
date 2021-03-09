@@ -71,8 +71,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
-    return BlocProvider.value(
-      value: resourcesBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => resourcesBloc,
+        ),
+        BlocProvider(
+          create: (_) =>  expeditionsBloc,
+        ),
+      ],
       child: MaterialApp(
         title: 'Mongers',
         theme: ThemeData(

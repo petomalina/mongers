@@ -1,5 +1,7 @@
+import 'package:app/components/expeditions/bloc/expeditions_bloc.dart';
 import 'package:app/components/expeditions/card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GameExpeditionsView extends StatelessWidget {
   @override
@@ -13,7 +15,9 @@ class GameExpeditionsView extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  Text('Available expedition groups: 1'),
+                  BlocBuilder<ExpeditionsBloc, ExpeditionsState>(builder: (context, state) {
+                    return Text('Available power: ' + state.power.toString());
+                  },),
                 ],
               ),
             ),
@@ -21,11 +25,21 @@ class GameExpeditionsView extends StatelessWidget {
           SizedBox(
             height: 16,
           ),
-          ExpeditionCard(ExpeditionType.quickSearch, '30 sec', ExpeditionStatus.available),
-          ExpeditionCard(ExpeditionType.nearbyExploration, '30 sec', ExpeditionStatus.done),
-          ExpeditionCard(ExpeditionType.newHorizons, '30 sec', ExpeditionStatus.inProgress),
+          _buildExpeditions(),
         ],
       ),
+    );
+  }
+
+  _buildExpeditions() {
+    return BlocBuilder<ExpeditionsBloc, ExpeditionsState>(
+      builder: (context, state) {
+        return Column(
+          children: state.expeditions.map((e) {
+            return ExpeditionCard(e);
+          }).toList(),
+        );
+      },
     );
   }
 }

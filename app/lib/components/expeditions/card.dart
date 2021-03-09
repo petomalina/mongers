@@ -1,14 +1,10 @@
+import 'package:app/apis/world/v1/world_service.pb.dart';
 import 'package:flutter/material.dart';
 
-enum ExpeditionStatus { available, inProgress, done }
-enum ExpeditionType { quickSearch, nearbyExploration, newHorizons}
-
 class ExpeditionCard extends StatelessWidget {
-  final ExpeditionType type;
-  final String time;
-  final ExpeditionStatus status;
+  final Expedition data;
 
-  ExpeditionCard(this.type, this.time, this.status);
+  ExpeditionCard(this.data);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +16,7 @@ class ExpeditionCard extends StatelessWidget {
             Column(
               children: [
                 Icon(Icons.search_outlined),
-                Text(time),
+                Text(Duration(seconds: data.duration.seconds.toInt()).toString()),
               ],
             ),
             SizedBox(
@@ -55,23 +51,25 @@ class ExpeditionCard extends StatelessWidget {
   }
 
   String _expeditionName() {
-    switch(type) {
-      case ExpeditionType.quickSearch:
+    switch (data.category) {
+      case ExpeditionCategory.EXPEDITION_CATEGORY_QUICK_SEARCH:
         return 'Quick Search';
-      case ExpeditionType.nearbyExploration:
+      case ExpeditionCategory.EXPEDITION_CATEGORY_NEARBY_EXPLORATION:
         return 'Nearby Exploration';
-      case ExpeditionType.newHorizons:
+      case ExpeditionCategory.EXPEDITION_CATEGORY_NEW_HORIZONS:
         return 'New Horizons';
     }
   }
 
   Widget _buildProgress() {
-    switch (status) {
-      case ExpeditionStatus.available:
+    switch (data.status) {
+      case ExpeditionStatus.EXPEDITION_STATUS_AVAILABLE:
         return TextButton(onPressed: () => {}, child: Text('Start'));
-      case ExpeditionStatus.inProgress:
+      case ExpeditionStatus.EXPEDITION_STATUS_IN_PROGRESS:
         return Padding(
-          padding: const EdgeInsets.only(right: 20,),
+          padding: const EdgeInsets.only(
+            right: 20,
+          ),
           child: Column(
             children: [
               SizedBox(
@@ -86,7 +84,7 @@ class ExpeditionCard extends StatelessWidget {
             ],
           ),
         );
-      case ExpeditionStatus.done:
+      case ExpeditionStatus.EXPEDITION_STATUS_DONE:
         return TextButton(child: Text('Collect'));
     }
   }
