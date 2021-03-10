@@ -25,12 +25,12 @@ class WorldServiceClient extends $grpc.Client {
           ($1.ConnectRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $1.ConnectResponse.fromBuffer(value));
-  static final _$listResources =
-      $grpc.ClientMethod<$1.ListResourcesRequest, $1.ListResourcesResponse>(
-          '/v1.WorldService/ListResources',
-          ($1.ListResourcesRequest value) => value.writeToBuffer(),
-          ($core.List<$core.int> value) =>
-              $1.ListResourcesResponse.fromBuffer(value));
+  static final _$listResourcesState = $grpc.ClientMethod<
+          $1.ListResourcesStateRequest, $1.ListResourcesStateResponse>(
+      '/v1.WorldService/ListResourcesState',
+      ($1.ListResourcesStateRequest value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) =>
+          $1.ListResourcesStateResponse.fromBuffer(value));
   static final _$startExpedition =
       $grpc.ClientMethod<$1.StartExpeditionRequest, $1.StartExpeditionResponse>(
           '/v1.WorldService/StartExpedition',
@@ -75,10 +75,10 @@ class WorldServiceClient extends $grpc.Client {
     return $createUnaryCall(_$connect, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.ListResourcesResponse> listResources(
-      $1.ListResourcesRequest request,
+  $grpc.ResponseFuture<$1.ListResourcesStateResponse> listResourcesState(
+      $1.ListResourcesStateRequest request,
       {$grpc.CallOptions? options}) {
-    return $createUnaryCall(_$listResources, request, options: options);
+    return $createUnaryCall(_$listResourcesState, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.StartExpeditionResponse> startExpedition(
@@ -130,15 +130,15 @@ abstract class WorldServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.ConnectRequest.fromBuffer(value),
         ($1.ConnectResponse value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$1.ListResourcesRequest, $1.ListResourcesResponse>(
-            'ListResources',
-            listResources_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $1.ListResourcesRequest.fromBuffer(value),
-            ($1.ListResourcesResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.ListResourcesStateRequest,
+            $1.ListResourcesStateResponse>(
+        'ListResourcesState',
+        listResourcesState_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $1.ListResourcesStateRequest.fromBuffer(value),
+        ($1.ListResourcesStateResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.StartExpeditionRequest,
             $1.StartExpeditionResponse>(
         'StartExpedition',
@@ -192,10 +192,10 @@ abstract class WorldServiceBase extends $grpc.Service {
     return connect(call, await request);
   }
 
-  $async.Future<$1.ListResourcesResponse> listResources_Pre(
+  $async.Future<$1.ListResourcesStateResponse> listResourcesState_Pre(
       $grpc.ServiceCall call,
-      $async.Future<$1.ListResourcesRequest> request) async {
-    return listResources(call, await request);
+      $async.Future<$1.ListResourcesStateRequest> request) async {
+    return listResourcesState(call, await request);
   }
 
   $async.Future<$1.StartExpeditionResponse> startExpedition_Pre(
@@ -224,8 +224,8 @@ abstract class WorldServiceBase extends $grpc.Service {
   $async.Future<$1.World> worldInfo($grpc.ServiceCall call, $0.Empty request);
   $async.Future<$1.ConnectResponse> connect(
       $grpc.ServiceCall call, $1.ConnectRequest request);
-  $async.Future<$1.ListResourcesResponse> listResources(
-      $grpc.ServiceCall call, $1.ListResourcesRequest request);
+  $async.Future<$1.ListResourcesStateResponse> listResourcesState(
+      $grpc.ServiceCall call, $1.ListResourcesStateRequest request);
   $async.Future<$1.StartExpeditionResponse> startExpedition(
       $grpc.ServiceCall call, $1.StartExpeditionRequest request);
   $async.Future<$1.CollectExpeditionResponse> collectExpedition(

@@ -9,6 +9,29 @@
 import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+class ResourceCategory extends $pb.ProtobufEnum {
+  static const ResourceCategory RESOURCE_CATEGORY_UNSPECIFIED = ResourceCategory._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESOURCE_CATEGORY_UNSPECIFIED');
+  static const ResourceCategory RESOURCE_CATEGORY_POWER = ResourceCategory._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESOURCE_CATEGORY_POWER');
+  static const ResourceCategory RESOURCE_CATEGORY_MONEY = ResourceCategory._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESOURCE_CATEGORY_MONEY');
+  static const ResourceCategory RESOURCE_CATEGORY_IRON = ResourceCategory._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESOURCE_CATEGORY_IRON');
+  static const ResourceCategory RESOURCE_CATEGORY_CLAY = ResourceCategory._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESOURCE_CATEGORY_CLAY');
+  static const ResourceCategory RESOURCE_CATEGORY_OIL = ResourceCategory._(5, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESOURCE_CATEGORY_OIL');
+
+  static const $core.List<ResourceCategory> values = <ResourceCategory> [
+    RESOURCE_CATEGORY_UNSPECIFIED,
+    RESOURCE_CATEGORY_POWER,
+    RESOURCE_CATEGORY_MONEY,
+    RESOURCE_CATEGORY_IRON,
+    RESOURCE_CATEGORY_CLAY,
+    RESOURCE_CATEGORY_OIL,
+  ];
+
+  static final $core.Map<$core.int, ResourceCategory> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static ResourceCategory? valueOf($core.int value) => _byValue[value];
+
+  const ResourceCategory._($core.int v, $core.String n) : super(v, n);
+}
+
 class ExpeditionCategory extends $pb.ProtobufEnum {
   static const ExpeditionCategory EXPEDITION_CATEGORY_UNSPECIFIED = ExpeditionCategory._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'EXPEDITION_CATEGORY_UNSPECIFIED');
   static const ExpeditionCategory EXPEDITION_CATEGORY_QUICK_SEARCH = ExpeditionCategory._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'EXPEDITION_CATEGORY_QUICK_SEARCH');

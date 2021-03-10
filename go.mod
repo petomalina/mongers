@@ -14,6 +14,7 @@ require (
 	github.com/magefile/mage v1.11.0
 	github.com/petomalina/xrpc v1.2.0 // indirect
 	github.com/spf13/viper v1.7.1 // indirect
+	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/zap v1.16.0 // indirect

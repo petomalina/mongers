@@ -8,6 +8,21 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+@$core.Deprecated('Use resourceCategoryDescriptor instead')
+const ResourceCategory$json = const {
+  '1': 'ResourceCategory',
+  '2': const [
+    const {'1': 'RESOURCE_CATEGORY_UNSPECIFIED', '2': 0},
+    const {'1': 'RESOURCE_CATEGORY_POWER', '2': 1},
+    const {'1': 'RESOURCE_CATEGORY_MONEY', '2': 2},
+    const {'1': 'RESOURCE_CATEGORY_IRON', '2': 3},
+    const {'1': 'RESOURCE_CATEGORY_CLAY', '2': 4},
+    const {'1': 'RESOURCE_CATEGORY_OIL', '2': 5},
+  ],
+};
+
+/// Descriptor for `ResourceCategory`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List resourceCategoryDescriptor = $convert.base64Decode('ChBSZXNvdXJjZUNhdGVnb3J5EiEKHVJFU09VUkNFX0NBVEVHT1JZX1VOU1BFQ0lGSUVEEAASGwoXUkVTT1VSQ0VfQ0FURUdPUllfUE9XRVIQARIbChdSRVNPVVJDRV9DQVRFR09SWV9NT05FWRACEhoKFlJFU09VUkNFX0NBVEVHT1JZX0lST04QAxIaChZSRVNPVVJDRV9DQVRFR09SWV9DTEFZEAQSGQoVUkVTT1VSQ0VfQ0FURUdPUllfT0lMEAU=');
 @$core.Deprecated('Use expeditionCategoryDescriptor instead')
 const ExpeditionCategory$json = const {
   '1': 'ExpeditionCategory',
@@ -72,7 +87,7 @@ final $typed_data.Uint8List connectResponseDescriptor = $convert.base64Decode('C
 const ClientPlayMessage$json = const {
   '1': 'ClientPlayMessage',
   '2': const [
-    const {'1': 'list_resources', '3': 1, '4': 1, '5': 11, '6': '.v1.ListResourcesRequest', '9': 0, '10': 'listResources'},
+    const {'1': 'list_resources', '3': 1, '4': 1, '5': 11, '6': '.v1.ListResourcesStateRequest', '9': 0, '10': 'listResources'},
     const {'1': 'list_expeditions', '3': 2, '4': 1, '5': 11, '6': '.v1.ListExpeditionsRequest', '9': 0, '10': 'listExpeditions'},
     const {'1': 'start_expedition', '3': 3, '4': 1, '5': 11, '6': '.v1.StartExpeditionRequest', '9': 0, '10': 'startExpedition'},
     const {'1': 'collect_expedition', '3': 4, '4': 1, '5': 11, '6': '.v1.CollectExpeditionRequest', '9': 0, '10': 'collectExpedition'},
@@ -83,12 +98,12 @@ const ClientPlayMessage$json = const {
 };
 
 /// Descriptor for `ClientPlayMessage`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List clientPlayMessageDescriptor = $convert.base64Decode('ChFDbGllbnRQbGF5TWVzc2FnZRJBCg5saXN0X3Jlc291cmNlcxgBIAEoCzIYLnYxLkxpc3RSZXNvdXJjZXNSZXF1ZXN0SABSDWxpc3RSZXNvdXJjZXMSRwoQbGlzdF9leHBlZGl0aW9ucxgCIAEoCzIaLnYxLkxpc3RFeHBlZGl0aW9uc1JlcXVlc3RIAFIPbGlzdEV4cGVkaXRpb25zEkcKEHN0YXJ0X2V4cGVkaXRpb24YAyABKAsyGi52MS5TdGFydEV4cGVkaXRpb25SZXF1ZXN0SABSD3N0YXJ0RXhwZWRpdGlvbhJNChJjb2xsZWN0X2V4cGVkaXRpb24YBCABKAsyHC52MS5Db2xsZWN0RXhwZWRpdGlvblJlcXVlc3RIAFIRY29sbGVjdEV4cGVkaXRpb25CBQoDcmVx');
+final $typed_data.Uint8List clientPlayMessageDescriptor = $convert.base64Decode('ChFDbGllbnRQbGF5TWVzc2FnZRJGCg5saXN0X3Jlc291cmNlcxgBIAEoCzIdLnYxLkxpc3RSZXNvdXJjZXNTdGF0ZVJlcXVlc3RIAFINbGlzdFJlc291cmNlcxJHChBsaXN0X2V4cGVkaXRpb25zGAIgASgLMhoudjEuTGlzdEV4cGVkaXRpb25zUmVxdWVzdEgAUg9saXN0RXhwZWRpdGlvbnMSRwoQc3RhcnRfZXhwZWRpdGlvbhgDIAEoCzIaLnYxLlN0YXJ0RXhwZWRpdGlvblJlcXVlc3RIAFIPc3RhcnRFeHBlZGl0aW9uEk0KEmNvbGxlY3RfZXhwZWRpdGlvbhgEIAEoCzIcLnYxLkNvbGxlY3RFeHBlZGl0aW9uUmVxdWVzdEgAUhFjb2xsZWN0RXhwZWRpdGlvbkIFCgNyZXE=');
 @$core.Deprecated('Use serverPlayMessageDescriptor instead')
 const ServerPlayMessage$json = const {
   '1': 'ServerPlayMessage',
   '2': const [
-    const {'1': 'list_resources', '3': 1, '4': 1, '5': 11, '6': '.v1.ListResourcesResponse', '9': 0, '10': 'listResources'},
+    const {'1': 'list_resources', '3': 1, '4': 1, '5': 11, '6': '.v1.ListResourcesStateResponse', '9': 0, '10': 'listResources'},
     const {'1': 'list_expeditions', '3': 2, '4': 1, '5': 11, '6': '.v1.ListExpeditionsResponse', '9': 0, '10': 'listExpeditions'},
     const {'1': 'start_expedition', '3': 3, '4': 1, '5': 11, '6': '.v1.StartExpeditionResponse', '9': 0, '10': 'startExpedition'},
     const {'1': 'collect_expedition', '3': 4, '4': 1, '5': 11, '6': '.v1.CollectExpeditionResponse', '9': 0, '10': 'collectExpedition'},
@@ -99,7 +114,7 @@ const ServerPlayMessage$json = const {
 };
 
 /// Descriptor for `ServerPlayMessage`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List serverPlayMessageDescriptor = $convert.base64Decode('ChFTZXJ2ZXJQbGF5TWVzc2FnZRJCCg5saXN0X3Jlc291cmNlcxgBIAEoCzIZLnYxLkxpc3RSZXNvdXJjZXNSZXNwb25zZUgAUg1saXN0UmVzb3VyY2VzEkgKEGxpc3RfZXhwZWRpdGlvbnMYAiABKAsyGy52MS5MaXN0RXhwZWRpdGlvbnNSZXNwb25zZUgAUg9saXN0RXhwZWRpdGlvbnMSSAoQc3RhcnRfZXhwZWRpdGlvbhgDIAEoCzIbLnYxLlN0YXJ0RXhwZWRpdGlvblJlc3BvbnNlSABSD3N0YXJ0RXhwZWRpdGlvbhJOChJjb2xsZWN0X2V4cGVkaXRpb24YBCABKAsyHS52MS5Db2xsZWN0RXhwZWRpdGlvblJlc3BvbnNlSABSEWNvbGxlY3RFeHBlZGl0aW9uQgUKA3Jlcw==');
+final $typed_data.Uint8List serverPlayMessageDescriptor = $convert.base64Decode('ChFTZXJ2ZXJQbGF5TWVzc2FnZRJHCg5saXN0X3Jlc291cmNlcxgBIAEoCzIeLnYxLkxpc3RSZXNvdXJjZXNTdGF0ZVJlc3BvbnNlSABSDWxpc3RSZXNvdXJjZXMSSAoQbGlzdF9leHBlZGl0aW9ucxgCIAEoCzIbLnYxLkxpc3RFeHBlZGl0aW9uc1Jlc3BvbnNlSABSD2xpc3RFeHBlZGl0aW9ucxJIChBzdGFydF9leHBlZGl0aW9uGAMgASgLMhsudjEuU3RhcnRFeHBlZGl0aW9uUmVzcG9uc2VIAFIPc3RhcnRFeHBlZGl0aW9uEk4KEmNvbGxlY3RfZXhwZWRpdGlvbhgEIAEoCzIdLnYxLkNvbGxlY3RFeHBlZGl0aW9uUmVzcG9uc2VIAFIRY29sbGVjdEV4cGVkaXRpb25CBQoDcmVz');
 @$core.Deprecated('Use worldDescriptor instead')
 const World$json = const {
   '1': 'World',
@@ -123,40 +138,50 @@ const Player$json = const {
 
 /// Descriptor for `Player`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List playerDescriptor = $convert.base64Decode('CgZQbGF5ZXISGwoJcGxheWVyX2lkGAEgASgJUghwbGF5ZXJJZBIfCgtwbGF5ZXJfbmFtZRgCIAEoCVIKcGxheWVyTmFtZQ==');
-@$core.Deprecated('Use resourceDescriptor instead')
-const Resource$json = const {
-  '1': 'Resource',
+@$core.Deprecated('Use resourceStateDescriptor instead')
+const ResourceState$json = const {
+  '1': 'ResourceState',
   '2': const [
-    const {'1': 'resource_id', '3': 1, '4': 1, '5': 9, '10': 'resourceId'},
-    const {'1': 'value', '3': 2, '4': 1, '5': 3, '10': 'value'},
-    const {'1': 'timestamp', '3': 3, '4': 1, '5': 3, '10': 'timestamp'},
+    const {'1': 'resource', '3': 1, '4': 1, '5': 11, '6': '.v1.Resource', '10': 'resource'},
+    const {'1': 'timestamp', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'timestamp'},
     const {'1': 'rpm', '3': 4, '4': 1, '5': 3, '10': 'rpm'},
   ],
 };
 
+/// Descriptor for `ResourceState`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List resourceStateDescriptor = $convert.base64Decode('Cg1SZXNvdXJjZVN0YXRlEigKCHJlc291cmNlGAEgASgLMgwudjEuUmVzb3VyY2VSCHJlc291cmNlEjgKCXRpbWVzdGFtcBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCXRpbWVzdGFtcBIQCgNycG0YBCABKANSA3JwbQ==');
+@$core.Deprecated('Use resourceDescriptor instead')
+const Resource$json = const {
+  '1': 'Resource',
+  '2': const [
+    const {'1': 'category', '3': 1, '4': 1, '5': 14, '6': '.v1.ResourceCategory', '10': 'category'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 3, '10': 'value'},
+  ],
+};
+
 /// Descriptor for `Resource`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List resourceDescriptor = $convert.base64Decode('CghSZXNvdXJjZRIfCgtyZXNvdXJjZV9pZBgBIAEoCVIKcmVzb3VyY2VJZBIUCgV2YWx1ZRgCIAEoA1IFdmFsdWUSHAoJdGltZXN0YW1wGAMgASgDUgl0aW1lc3RhbXASEAoDcnBtGAQgASgDUgNycG0=');
-@$core.Deprecated('Use listResourcesRequestDescriptor instead')
-const ListResourcesRequest$json = const {
-  '1': 'ListResourcesRequest',
+final $typed_data.Uint8List resourceDescriptor = $convert.base64Decode('CghSZXNvdXJjZRIwCghjYXRlZ29yeRgBIAEoDjIULnYxLlJlc291cmNlQ2F0ZWdvcnlSCGNhdGVnb3J5EhQKBXZhbHVlGAIgASgDUgV2YWx1ZQ==');
+@$core.Deprecated('Use listResourcesStateRequestDescriptor instead')
+const ListResourcesStateRequest$json = const {
+  '1': 'ListResourcesStateRequest',
   '2': const [
     const {'1': 'player_id', '3': 1, '4': 1, '5': 9, '10': 'playerId'},
     const {'1': 'ids', '3': 2, '4': 3, '5': 9, '10': 'ids'},
   ],
 };
 
-/// Descriptor for `ListResourcesRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listResourcesRequestDescriptor = $convert.base64Decode('ChRMaXN0UmVzb3VyY2VzUmVxdWVzdBIbCglwbGF5ZXJfaWQYASABKAlSCHBsYXllcklkEhAKA2lkcxgCIAMoCVIDaWRz');
-@$core.Deprecated('Use listResourcesResponseDescriptor instead')
-const ListResourcesResponse$json = const {
-  '1': 'ListResourcesResponse',
+/// Descriptor for `ListResourcesStateRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listResourcesStateRequestDescriptor = $convert.base64Decode('ChlMaXN0UmVzb3VyY2VzU3RhdGVSZXF1ZXN0EhsKCXBsYXllcl9pZBgBIAEoCVIIcGxheWVySWQSEAoDaWRzGAIgAygJUgNpZHM=');
+@$core.Deprecated('Use listResourcesStateResponseDescriptor instead')
+const ListResourcesStateResponse$json = const {
+  '1': 'ListResourcesStateResponse',
   '2': const [
-    const {'1': 'resources', '3': 1, '4': 3, '5': 11, '6': '.v1.Resource', '10': 'resources'},
+    const {'1': 'resources', '3': 1, '4': 3, '5': 11, '6': '.v1.ResourceState', '10': 'resources'},
   ],
 };
 
-/// Descriptor for `ListResourcesResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listResourcesResponseDescriptor = $convert.base64Decode('ChVMaXN0UmVzb3VyY2VzUmVzcG9uc2USKgoJcmVzb3VyY2VzGAEgAygLMgwudjEuUmVzb3VyY2VSCXJlc291cmNlcw==');
+/// Descriptor for `ListResourcesStateResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listResourcesStateResponseDescriptor = $convert.base64Decode('ChpMaXN0UmVzb3VyY2VzU3RhdGVSZXNwb25zZRIvCglyZXNvdXJjZXMYASADKAsyES52MS5SZXNvdXJjZVN0YXRlUglyZXNvdXJjZXM=');
 @$core.Deprecated('Use expeditionDescriptor instead')
 const Expedition$json = const {
   '1': 'Expedition',

@@ -14,7 +14,7 @@ service WorldService {
   // errors to other RPC calls.
   rpc Connect(ConnectRequest) returns (ConnectResponse) {}
 
-  rpc ListResources(ListResourcesRequest) returns (ListResourcesResponse) {}
+  rpc ListResourcesState(ListResourcesStateRequest) returns (ListResourcesStateResponse) {}
 
   rpc StartExpedition(StartExpeditionRequest) returns (StartExpeditionResponse) {}
 
@@ -50,7 +50,7 @@ message ConnectResponse {
 // ClientPlayMessage are messages sent by the clients to the server
 message ClientPlayMessage {
   oneof req {
-    ListResourcesRequest list_resources = 1;
+    ListResourcesStateRequest list_resources = 1;
     ListExpeditionsRequest list_expeditions = 2;
     StartExpeditionRequest start_expedition = 3;
     CollectExpeditionRequest collect_expedition = 4;
@@ -60,7 +60,7 @@ message ClientPlayMessage {
 // ServerPlayMessage are messages sent from the server to the clients
 message ServerPlayMessage {
   oneof res {
-    ListResourcesResponse list_resources = 1;
+    ListResourcesStateResponse list_resources = 1;
     ListExpeditionsResponse list_expeditions = 2;
     StartExpeditionResponse start_expedition = 3;
     CollectExpeditionResponse collect_expedition = 4;
@@ -77,34 +77,45 @@ message World {
 message Player {
   string player_id = 1;
   string player_name = 2;
-
-  //  repeated Resource resources = 10;
-  //  repeated Expedition active_expeditions = 11;
 }
 
-// Resource is a structure that encapsulates various types of resources and
+enum ResourceCategory {
+  RESOURCE_CATEGORY_UNSPECIFIED = 0;
+  RESOURCE_CATEGORY_POWER = 1;
+  RESOURCE_CATEGORY_MONEY = 2;
+  RESOURCE_CATEGORY_IRON = 3;
+  RESOURCE_CATEGORY_CLAY = 4;
+  RESOURCE_CATEGORY_OIL = 5;
+}
+
+// ResourceState is a structure that encapsulates various types of resources and
 // their value for a particular player, e.g. iron, clay, oil, bricks, money, etc.
-message Resource {
-  string resource_id = 1;
-  int64 value = 2;
+message ResourceState {
+  Resource resource = 1;
 
   // timestamp of the value. This is used to calculate how much resource was generated
   // in the meantime while the resource was not updated.
-  int64 timestamp = 3;
+  google.protobuf.Timestamp timestamp = 3;
   // current known resource per minute. Frontends use this to automatically update the resources
   // from the last known timestamp.
   int64 rpm = 4;
 }
 
-message ListResourcesRequest {
+// Resource is used to specify costs of in-game entities, static spend, etc.
+message Resource {
+  ResourceCategory category = 1;
+  int64 value = 2;
+}
+
+message ListResourcesStateRequest {
   // id of the player to fetch resources for
   string player_id = 1;
   // ids to fetch. If empty, all resources will be returned
   repeated string ids = 2;
 }
 
-message ListResourcesResponse {
-  repeated Resource resources = 1;
+message ListResourcesStateResponse {
+  repeated ResourceState resources = 1;
 }
 
 enum ExpeditionCategory {

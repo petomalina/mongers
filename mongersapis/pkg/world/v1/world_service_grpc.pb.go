@@ -23,7 +23,7 @@ type WorldServiceClient interface {
 	// if the server has enough capacity. Players will otherwise be disconnected via
 	// errors to other RPC calls.
 	Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (*ConnectResponse, error)
-	ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesResponse, error)
+	ListResourcesState(ctx context.Context, in *ListResourcesStateRequest, opts ...grpc.CallOption) (*ListResourcesStateResponse, error)
 	StartExpedition(ctx context.Context, in *StartExpeditionRequest, opts ...grpc.CallOption) (*StartExpeditionResponse, error)
 	CollectExpedition(ctx context.Context, in *CollectExpeditionRequest, opts ...grpc.CallOption) (*CollectExpeditionResponse, error)
 	// ListExpeditions returns all expeditions based on the filter: all, player_owned, available
@@ -68,9 +68,9 @@ func (c *worldServiceClient) Connect(ctx context.Context, in *ConnectRequest, op
 	return out, nil
 }
 
-func (c *worldServiceClient) ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesResponse, error) {
-	out := new(ListResourcesResponse)
-	err := c.cc.Invoke(ctx, "/v1.WorldService/ListResources", in, out, opts...)
+func (c *worldServiceClient) ListResourcesState(ctx context.Context, in *ListResourcesStateRequest, opts ...grpc.CallOption) (*ListResourcesStateResponse, error) {
+	out := new(ListResourcesStateResponse)
+	err := c.cc.Invoke(ctx, "/v1.WorldService/ListResourcesState", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -176,7 +176,7 @@ type WorldServiceServer interface {
 	// if the server has enough capacity. Players will otherwise be disconnected via
 	// errors to other RPC calls.
 	Connect(context.Context, *ConnectRequest) (*ConnectResponse, error)
-	ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error)
+	ListResourcesState(context.Context, *ListResourcesStateRequest) (*ListResourcesStateResponse, error)
 	StartExpedition(context.Context, *StartExpeditionRequest) (*StartExpeditionResponse, error)
 	CollectExpedition(context.Context, *CollectExpeditionRequest) (*CollectExpeditionResponse, error)
 	// ListExpeditions returns all expeditions based on the filter: all, player_owned, available
@@ -206,8 +206,8 @@ func (UnimplementedWorldServiceServer) WorldInfo(context.Context, *emptypb.Empty
 func (UnimplementedWorldServiceServer) Connect(context.Context, *ConnectRequest) (*ConnectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Connect not implemented")
 }
-func (UnimplementedWorldServiceServer) ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListResources not implemented")
+func (UnimplementedWorldServiceServer) ListResourcesState(context.Context, *ListResourcesStateRequest) (*ListResourcesStateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListResourcesState not implemented")
 }
 func (UnimplementedWorldServiceServer) StartExpedition(context.Context, *StartExpeditionRequest) (*StartExpeditionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method StartExpedition not implemented")
@@ -273,20 +273,20 @@ func _WorldService_Connect_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _WorldService_ListResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListResourcesRequest)
+func _WorldService_ListResourcesState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListResourcesStateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WorldServiceServer).ListResources(ctx, in)
+		return srv.(WorldServiceServer).ListResourcesState(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.WorldService/ListResources",
+		FullMethod: "/v1.WorldService/ListResourcesState",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WorldServiceServer).ListResources(ctx, req.(*ListResourcesRequest))
+		return srv.(WorldServiceServer).ListResourcesState(ctx, req.(*ListResourcesStateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -405,8 +405,8 @@ var _WorldService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _WorldService_Connect_Handler,
 		},
 		{
-			MethodName: "ListResources",
-			Handler:    _WorldService_ListResources_Handler,
+			MethodName: "ListResourcesState",
+			Handler:    _WorldService_ListResourcesState_Handler,
 		},
 		{
 			MethodName: "StartExpedition",

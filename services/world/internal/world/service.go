@@ -88,19 +88,19 @@ func (ws *WorldService) Connect(ctx context.Context, req *v1.ConnectRequest) (*v
 	}, nil
 }
 
-func (ws *WorldService) ListResources(ctx context.Context, req *v1.ListResourcesRequest) (*v1.ListResourcesResponse, error) {
+func (ws *WorldService) ListResourcesState(ctx context.Context, req *v1.ListResourcesStateRequest) (*v1.ListResourcesStateResponse, error) {
 	rr := ws.resourcesMan.ListResources(req.PlayerId)
 
-	return &v1.ListResourcesResponse{
+	return &v1.ListResourcesStateResponse{
 		Resources: rr,
 	}, nil
 }
 
-func (ws *WorldService) StartExpedition(context.Context, *v1.StartExpeditionRequest) (*v1.StartExpeditionResponse, error) {
+func (ws *WorldService) StartExpedition(ctx context.Context, req *v1.StartExpeditionRequest) (*v1.StartExpeditionResponse, error) {
 	return &v1.StartExpeditionResponse{}, nil
 }
 
-func (ws *WorldService) CollectExpedition(context.Context, *v1.CollectExpeditionRequest) (*v1.CollectExpeditionResponse, error) {
+func (ws *WorldService) CollectExpedition(ctx context.Context, req *v1.CollectExpeditionRequest) (*v1.CollectExpeditionResponse, error) {
 	return &v1.CollectExpeditionResponse{}, nil
 }
 

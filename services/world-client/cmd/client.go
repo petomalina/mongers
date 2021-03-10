@@ -6,6 +6,7 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func main() {
@@ -24,6 +25,6 @@ func main() {
 
 	world := v1.NewWorldServiceClient(conn)
 
-	w, err := world.WorldInfo(context.Background(), &v1.Empty{})
+	w, err := world.WorldInfo(context.Background(), &emptypb.Empty{})
 	fmt.Println(w, err)
 }
