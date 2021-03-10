@@ -2,11 +2,13 @@ package world
 
 import (
 	"context"
+	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
 	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"io"
 )
 
 type WorldService struct {
@@ -96,6 +98,29 @@ func (ws *WorldService) ListResourcesState(ctx context.Context, req *v1.ListReso
 	}, nil
 }
 
+// notifyResourceStateChange sends the notification about a resource state change to the
+// particular player
+func (ws *WorldService) notifyResourceStateChange(playerID string) {
+	stream := ws.playerManager.GetNotifier(playerID)
+	if stream == nil {
+		return
+	}
+
+	rr := ws.resourcesMan.ListResources(playerID)
+
+	err := stream.Send(&v1.ServerPlayMessage{
+		Res: &v1.ServerPlayMessage_ListResources{
+			ListResources: &v1.ListResourcesStateResponse{
+				Resources: rr,
+			},
+		},
+	})
+	if err != nil {
+		ws.log.Warn("watch stream broken for a player, cleaning up the stream", zap.String("playerID", playerID))
+		ws.playerManager.StopWatch(playerID)
+	}
+}
+
 func (ws *WorldService) StartExpedition(ctx context.Context, req *v1.StartExpeditionRequest) (*v1.StartExpeditionResponse, error) {
 	return &v1.StartExpeditionResponse{}, nil
 }
@@ -119,7 +144,38 @@ func (ws *WorldService) ListExpeditions(ctx context.Context, req *v1.ListExpedit
 }
 
 func (ws *WorldService) Play(s v1.WorldService_PlayServer) error {
-	return nil
+	playerID := metautils.ExtractIncoming(s.Context()).Get("user_id")
+
+	ws.playerManager.BeginWatch(playerID, s)
+	defer func() {
+		ws.playerManager.StopWatch(playerID)
+	}()
+
+	for {
+		req, err := s.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+
+		switch r := req.Req.(type) {
+		case *v1.ClientPlayMessage_ListResources:
+			res, err := ws.ListResourcesState(s.Context(), r.ListResources)
+			if err != nil {
+				return err
+			}
+			err = s.Send(&v1.ServerPlayMessage{
+				Res: &v1.ServerPlayMessage_ListResources{
+					ListResources: res,
+				},
+			})
+			if err != nil {
+				return err
+			}
+		}
+	}
 }
 
 func (ws *WorldService) Watch(_ *emptypb.Empty, s v1.WorldService_WatchServer) error {

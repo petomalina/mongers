@@ -49,6 +49,16 @@ func (pm *PlayerManager) BeginWatch(id string, stream v1.WorldService_PlayServer
 	pm.players[id] = stream
 }
 
+// StopWatch cleans up a stream provided by the server, e.g. when it's broken or disconnected
+func (pm *PlayerManager) StopWatch(id string) {
+	pm.players[id] = nil
+}
+
+// GetNotifier returns a notifier that a player may have added by BeginWatch
+func (pm *PlayerManager) GetNotifier(id string) v1.WorldService_PlayServer {
+	return pm.players[id]
+}
+
 // IsAllowed returns true if the player is registered within the server,
 // otherwise returns false. The connection to the unallowed player should
 // be immediately dropped by the rpc
