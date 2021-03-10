@@ -2,6 +2,7 @@ package world
 
 import (
 	"errors"
+	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
 	"sync"
 )
 
@@ -13,14 +14,14 @@ var (
 // all incoming players and handling the capacity of the server
 type PlayerManager struct {
 	playersMutex sync.Mutex
-	players      map[string]struct{}
+	players      map[string]v1.WorldService_PlayServer
 
 	capacity int
 }
 
 func NewPlayerManager(capacity int) *PlayerManager {
 	return &PlayerManager{
-		players:  map[string]struct{}{},
+		players:  map[string]v1.WorldService_PlayServer{},
 		capacity: capacity,
 	}
 }
@@ -34,11 +35,18 @@ func (pm *PlayerManager) TryConnect(id string) error {
 		return ErrServerCapacityReached
 	}
 
-	pm.players[id] = struct{}{}
+	// no need for the stream, clients can handle updates without the stream if they want to
+	pm.players[id] = nil
 
 	pm.playersMutex.Unlock()
 
 	return nil
+}
+
+// BeginWatch saves the grpc stream of the player so we can send the update messages
+// to this socket
+func (pm *PlayerManager) BeginWatch(id string, stream v1.WorldService_PlayServer) {
+	pm.players[id] = stream
 }
 
 // IsAllowed returns true if the player is registered within the server,
