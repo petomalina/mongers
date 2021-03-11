@@ -733,10 +733,8 @@ class Expedition extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Expedition', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditionId')
     ..e<ExpeditionCategory>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'category', $pb.PbFieldType.OE, defaultOrMaker: ExpeditionCategory.EXPEDITION_CATEGORY_UNSPECIFIED, valueOf: ExpeditionCategory.valueOf, enumValues: ExpeditionCategory.values)
-    ..e<ExpeditionStatus>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: ExpeditionStatus.EXPEDITION_STATUS_UNSPECIFIED, valueOf: ExpeditionStatus.valueOf, enumValues: ExpeditionStatus.values)
-    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
-    ..aOM<$2.Timestamp>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'startedAt', subBuilder: $2.Timestamp.create)
-    ..aOM<$3.Duration>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'duration', subBuilder: $3.Duration.create)
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
+    ..aOM<$3.Duration>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'baseDuration', subBuilder: $3.Duration.create)
     ..aInt64(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'powerCost')
     ..hasRequiredFields = false
   ;
@@ -745,10 +743,8 @@ class Expedition extends $pb.GeneratedMessage {
   factory Expedition({
     $core.String? expeditionId,
     ExpeditionCategory? category,
-    ExpeditionStatus? status,
     $core.String? name,
-    $2.Timestamp? startedAt,
-    $3.Duration? duration,
+    $3.Duration? baseDuration,
     $fixnum.Int64? powerCost,
   }) {
     final _result = create();
@@ -758,17 +754,11 @@ class Expedition extends $pb.GeneratedMessage {
     if (category != null) {
       _result.category = category;
     }
-    if (status != null) {
-      _result.status = status;
-    }
     if (name != null) {
       _result.name = name;
     }
-    if (startedAt != null) {
-      _result.startedAt = startedAt;
-    }
-    if (duration != null) {
-      _result.duration = duration;
+    if (baseDuration != null) {
+      _result.baseDuration = baseDuration;
     }
     if (powerCost != null) {
       _result.powerCost = powerCost;
@@ -815,53 +805,128 @@ class Expedition extends $pb.GeneratedMessage {
   void clearCategory() => clearField(2);
 
   @$pb.TagNumber(3)
-  ExpeditionStatus get status => $_getN(2);
+  $core.String get name => $_getSZ(2);
   @$pb.TagNumber(3)
-  set status(ExpeditionStatus v) { setField(3, v); }
+  set name($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasStatus() => $_has(2);
+  $core.bool hasName() => $_has(2);
   @$pb.TagNumber(3)
-  void clearStatus() => clearField(3);
+  void clearName() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get name => $_getSZ(3);
+  $3.Duration get baseDuration => $_getN(3);
   @$pb.TagNumber(4)
-  set name($core.String v) { $_setString(3, v); }
+  set baseDuration($3.Duration v) { setField(4, v); }
   @$pb.TagNumber(4)
-  $core.bool hasName() => $_has(3);
+  $core.bool hasBaseDuration() => $_has(3);
   @$pb.TagNumber(4)
-  void clearName() => clearField(4);
+  void clearBaseDuration() => clearField(4);
+  @$pb.TagNumber(4)
+  $3.Duration ensureBaseDuration() => $_ensure(3);
+
+  @$pb.TagNumber(12)
+  $fixnum.Int64 get powerCost => $_getI64(4);
+  @$pb.TagNumber(12)
+  set powerCost($fixnum.Int64 v) { $_setInt64(4, v); }
+  @$pb.TagNumber(12)
+  $core.bool hasPowerCost() => $_has(4);
+  @$pb.TagNumber(12)
+  void clearPowerCost() => clearField(12);
+}
+
+class ExpeditionState extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ExpeditionState', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+    ..aOM<Expedition>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expedition', subBuilder: Expedition.create)
+    ..e<ExpeditionStatus>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: ExpeditionStatus.EXPEDITION_STATUS_UNSPECIFIED, valueOf: ExpeditionStatus.valueOf, enumValues: ExpeditionStatus.values)
+    ..aOM<$2.Timestamp>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'startedAt', subBuilder: $2.Timestamp.create)
+    ..aOM<$3.Duration>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'duration', subBuilder: $3.Duration.create)
+    ..hasRequiredFields = false
+  ;
+
+  ExpeditionState._() : super();
+  factory ExpeditionState({
+    Expedition? expedition,
+    ExpeditionStatus? status,
+    $2.Timestamp? startedAt,
+    $3.Duration? duration,
+  }) {
+    final _result = create();
+    if (expedition != null) {
+      _result.expedition = expedition;
+    }
+    if (status != null) {
+      _result.status = status;
+    }
+    if (startedAt != null) {
+      _result.startedAt = startedAt;
+    }
+    if (duration != null) {
+      _result.duration = duration;
+    }
+    return _result;
+  }
+  factory ExpeditionState.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ExpeditionState.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ExpeditionState clone() => ExpeditionState()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ExpeditionState copyWith(void Function(ExpeditionState) updates) => super.copyWith((message) => updates(message as ExpeditionState)) as ExpeditionState; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ExpeditionState create() => ExpeditionState._();
+  ExpeditionState createEmptyInstance() => create();
+  static $pb.PbList<ExpeditionState> createRepeated() => $pb.PbList<ExpeditionState>();
+  @$core.pragma('dart2js:noInline')
+  static ExpeditionState getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ExpeditionState>(create);
+  static ExpeditionState? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Expedition get expedition => $_getN(0);
+  @$pb.TagNumber(1)
+  set expedition(Expedition v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasExpedition() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearExpedition() => clearField(1);
+  @$pb.TagNumber(1)
+  Expedition ensureExpedition() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  ExpeditionStatus get status => $_getN(1);
+  @$pb.TagNumber(2)
+  set status(ExpeditionStatus v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasStatus() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStatus() => clearField(2);
 
   @$pb.TagNumber(10)
-  $2.Timestamp get startedAt => $_getN(4);
+  $2.Timestamp get startedAt => $_getN(2);
   @$pb.TagNumber(10)
   set startedAt($2.Timestamp v) { setField(10, v); }
   @$pb.TagNumber(10)
-  $core.bool hasStartedAt() => $_has(4);
+  $core.bool hasStartedAt() => $_has(2);
   @$pb.TagNumber(10)
   void clearStartedAt() => clearField(10);
   @$pb.TagNumber(10)
-  $2.Timestamp ensureStartedAt() => $_ensure(4);
+  $2.Timestamp ensureStartedAt() => $_ensure(2);
 
   @$pb.TagNumber(11)
-  $3.Duration get duration => $_getN(5);
+  $3.Duration get duration => $_getN(3);
   @$pb.TagNumber(11)
   set duration($3.Duration v) { setField(11, v); }
   @$pb.TagNumber(11)
-  $core.bool hasDuration() => $_has(5);
+  $core.bool hasDuration() => $_has(3);
   @$pb.TagNumber(11)
   void clearDuration() => clearField(11);
   @$pb.TagNumber(11)
-  $3.Duration ensureDuration() => $_ensure(5);
-
-  @$pb.TagNumber(12)
-  $fixnum.Int64 get powerCost => $_getI64(6);
-  @$pb.TagNumber(12)
-  set powerCost($fixnum.Int64 v) { $_setInt64(6, v); }
-  @$pb.TagNumber(12)
-  $core.bool hasPowerCost() => $_has(6);
-  @$pb.TagNumber(12)
-  void clearPowerCost() => clearField(12);
+  $3.Duration ensureDuration() => $_ensure(3);
 }
 
 class ListExpeditionsRequest extends $pb.GeneratedMessage {
@@ -935,17 +1000,22 @@ class ListExpeditionsRequest extends $pb.GeneratedMessage {
 
 class ListExpeditionsResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListExpeditionsResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
-    ..pc<Expedition>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditions', $pb.PbFieldType.PM, subBuilder: Expedition.create)
+    ..pc<Expedition>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'availableExpeditions', $pb.PbFieldType.PM, subBuilder: Expedition.create)
+    ..pc<ExpeditionState>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditionStates', $pb.PbFieldType.PM, subBuilder: ExpeditionState.create)
     ..hasRequiredFields = false
   ;
 
   ListExpeditionsResponse._() : super();
   factory ListExpeditionsResponse({
-    $core.Iterable<Expedition>? expeditions,
+    $core.Iterable<Expedition>? availableExpeditions,
+    $core.Iterable<ExpeditionState>? expeditionStates,
   }) {
     final _result = create();
-    if (expeditions != null) {
-      _result.expeditions.addAll(expeditions);
+    if (availableExpeditions != null) {
+      _result.availableExpeditions.addAll(availableExpeditions);
+    }
+    if (expeditionStates != null) {
+      _result.expeditionStates.addAll(expeditionStates);
     }
     return _result;
   }
@@ -971,7 +1041,10 @@ class ListExpeditionsResponse extends $pb.GeneratedMessage {
   static ListExpeditionsResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<Expedition> get expeditions => $_getList(0);
+  $core.List<Expedition> get availableExpeditions => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $core.List<ExpeditionState> get expeditionStates => $_getList(1);
 }
 
 class StartExpeditionRequest extends $pb.GeneratedMessage {

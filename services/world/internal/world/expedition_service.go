@@ -3,12 +3,15 @@ package world
 import (
 	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
 	"google.golang.org/protobuf/types/known/durationpb"
+	"sync"
 	"time"
 )
 
 type ExpeditionService struct {
 	// data is a map of [player_id][]Expedition
-	data map[string][]*v1.Expedition
+	data map[string][]*v1.ExpeditionState
+
+	dataMutex sync.RWMutex
 
 	// availableExpeditions is the list of currently available
 	// expeditions to all players in the world
@@ -17,33 +20,27 @@ type ExpeditionService struct {
 
 func NewExpeditionService() *ExpeditionService {
 	return &ExpeditionService{
-		data: map[string][]*v1.Expedition{},
+		data: map[string][]*v1.ExpeditionState{},
 		availableExpeditions: []*v1.Expedition{
 			{
 				ExpeditionId: "12345",
 				Category:     v1.ExpeditionCategory_EXPEDITION_CATEGORY_QUICK_SEARCH,
-				Status:       v1.ExpeditionStatus_EXPEDITION_STATUS_AVAILABLE,
 				Name:         "I saw something!",
-				StartedAt:    nil,
-				Duration:     durationpb.New(time.Second * 30),
+				BaseDuration: durationpb.New(time.Second * 30),
 				PowerCost:    1,
 			},
 			{
 				ExpeditionId: "12346",
 				Category:     v1.ExpeditionCategory_EXPEDITION_CATEGORY_NEARBY_EXPLORATION,
-				Status:       v1.ExpeditionStatus_EXPEDITION_STATUS_AVAILABLE,
 				Name:         "Is it a mine?",
-				StartedAt:    nil,
-				Duration:     durationpb.New(time.Minute * 6),
+				BaseDuration: durationpb.New(time.Minute * 6),
 				PowerCost:    6,
 			},
 			{
 				ExpeditionId: "12347",
 				Category:     v1.ExpeditionCategory_EXPEDITION_CATEGORY_NEW_HORIZONS,
-				Status:       v1.ExpeditionStatus_EXPEDITION_STATUS_AVAILABLE,
 				Name:         "Look! An island!",
-				StartedAt:    nil,
-				Duration:     durationpb.New(time.Minute * 60),
+				BaseDuration: durationpb.New(time.Minute * 60),
 				PowerCost:    60,
 			},
 		},
@@ -54,7 +51,7 @@ func (es *ExpeditionService) RegisterPlayer(player string) error {
 	// TODO: the players should be in a storage and we should look there first
 
 	// register a new player to the game
-	es.data[player] = []*v1.Expedition{}
+	es.data[player] = []*v1.ExpeditionState{}
 
 	return nil
 }
@@ -63,11 +60,55 @@ func (es *ExpeditionService) DisposePlayer(player string) error {
 	return nil
 }
 
-func (es *ExpeditionService) ListExpeditions(playerID string, filter v1.ListExpeditionFilter) ([]*v1.Expedition, error) {
+func (es *ExpeditionService) ListExpeditions(playerID string, filter v1.ListExpeditionFilter) ([]*v1.Expedition, []*v1.ExpeditionState, error) {
+	es.dataMutex.RLock()
+	defer func() {
+		es.dataMutex.RUnlock()
+	}()
+
 	var expeditions []*v1.Expedition
+	var expeditionStates []*v1.ExpeditionState
 
-	expeditions = append(expeditions, es.data[playerID]...)
-	expeditions = append(expeditions, es.availableExpeditions...)
+	if filter == v1.ListExpeditionFilter_LIST_EXPEDITION_FILTER_ALL ||
+		filter == v1.ListExpeditionFilter_LIST_EXPEDITION_FILTER_PLAYER_ONLY {
+		expeditionStates = append(expeditionStates, es.data[playerID]...)
+	}
 
-	return expeditions, nil
+	if filter == v1.ListExpeditionFilter_LIST_EXPEDITION_FILTER_ALL ||
+		filter == v1.ListExpeditionFilter_LIST_EXPEDITION_FILTER_AVAILABLE_ONLY {
+		expeditions = append(expeditions, es.availableExpeditions...)
+	}
+
+	return expeditions, expeditionStates, nil
+}
+
+// SelectAvailableExpedition returns either a specific expedition if available,
+// or nil if unavailable.
+func (es *ExpeditionService) SelectAvailableExpedition(expeditionID string) *v1.Expedition {
+	es.dataMutex.RLock()
+	defer func() {
+		es.dataMutex.RUnlock()
+	}()
+
+	for _, ex := range es.availableExpeditions {
+		if ex.ExpeditionId == expeditionID {
+			return ex
+		}
+	}
+
+	return nil
+}
+
+// StartExpedition starts the given expedition for the player. The expedition does not need to be
+// in the availableExpeditions for this method to work. This is in case an expedition expired
+// while the request was fulfilling. It also enables custom expeditions to be registered for a player.
+func (es *ExpeditionService) StartExpedition(playerID string, expedition *v1.ExpeditionState) *v1.ExpeditionState {
+	es.dataMutex.Lock()
+	defer func() {
+		es.dataMutex.Unlock()
+	}()
+
+	es.data[playerID] = append(es.data[playerID], expedition)
+
+	return expedition
 }

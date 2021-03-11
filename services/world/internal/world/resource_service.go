@@ -96,6 +96,16 @@ func (rs *ResourceService) ListResources(playerID string) []*v1.ResourceState {
 	return rs.data[playerID]
 }
 
+// ListResource returns the selected resource or nil if the resource does not exist (thus 0)
+func (rs *ResourceService) ListResource(playerID string, cat v1.ResourceCategory) *v1.ResourceState {
+	rs.dataMutex.RLock()
+	defer func() {
+		rs.dataMutex.RUnlock()
+	}()
+
+	return selectResource(rs.data[playerID], cat)
+}
+
 // SpendResources validates that the player has enough resources and if so, spends them.
 func (rs *ResourceService) SpendResources(playerID string, spenders []*v1.Resource) error {
 	rs.dataMutex.Lock()

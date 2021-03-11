@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"io"
 )
 
@@ -121,7 +122,34 @@ func (ws *WorldService) notifyResourceStateChange(playerID string) {
 	}
 }
 
+// StartExpedition starts a new expedition for a player if they have enough resources
+// and the expedition is currently available.
 func (ws *WorldService) StartExpedition(ctx context.Context, req *v1.StartExpeditionRequest) (*v1.StartExpeditionResponse, error) {
+	ex := ws.expeditionsMan.SelectAvailableExpedition(req.ExpeditionId)
+	if ex == nil {
+		return &v1.StartExpeditionResponse{}, status.Error(codes.NotFound, "expedition could not be found")
+	}
+
+	err := ws.resourcesMan.SpendResources(req.PlayerId, []*v1.Resource{
+		{
+			Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
+			Value:    ex.PowerCost,
+		},
+	})
+	if err != nil {
+		return &v1.StartExpeditionResponse{}, status.Error(codes.FailedPrecondition, err.Error())
+	}
+
+	state := &v1.ExpeditionState{
+		Expedition: ex,
+		Status:     v1.ExpeditionStatus_EXPEDITION_STATUS_IN_PROGRESS,
+		StartedAt:  timestamppb.Now(),
+		Duration:   ex.BaseDuration,
+	}
+
+	ws.expeditionsMan.StartExpedition(req.PlayerId, state)
+	ws.notifyResourceStateChange(req.PlayerId)
+
 	return &v1.StartExpeditionResponse{}, nil
 }
 
@@ -130,13 +158,14 @@ func (ws *WorldService) CollectExpedition(ctx context.Context, req *v1.CollectEx
 }
 
 func (ws *WorldService) ListExpeditions(ctx context.Context, req *v1.ListExpeditionsRequest) (*v1.ListExpeditionsResponse, error) {
-	ee, err := ws.expeditionsMan.ListExpeditions(req.PlayerId, req.ExpeditionFilter)
+	expeditions, states, err := ws.expeditionsMan.ListExpeditions(req.PlayerId, req.ExpeditionFilter)
 	if err != nil {
 		return &v1.ListExpeditionsResponse{}, err
 	}
 
 	return &v1.ListExpeditionsResponse{
-		Expeditions: ee,
+		AvailableExpeditions: expeditions,
+		ExpeditionStates:     states,
 	}, nil
 }
 

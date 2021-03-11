@@ -138,10 +138,18 @@ enum ExpeditionStatus {
 
 message Expedition {
   string expedition_id = 1;
-
   ExpeditionCategory category = 2;
-  ExpeditionStatus status = 3;
-  string name = 4;
+  string name = 3;
+  // base duration of the expedition that can be modified within the state
+  google.protobuf.Duration base_duration = 4;
+
+  // The cost the player needs to pay in power to start this expedition
+  int64 power_cost = 12;
+}
+
+message ExpeditionState {
+  Expedition expedition = 1;
+  ExpeditionStatus status = 2;
 
   // The time expedition started if it's currently EXPEDITION_STATUS_IN_PROGRESS
   google.protobuf.Timestamp started_at = 10;
@@ -150,9 +158,6 @@ message Expedition {
   // statuses. This is a total duration, not the remaining. The remaining duration is
   // calculated by subtracting this duration from the started_at field
   google.protobuf.Duration duration = 11;
-
-  // The cost the player needs to pay in power to start this expedition
-  int64 power_cost = 12;
 }
 
 enum ListExpeditionFilter {
@@ -170,7 +175,8 @@ message ListExpeditionsRequest {
 }
 
 message ListExpeditionsResponse {
-  repeated Expedition expeditions = 1;
+  repeated Expedition available_expeditions = 1;
+  repeated ExpeditionState expedition_states = 2;
 }
 
 message StartExpeditionRequest {

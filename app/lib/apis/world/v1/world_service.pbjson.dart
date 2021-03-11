@@ -188,16 +188,27 @@ const Expedition$json = const {
   '2': const [
     const {'1': 'expedition_id', '3': 1, '4': 1, '5': 9, '10': 'expeditionId'},
     const {'1': 'category', '3': 2, '4': 1, '5': 14, '6': '.v1.ExpeditionCategory', '10': 'category'},
-    const {'1': 'status', '3': 3, '4': 1, '5': 14, '6': '.v1.ExpeditionStatus', '10': 'status'},
-    const {'1': 'name', '3': 4, '4': 1, '5': 9, '10': 'name'},
-    const {'1': 'started_at', '3': 10, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'startedAt'},
-    const {'1': 'duration', '3': 11, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'duration'},
+    const {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'base_duration', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'baseDuration'},
     const {'1': 'power_cost', '3': 12, '4': 1, '5': 3, '10': 'powerCost'},
   ],
 };
 
 /// Descriptor for `Expedition`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List expeditionDescriptor = $convert.base64Decode('CgpFeHBlZGl0aW9uEiMKDWV4cGVkaXRpb25faWQYASABKAlSDGV4cGVkaXRpb25JZBIyCghjYXRlZ29yeRgCIAEoDjIWLnYxLkV4cGVkaXRpb25DYXRlZ29yeVIIY2F0ZWdvcnkSLAoGc3RhdHVzGAMgASgOMhQudjEuRXhwZWRpdGlvblN0YXR1c1IGc3RhdHVzEhIKBG5hbWUYBCABKAlSBG5hbWUSOQoKc3RhcnRlZF9hdBgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCXN0YXJ0ZWRBdBI1CghkdXJhdGlvbhgLIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvblIIZHVyYXRpb24SHQoKcG93ZXJfY29zdBgMIAEoA1IJcG93ZXJDb3N0');
+final $typed_data.Uint8List expeditionDescriptor = $convert.base64Decode('CgpFeHBlZGl0aW9uEiMKDWV4cGVkaXRpb25faWQYASABKAlSDGV4cGVkaXRpb25JZBIyCghjYXRlZ29yeRgCIAEoDjIWLnYxLkV4cGVkaXRpb25DYXRlZ29yeVIIY2F0ZWdvcnkSEgoEbmFtZRgDIAEoCVIEbmFtZRI+Cg1iYXNlX2R1cmF0aW9uGAQgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uUgxiYXNlRHVyYXRpb24SHQoKcG93ZXJfY29zdBgMIAEoA1IJcG93ZXJDb3N0');
+@$core.Deprecated('Use expeditionStateDescriptor instead')
+const ExpeditionState$json = const {
+  '1': 'ExpeditionState',
+  '2': const [
+    const {'1': 'expedition', '3': 1, '4': 1, '5': 11, '6': '.v1.Expedition', '10': 'expedition'},
+    const {'1': 'status', '3': 2, '4': 1, '5': 14, '6': '.v1.ExpeditionStatus', '10': 'status'},
+    const {'1': 'started_at', '3': 10, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'startedAt'},
+    const {'1': 'duration', '3': 11, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'duration'},
+  ],
+};
+
+/// Descriptor for `ExpeditionState`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List expeditionStateDescriptor = $convert.base64Decode('Cg9FeHBlZGl0aW9uU3RhdGUSLgoKZXhwZWRpdGlvbhgBIAEoCzIOLnYxLkV4cGVkaXRpb25SCmV4cGVkaXRpb24SLAoGc3RhdHVzGAIgASgOMhQudjEuRXhwZWRpdGlvblN0YXR1c1IGc3RhdHVzEjkKCnN0YXJ0ZWRfYXQYCiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUglzdGFydGVkQXQSNQoIZHVyYXRpb24YCyABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb25SCGR1cmF0aW9u');
 @$core.Deprecated('Use listExpeditionsRequestDescriptor instead')
 const ListExpeditionsRequest$json = const {
   '1': 'ListExpeditionsRequest',
@@ -214,12 +225,13 @@ final $typed_data.Uint8List listExpeditionsRequestDescriptor = $convert.base64De
 const ListExpeditionsResponse$json = const {
   '1': 'ListExpeditionsResponse',
   '2': const [
-    const {'1': 'expeditions', '3': 1, '4': 3, '5': 11, '6': '.v1.Expedition', '10': 'expeditions'},
+    const {'1': 'available_expeditions', '3': 1, '4': 3, '5': 11, '6': '.v1.Expedition', '10': 'availableExpeditions'},
+    const {'1': 'expedition_states', '3': 2, '4': 3, '5': 11, '6': '.v1.ExpeditionState', '10': 'expeditionStates'},
   ],
 };
 
 /// Descriptor for `ListExpeditionsResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listExpeditionsResponseDescriptor = $convert.base64Decode('ChdMaXN0RXhwZWRpdGlvbnNSZXNwb25zZRIwCgtleHBlZGl0aW9ucxgBIAMoCzIOLnYxLkV4cGVkaXRpb25SC2V4cGVkaXRpb25z');
+final $typed_data.Uint8List listExpeditionsResponseDescriptor = $convert.base64Decode('ChdMaXN0RXhwZWRpdGlvbnNSZXNwb25zZRJDChVhdmFpbGFibGVfZXhwZWRpdGlvbnMYASADKAsyDi52MS5FeHBlZGl0aW9uUhRhdmFpbGFibGVFeHBlZGl0aW9ucxJAChFleHBlZGl0aW9uX3N0YXRlcxgCIAMoCzITLnYxLkV4cGVkaXRpb25TdGF0ZVIQZXhwZWRpdGlvblN0YXRlcw==');
 @$core.Deprecated('Use startExpeditionRequestDescriptor instead')
 const StartExpeditionRequest$json = const {
   '1': 'StartExpeditionRequest',
