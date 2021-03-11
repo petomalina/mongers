@@ -86,6 +86,7 @@ func (rs *ResourceService) DisposePlayer(player string) error {
 	return nil
 }
 
+// ListResources returns all registered resources for a given player
 func (rs *ResourceService) ListResources(playerID string) []*v1.ResourceState {
 	rs.dataMutex.RLock()
 	defer func() {
@@ -95,6 +96,7 @@ func (rs *ResourceService) ListResources(playerID string) []*v1.ResourceState {
 	return rs.data[playerID]
 }
 
+// SpendResources validates that the player has enough resources and if so, spends them.
 func (rs *ResourceService) SpendResources(playerID string, spenders []*v1.Resource) error {
 	rs.dataMutex.Lock()
 	defer func() {
@@ -104,6 +106,41 @@ func (rs *ResourceService) SpendResources(playerID string, spenders []*v1.Resour
 	playerResources := rs.data[playerID]
 
 	return spendResources(playerResources, spenders)
+}
+
+// AddResources does not validate any resources and simply add them. In case the resource
+// would be above its cap, it caps the resource.
+func (rs *ResourceService) AddResources(playerID string, adders []*v1.Resource) {
+	rs.dataMutex.Lock()
+	defer func() {
+		rs.dataMutex.Unlock()
+	}()
+
+	rs.data[playerID] = addResources(rs.data[playerID], adders)
+}
+
+// UpdateResourceRPM updates the RPM of a given category of a resource for the given player.
+// In case the category does not exist, this function creates it first.
+func (rs *ResourceService) UpdateResourceRPM(playerID string, cat v1.ResourceCategory, rpm int64) {
+	rs.dataMutex.Lock()
+	defer func() {
+		rs.dataMutex.Unlock()
+	}()
+
+	// select and create the resource if it does not exist
+	res := selectResource(rs.data[playerID], cat)
+	if res == nil {
+		res = &v1.ResourceState{
+			Resource: &v1.Resource{
+				Category: cat,
+			},
+		}
+
+		// add the newly created resource to the registered resources
+		rs.data[playerID] = append(rs.data[playerID], res)
+	}
+
+	updateResourceRPM(res, rpm)
 }
 
 // SpendResources tries to spend resources from a given resource pool. It can result in the following errors:
@@ -130,51 +167,78 @@ func spendResources(pool []*v1.ResourceState, spenders []*v1.Resource) error {
 
 	// spend the resource
 	for _, spender := range spenders {
-		addResource(resourcesMap[spender.Category], -spender.Value)
+		addToResource(resourcesMap[spender.Category], -spender.Value)
 	}
 
 	return nil
 }
 
-// selectResources returns only selection of resources from all resources that the player has
+// addResources adds resources to the given pool, returning an updated pool of resources.
+// If the resource does not exist but the adder has it, the resource will be registered
+// with 0 RPM and current timestamp.
+func addResources(pool []*v1.ResourceState, adders []*v1.Resource) []*v1.ResourceState {
+	for _, adder := range adders {
+		// find the resource and add resources
+		found := false
+		for _, res := range pool {
+			if res.Resource.Category == adder.Category {
+				addToResource(res, adder.Value)
+				found = true
+				break
+			}
+		}
+
+		// if the resource cannot be found, this will create it instead (auto-registration)
+		if !found {
+			pool = append(pool, &v1.ResourceState{
+				Resource: &v1.Resource{
+					Category: adder.Category,
+					Value:    adder.Value,
+				},
+				Timestamp: timestamppb.Now(),
+				Rpm:       0,
+			})
+		}
+	}
+
+	return pool
+}
+
+// selectResources returns only selection of resources from all resources that the player has.
+// If a resource category does not exist in the input, it also won't be included on the output
 func selectResources(rr []*v1.ResourceState, cats []v1.ResourceCategory) []*v1.ResourceState {
 	var resources []*v1.ResourceState
 
 	for _, cat := range cats {
-		found := false
-
 		for _, r := range rr {
 			if r.Resource.Category == cat {
-				found = true
 				resources = append(resources, r)
 			}
 		}
-
-		// skip adding the default value if we've found the state
-		if found {
-			break
-		}
-
-		resources = append(resources, &v1.ResourceState{
-			Resource: &v1.Resource{
-				Category: cat,
-				Value:    0,
-			},
-			Timestamp: timestamppb.Now(),
-			Rpm:       0,
-		})
 	}
 
 	return resources
 }
 
-// selectResource expects that selectResources always returns the element, even if not registered.
-// The selectResources function fills the unregistered resource with a zero-value resource
+// selectResource returns the selected resource from the resource pool. In case the resource
+// does not exist, the function returns nil.
 func selectResource(rr []*v1.ResourceState, cat v1.ResourceCategory) *v1.ResourceState {
-	return selectResources(rr, []v1.ResourceCategory{cat})[0]
+	selection := selectResources(rr, []v1.ResourceCategory{cat})
+	if len(selection) == 0 {
+		return nil
+	}
+
+	return selection[0]
 }
 
+// calculateCurrentResource returns a value of a resource in time, adding together the current
+// value with the value calculated from the last change (based on the RPM)
 func calculateCurrentResource(state *v1.ResourceState) int64 {
+	// this is to avoid crashing in case we're given a nil resource (e.g. during validation)
+	if state == nil {
+		return 0
+	}
+
 	// we'll calculate the diff for RPS (resources per second) and then divide by 60 to make
 	// an RPM. This makes the calculation not loose precision
 	resourceDiff := time.Now().Sub(state.Timestamp.AsTime()).Seconds() * float64(state.Rpm) / 60
@@ -182,15 +246,26 @@ func calculateCurrentResource(state *v1.ResourceState) int64 {
 	return state.Resource.Value + int64(math.Floor(resourceDiff))
 }
 
-// addResource add a certain amount of the resource. Call calculateCurrentResource
+// addToResource add a certain amount of the resource. Call calculateCurrentResource
 // to make sure the resource is not depleted. This function will otherwise put the resource
 // into a dept.
 // Returns the same mutated object
-func addResource(state *v1.ResourceState, value int64) *v1.ResourceState {
+func addToResource(state *v1.ResourceState, value int64, tsource ...TimeSource) *v1.ResourceState {
 	current := calculateCurrentResource(state)
 
 	state.Resource.Value = current + value
-	state.Timestamp = timestamppb.Now()
+	state.Timestamp = timestamppb.New(TimeNow(tsource...))
+
+	return state
+}
+
+// updateResourceRPM sets a new RPM for the resource, while also recalculating its current state
+func updateResourceRPM(state *v1.ResourceState, rpm int64, tsource ...TimeSource) *v1.ResourceState {
+	current := calculateCurrentResource(state)
+
+	state.Resource.Value = current
+	state.Timestamp = timestamppb.New(TimeNow(tsource...))
+	state.Rpm = rpm
 
 	return state
 }

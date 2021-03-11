@@ -24,3 +24,12 @@ type StaticTimeSource struct {
 func (t StaticTimeSource) Now() time.Time {
 	return t.T
 }
+
+// TimeNow either returns the time source time or time.Now
+func TimeNow(tsource ...TimeSource) time.Time {
+	if len(tsource) > 0 {
+		return tsource[0].Now()
+	}
+
+	return time.Now()
+}

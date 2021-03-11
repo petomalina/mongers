@@ -56,13 +56,17 @@ type TestAddResourceCandidate struct {
 }
 
 func (s *ResourceServiceSuite) TestAddResource() {
+	testTime := StaticTimeSource{
+		T: time.Now(),
+	}
+
 	candidates := map[TestAddResourceCandidate]*v1.ResourceState{
 		TestAddResourceCandidate{
 			state: &v1.ResourceState{
 				Resource: &v1.Resource{
 					Value: 0,
 				},
-				Timestamp: timestamppb.Now(),
+				Timestamp: timestamppb.New(testTime.Now()),
 				Rpm:       0,
 			},
 			value: 0,
@@ -70,7 +74,7 @@ func (s *ResourceServiceSuite) TestAddResource() {
 			Resource: &v1.Resource{
 				Value: 0,
 			},
-			Timestamp: timestamppb.Now(),
+			Timestamp: timestamppb.New(testTime.Now()),
 			Rpm:       0,
 		},
 		TestAddResourceCandidate{
@@ -78,7 +82,7 @@ func (s *ResourceServiceSuite) TestAddResource() {
 				Resource: &v1.Resource{
 					Value: 20000,
 				},
-				Timestamp: timestamppb.Now(),
+				Timestamp: timestamppb.New(testTime.Now()),
 				Rpm:       0,
 			},
 			value: 20000,
@@ -86,7 +90,7 @@ func (s *ResourceServiceSuite) TestAddResource() {
 			Resource: &v1.Resource{
 				Value: 40000,
 			},
-			Timestamp: timestamppb.Now(),
+			Timestamp: timestamppb.New(testTime.Now()),
 			Rpm:       0,
 		},
 		TestAddResourceCandidate{
@@ -94,7 +98,7 @@ func (s *ResourceServiceSuite) TestAddResource() {
 				Resource: &v1.Resource{
 					Value: 20000,
 				},
-				Timestamp: timestamppb.New(time.Now().Add(-time.Minute * 30)),
+				Timestamp: timestamppb.New(testTime.Now().Add(-time.Minute * 30)),
 				Rpm:       1000,
 			},
 			value: 20000,
@@ -102,7 +106,7 @@ func (s *ResourceServiceSuite) TestAddResource() {
 			Resource: &v1.Resource{
 				Value: 40000 + 30*1000,
 			},
-			Timestamp: timestamppb.Now(),
+			Timestamp: timestamppb.New(testTime.Now()),
 			Rpm:       1000,
 		},
 		TestAddResourceCandidate{
@@ -110,7 +114,7 @@ func (s *ResourceServiceSuite) TestAddResource() {
 				Resource: &v1.Resource{
 					Value: 20000,
 				},
-				Timestamp: timestamppb.New(time.Now().Add(-time.Second * 30)),
+				Timestamp: timestamppb.New(testTime.Now().Add(-time.Second * 30)),
 				Rpm:       1000,
 			},
 			value: -20000,
@@ -118,18 +122,91 @@ func (s *ResourceServiceSuite) TestAddResource() {
 			Resource: &v1.Resource{
 				Value: 500,
 			},
-			Timestamp: timestamppb.Now(),
+			Timestamp: timestamppb.New(testTime.Now()),
 			Rpm:       1000,
 		},
 	}
 
 	for candidate, result := range candidates {
 		s.Run(fmt.Sprintf(""), func() {
-			addResource(candidate.state, candidate.value)
+			addToResource(candidate.state, candidate.value, testTime)
 
 			s.Equal(result.Rpm, candidate.state.Rpm)
 			s.Equal(result.Timestamp.AsTime().Unix(), candidate.state.Timestamp.AsTime().Unix())
 			s.Equal(result.Resource.Value, candidate.state.Resource.Value)
+		})
+	}
+}
+
+type TestUpdateResourceRPMCandidate struct {
+	state *v1.ResourceState
+	rpm   int64
+
+	expectedState *v1.ResourceState
+}
+
+func (s *ResourceServiceSuite) TestUpdateResourceRPM() {
+	testTime := StaticTimeSource{
+		T: time.Now(),
+	}
+
+	candidates := []*TestUpdateResourceRPMCandidate{
+		{
+			state: &v1.ResourceState{
+				Resource:  &v1.Resource{},
+				Timestamp: timestamppb.New(testTime.Now()),
+				Rpm:       0,
+			},
+			rpm: 10,
+			expectedState: &v1.ResourceState{
+				Resource:  &v1.Resource{},
+				Timestamp: timestamppb.New(testTime.Now()),
+				Rpm:       10,
+			},
+		},
+		{
+			state: &v1.ResourceState{
+				Resource: &v1.Resource{
+					Value: 1000,
+				},
+				Timestamp: timestamppb.New(testTime.Now().Add(-time.Second * 40)),
+				Rpm:       60,
+			},
+			rpm: 100,
+			expectedState: &v1.ResourceState{
+				Resource: &v1.Resource{
+					Value: 1040,
+				},
+				Timestamp: timestamppb.New(testTime.Now()),
+				Rpm:       100,
+			},
+		},
+		{
+			state: &v1.ResourceState{
+				Resource: &v1.Resource{
+					Value: 1000,
+				},
+				Timestamp: timestamppb.New(testTime.Now().Add(-time.Minute)),
+				Rpm:       120,
+			},
+			rpm: 10,
+			expectedState: &v1.ResourceState{
+				Resource: &v1.Resource{
+					Value: 1120,
+				},
+				Timestamp: timestamppb.New(testTime.Now()),
+				Rpm:       10,
+			},
+		},
+	}
+
+	for _, c := range candidates {
+		s.Run(fmt.Sprintf(""), func() {
+			updateResourceRPM(c.state, c.rpm, testTime)
+
+			s.Equal(c.expectedState.Rpm, c.state.Rpm)
+			s.Equal(c.expectedState.Timestamp.AsTime().Unix(), c.state.Timestamp.AsTime().Unix())
+			s.Equal(c.expectedState.Resource.Value, c.state.Resource.Value)
 		})
 	}
 }

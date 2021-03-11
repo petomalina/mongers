@@ -99,6 +99,8 @@ message ResourceState {
   // current known resource per minute. Frontends use this to automatically update the resources
   // from the last known timestamp.
   int64 rpm = 4;
+
+  // TODO: add resource cap
 }
 
 // Resource is used to specify costs of in-game entities, static spend, etc.
