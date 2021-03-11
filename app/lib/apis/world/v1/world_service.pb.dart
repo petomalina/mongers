@@ -936,21 +936,16 @@ class ListExpeditionsRequest extends $pb.GeneratedMessage {
 class ListExpeditionsResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListExpeditionsResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
     ..pc<Expedition>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditions', $pb.PbFieldType.PM, subBuilder: Expedition.create)
-    ..aOM<PlayerPower>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'power', subBuilder: PlayerPower.create)
     ..hasRequiredFields = false
   ;
 
   ListExpeditionsResponse._() : super();
   factory ListExpeditionsResponse({
     $core.Iterable<Expedition>? expeditions,
-    PlayerPower? power,
   }) {
     final _result = create();
     if (expeditions != null) {
       _result.expeditions.addAll(expeditions);
-    }
-    if (power != null) {
-      _result.power = power;
     }
     return _result;
   }
@@ -977,96 +972,6 @@ class ListExpeditionsResponse extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $core.List<Expedition> get expeditions => $_getList(0);
-
-  @$pb.TagNumber(2)
-  PlayerPower get power => $_getN(1);
-  @$pb.TagNumber(2)
-  set power(PlayerPower v) { setField(2, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasPower() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearPower() => clearField(2);
-  @$pb.TagNumber(2)
-  PlayerPower ensurePower() => $_ensure(1);
-}
-
-class PlayerPower extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'PlayerPower', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'current', $pb.PbFieldType.O3)
-    ..aOM<$2.Timestamp>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastChange', subBuilder: $2.Timestamp.create)
-    ..aOM<$3.Duration>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'refill', subBuilder: $3.Duration.create)
-    ..hasRequiredFields = false
-  ;
-
-  PlayerPower._() : super();
-  factory PlayerPower({
-    $core.int? current,
-    $2.Timestamp? lastChange,
-    $3.Duration? refill,
-  }) {
-    final _result = create();
-    if (current != null) {
-      _result.current = current;
-    }
-    if (lastChange != null) {
-      _result.lastChange = lastChange;
-    }
-    if (refill != null) {
-      _result.refill = refill;
-    }
-    return _result;
-  }
-  factory PlayerPower.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory PlayerPower.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  PlayerPower clone() => PlayerPower()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  PlayerPower copyWith(void Function(PlayerPower) updates) => super.copyWith((message) => updates(message as PlayerPower)) as PlayerPower; // ignore: deprecated_member_use
-  $pb.BuilderInfo get info_ => _i;
-  @$core.pragma('dart2js:noInline')
-  static PlayerPower create() => PlayerPower._();
-  PlayerPower createEmptyInstance() => create();
-  static $pb.PbList<PlayerPower> createRepeated() => $pb.PbList<PlayerPower>();
-  @$core.pragma('dart2js:noInline')
-  static PlayerPower getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PlayerPower>(create);
-  static PlayerPower? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.int get current => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set current($core.int v) { $_setSignedInt32(0, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasCurrent() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearCurrent() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $2.Timestamp get lastChange => $_getN(1);
-  @$pb.TagNumber(2)
-  set lastChange($2.Timestamp v) { setField(2, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasLastChange() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearLastChange() => clearField(2);
-  @$pb.TagNumber(2)
-  $2.Timestamp ensureLastChange() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  $3.Duration get refill => $_getN(2);
-  @$pb.TagNumber(3)
-  set refill($3.Duration v) { setField(3, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasRefill() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearRefill() => clearField(3);
-  @$pb.TagNumber(3)
-  $3.Duration ensureRefill() => $_ensure(2);
 }
 
 class StartExpeditionRequest extends $pb.GeneratedMessage {

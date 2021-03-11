@@ -3,15 +3,12 @@ package world
 import (
 	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
 	"google.golang.org/protobuf/types/known/durationpb"
-	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 )
 
 type ExpeditionService struct {
 	// data is a map of [player_id][]Expedition
 	data map[string][]*v1.Expedition
-	// powers is a map of [player_id]PlayerPower
-	powers map[string]*v1.PlayerPower
 
 	// availableExpeditions is the list of currently available
 	// expeditions to all players in the world
@@ -20,8 +17,7 @@ type ExpeditionService struct {
 
 func NewExpeditionService() *ExpeditionService {
 	return &ExpeditionService{
-		data:   map[string][]*v1.Expedition{},
-		powers: map[string]*v1.PlayerPower{},
+		data: map[string][]*v1.Expedition{},
 		availableExpeditions: []*v1.Expedition{
 			{
 				ExpeditionId: "12345",
@@ -59,11 +55,6 @@ func (es *ExpeditionService) RegisterPlayer(player string) error {
 
 	// register a new player to the game
 	es.data[player] = []*v1.Expedition{}
-	es.powers[player] = &v1.PlayerPower{
-		Current:    100,
-		LastChange: timestamppb.Now(),
-		Refill:     durationpb.New(time.Minute * 7),
-	}
 
 	return nil
 }
@@ -79,8 +70,4 @@ func (es *ExpeditionService) ListExpeditions(playerID string, filter v1.ListExpe
 	expeditions = append(expeditions, es.availableExpeditions...)
 
 	return expeditions, nil
-}
-
-func (es *ExpeditionService) ListPower(playerID string) *v1.PlayerPower {
-	return es.powers[playerID]
 }

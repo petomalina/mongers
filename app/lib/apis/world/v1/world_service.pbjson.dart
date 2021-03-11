@@ -215,24 +215,11 @@ const ListExpeditionsResponse$json = const {
   '1': 'ListExpeditionsResponse',
   '2': const [
     const {'1': 'expeditions', '3': 1, '4': 3, '5': 11, '6': '.v1.Expedition', '10': 'expeditions'},
-    const {'1': 'power', '3': 2, '4': 1, '5': 11, '6': '.v1.PlayerPower', '10': 'power'},
   ],
 };
 
 /// Descriptor for `ListExpeditionsResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listExpeditionsResponseDescriptor = $convert.base64Decode('ChdMaXN0RXhwZWRpdGlvbnNSZXNwb25zZRIwCgtleHBlZGl0aW9ucxgBIAMoCzIOLnYxLkV4cGVkaXRpb25SC2V4cGVkaXRpb25zEiUKBXBvd2VyGAIgASgLMg8udjEuUGxheWVyUG93ZXJSBXBvd2Vy');
-@$core.Deprecated('Use playerPowerDescriptor instead')
-const PlayerPower$json = const {
-  '1': 'PlayerPower',
-  '2': const [
-    const {'1': 'current', '3': 1, '4': 1, '5': 5, '10': 'current'},
-    const {'1': 'last_change', '3': 2, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'lastChange'},
-    const {'1': 'refill', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'refill'},
-  ],
-};
-
-/// Descriptor for `PlayerPower`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List playerPowerDescriptor = $convert.base64Decode('CgtQbGF5ZXJQb3dlchIYCgdjdXJyZW50GAEgASgFUgdjdXJyZW50EjsKC2xhc3RfY2hhbmdlGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIKbGFzdENoYW5nZRIxCgZyZWZpbGwYAyABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb25SBnJlZmlsbA==');
+final $typed_data.Uint8List listExpeditionsResponseDescriptor = $convert.base64Decode('ChdMaXN0RXhwZWRpdGlvbnNSZXNwb25zZRIwCgtleHBlZGl0aW9ucxgBIAMoCzIOLnYxLkV4cGVkaXRpb25SC2V4cGVkaXRpb25z');
 @$core.Deprecated('Use startExpeditionRequestDescriptor instead')
 const StartExpeditionRequest$json = const {
   '1': 'StartExpeditionRequest',

@@ -171,13 +171,6 @@ message ListExpeditionsRequest {
 
 message ListExpeditionsResponse {
   repeated Expedition expeditions = 1;
-  PlayerPower power = 2;
-}
-
-message PlayerPower {
-  int32 current = 1;
-  google.protobuf.Timestamp last_change = 2;
-  google.protobuf.Duration refill = 3;
 }
 
 message StartExpeditionRequest {
