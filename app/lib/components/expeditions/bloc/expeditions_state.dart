@@ -3,13 +3,14 @@ part of 'expeditions_bloc.dart';
 enum ExpeditionsStateStatus { loading, full }
 
 class ExpeditionsState extends Equatable {
-  final List<Expedition> expeditions;
+  final List<Expedition> availableExpeditions;
+  final List<ExpeditionState> expeditionStates;
+
   final ExpeditionsStateStatus status;
-  final int power;
 
   ExpeditionsState._({
-    this.expeditions = const [],
-    this.power = 0,
+    this.availableExpeditions = const [],
+    this.expeditionStates = const [],
     this.status = ExpeditionsStateStatus.loading,
   });
 
@@ -17,11 +18,11 @@ class ExpeditionsState extends Equatable {
 
   ExpeditionsState.full(ListExpeditionsResponse res)
       : this._(
-          expeditions: res.expeditions,
-          power: res.power.current,
+          availableExpeditions: res.availableExpeditions,
+          expeditionStates: res.expeditionStates,
           status: ExpeditionsStateStatus.full,
         );
 
   @override
-  List<Object> get props => [expeditions, status];
+  List<Object> get props => [availableExpeditions, status];
 }

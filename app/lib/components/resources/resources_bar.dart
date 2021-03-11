@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app/apis/world/v1/world_service.pb.dart';
 import 'package:app/components/resources/bloc/resources_bloc.dart';
+import 'package:app/components/resources/resources_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,13 +24,13 @@ class ResourcesBar extends StatelessWidget implements PreferredSizeWidget {
       child: Padding(
         padding: const EdgeInsets.only(top: 16, bottom: 16),
         child: BlocBuilder<ResourcesBloc, ResourcesState>(
-          builder: (context, state) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: state.resources.map((e) => SingleResourceStatus(e)).toList(),
-            );
-          }
-        ),
+            builder: (context, state) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children:
+                state.resources.map((e) => SingleResourceStatus(e)).toList(),
+          );
+        }),
       ),
     );
   }
@@ -39,9 +40,9 @@ class ResourcesBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class SingleResourceStatus extends StatefulWidget {
-  final Resource resource;
+  final ResourceState resourceState;
 
-  SingleResourceStatus(this.resource);
+  SingleResourceStatus(this.resourceState);
 
   @override
   _SingleResourceStatusState createState() => _SingleResourceStatusState();
@@ -54,11 +55,10 @@ class _SingleResourceStatusState extends State<SingleResourceStatus> {
   void initState() {
     super.initState();
 
-    _updater = Timer.periodic(Duration(milliseconds: 1000), (timer) {
+    _updater = Timer.periodic(Duration(milliseconds: 5000), (timer) {
       setState(() {});
     });
   }
-
 
   @override
   void dispose() {
@@ -71,7 +71,7 @@ class _SingleResourceStatusState extends State<SingleResourceStatus> {
     return Row(
       children: [
         Text(
-          _currentResource().toString(),
+          calculateCurrentResourceValue(widget.resourceState).toString(),
           style: TextStyle(
             color: Theme.of(context).accentColor,
           ),
@@ -80,18 +80,9 @@ class _SingleResourceStatusState extends State<SingleResourceStatus> {
           width: 4,
         ),
         Text(
-          widget.resource.resourceId,
+          getResourceCategory(widget.resourceState.resource.category),
         ),
       ],
-    ); 
-  }
-
-  _currentResource() {
-    final diff = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(widget.resource.timestamp.toInt() * 1000));
-
-    // this creates an rpm diff in seconds and then makes minutes again, so we don't
-    // need to wait a full minute for the RPM to pass. It also normalizes the number
-    // so the player won't see thousands (every 1 resource has 1000 units).
-    return ((widget.resource.value.toInt() + (diff.inSeconds * widget.resource.rpm.toInt()) / 60) / 1000).round();
+    );
   }
 }

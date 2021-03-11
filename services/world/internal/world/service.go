@@ -200,6 +200,32 @@ func (ws *WorldService) Play(s v1.WorldService_PlayServer) error {
 			if err != nil {
 				return err
 			}
+		case *v1.ClientPlayMessage_ListExpeditions:
+			res, err := ws.ListExpeditions(s.Context(), r.ListExpeditions)
+			if err != nil {
+				return err
+			}
+			err = s.Send(&v1.ServerPlayMessage{
+				Res: &v1.ServerPlayMessage_ListExpeditions{
+					ListExpeditions: res,
+				},
+			})
+			if err != nil {
+				return err
+			}
+		case *v1.ClientPlayMessage_StartExpedition:
+			res, err := ws.StartExpedition(s.Context(), r.StartExpedition)
+			if err != nil {
+				return err
+			}
+			err = s.Send(&v1.ServerPlayMessage{
+				Res: &v1.ServerPlayMessage_StartExpedition{
+					StartExpedition: res,
+				},
+			})
+			if err != nil {
+				return err
+			}
 		}
 	}
 }

@@ -10,33 +10,31 @@ class GameExpeditionsView extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  BlocBuilder<ExpeditionsBloc, ExpeditionsState>(builder: (context, state) {
-                    return Text('Available power: ' + state.power.toString());
-                  },),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          _buildExpeditions(),
+          _buildStartedExpeditions(),
+          _buildAvailableExpeditions(),
         ],
       ),
     );
   }
 
-  _buildExpeditions() {
+  _buildAvailableExpeditions() {
     return BlocBuilder<ExpeditionsBloc, ExpeditionsState>(
       builder: (context, state) {
         return Column(
-          children: state.expeditions.map((e) {
-            return ExpeditionCard(e);
+          children: state.availableExpeditions.map((e) {
+            return AvailableExpeditionCard(e);
+          }).toList(),
+        );
+      },
+    );
+  }
+
+  _buildStartedExpeditions() {
+    return BlocBuilder<ExpeditionsBloc, ExpeditionsState>(
+      builder: (context, state) {
+        return Column(
+          children: state.expeditionStates.map((e) {
+            return StartedExpeditionCard(e);
           }).toList(),
         );
       },

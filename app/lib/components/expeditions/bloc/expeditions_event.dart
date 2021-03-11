@@ -24,3 +24,14 @@ class ExpeditionsUpdate extends ExpeditionsEvent {
   @override
   List<Object> get props => [update];
 }
+
+class RequestExpeditionStart extends ExpeditionsEvent {
+  final String expeditionId;
+
+  RequestExpeditionStart(this.expeditionId);
+
+  @override
+  List<Object> get props => [expeditionId];
+}
+
+class RequestExpeditionStartResponse extends ExpeditionsEvent {}

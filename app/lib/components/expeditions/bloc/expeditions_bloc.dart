@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
 part 'expeditions_event.dart';
+
 part 'expeditions_state.dart';
 
 class ExpeditionsBloc extends Bloc<ExpeditionsEvent, ExpeditionsState> {
@@ -33,6 +34,18 @@ class ExpeditionsBloc extends Bloc<ExpeditionsEvent, ExpeditionsState> {
       }
     } else if (event is ExpeditionsUpdate) {
       yield ExpeditionsState.full(event.update);
+    } else if (event is RequestExpeditionStart) {
+      try {
+        await _repository.startExpedition(StartExpeditionRequest(
+          playerId: 'peto',
+          expeditionId: event.expeditionId
+        ));
+
+        // request an update of expeditions after the start
+        add(RequestExpeditionsUpdate([]));
+      } catch (e) {
+        print(e);
+      }
     }
   }
 }

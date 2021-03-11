@@ -39,7 +39,7 @@ func (rs *ResourceService) RegisterPlayer(playerID string) error {
 		{
 			Resource: &v1.Resource{
 				Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
-				Value:    75,
+				Value:    75000,
 			},
 			Timestamp: timestamppb.Now(),
 			Rpm:       int64(0.142 * ResourceMagnifier),
