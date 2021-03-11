@@ -135,11 +135,8 @@ func (ws *WorldService) ListExpeditions(ctx context.Context, req *v1.ListExpedit
 		return &v1.ListExpeditionsResponse{}, err
 	}
 
-	power := ws.expeditionsMan.ListPower(req.PlayerId)
-
 	return &v1.ListExpeditionsResponse{
 		Expeditions: ee,
-		Power:       power,
 	}, nil
 }
 
