@@ -261,21 +261,26 @@ func calculateCurrentResource(state *v1.ResourceState) int64 {
 // into a dept.
 // Returns the same mutated object
 func addToResource(state *v1.ResourceState, value int64, tsource ...TimeSource) *v1.ResourceState {
-	current := calculateCurrentResource(state)
-
-	state.Resource.Value = current + value
-	state.Timestamp = timestamppb.New(TimeNow(tsource...))
+	reconcileResource(state, tsource...)
+	state.Resource.Value += value
 
 	return state
 }
 
 // updateResourceRPM sets a new RPM for the resource, while also recalculating its current state
 func updateResourceRPM(state *v1.ResourceState, rpm int64, tsource ...TimeSource) *v1.ResourceState {
+	reconcileResource(state, tsource...)
+	state.Rpm = rpm
+
+	return state
+}
+
+// reconcileResource updates the resource value and timestamp to the current time
+func reconcileResource(state *v1.ResourceState, tsource ...TimeSource) *v1.ResourceState {
 	current := calculateCurrentResource(state)
 
 	state.Resource.Value = current
 	state.Timestamp = timestamppb.New(TimeNow(tsource...))
-	state.Rpm = rpm
 
 	return state
 }
