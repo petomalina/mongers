@@ -13,6 +13,8 @@ type ExpeditionService struct {
 
 	dataMutex sync.RWMutex
 
+	timeSource TimeSource
+
 	// availableExpeditions is the list of currently available
 	// expeditions to all players in the world
 	availableExpeditions []*v1.Expedition
@@ -20,7 +22,8 @@ type ExpeditionService struct {
 
 func NewExpeditionService() *ExpeditionService {
 	return &ExpeditionService{
-		data: map[string][]*v1.ExpeditionState{},
+		data:       map[string][]*v1.ExpeditionState{},
+		timeSource: DefaultTimeSource{},
 		availableExpeditions: []*v1.Expedition{
 			{
 				ExpeditionId: "12345",
@@ -86,6 +89,11 @@ func (es *ExpeditionService) ListExpeditions(playerID string, filter v1.ListExpe
 
 	if filter == v1.ListExpeditionFilter_LIST_EXPEDITION_FILTER_ALL ||
 		filter == v1.ListExpeditionFilter_LIST_EXPEDITION_FILTER_PLAYER_ONLY {
+		// reconcile all states before they are sent
+		for i := 0; i < len(es.data[playerID]); i++ {
+			es.data[playerID][i] = reconcileExpedition(es.data[playerID][i], es.timeSource)
+		}
+
 		expeditionStates = append(expeditionStates, es.data[playerID]...)
 	}
 
@@ -126,4 +134,13 @@ func (es *ExpeditionService) StartExpedition(playerID string, expedition *v1.Exp
 	es.data[playerID] = append(es.data[playerID], expedition)
 
 	return expedition
+}
+
+// reconcileExpedition updates the state of the expedition to the current time
+func reconcileExpedition(state *v1.ExpeditionState, tsource ...TimeSource) *v1.ExpeditionState {
+	if TimeNow(tsource...).Sub(state.StartedAt.AsTime()) >= state.Duration.AsDuration() {
+		state.Status = v1.ExpeditionStatus_EXPEDITION_STATUS_DONE
+	}
+
+	return state
 }
