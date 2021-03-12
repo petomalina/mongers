@@ -51,6 +51,9 @@ type PlayerRegister interface {
 }
 
 func (ws *WorldService) Connect(ctx context.Context, req *v1.ConnectRequest) (*v1.ConnectResponse, error) {
+	L := ws.log.With(zap.String("playerID", req.PlayerId), zap.String("method", "/v1.WorldService/Connect"))
+	L.Info("New Connect request")
+
 	// early return if the player is already connected (the session has his data)
 	if ws.playerManager.IsAllowed(req.PlayerId) {
 		return &v1.ConnectResponse{
@@ -60,6 +63,7 @@ func (ws *WorldService) Connect(ctx context.Context, req *v1.ConnectRequest) (*v
 
 	err := ws.playerManager.TryConnect(req.PlayerId)
 	if err != nil {
+		L.Warn("Server exhausted")
 		return &v1.ConnectResponse{
 			Approved: false,
 		}, status.Error(codes.ResourceExhausted, err.Error())
@@ -85,7 +89,7 @@ func (ws *WorldService) Connect(ctx context.Context, req *v1.ConnectRequest) (*v
 		}
 	}
 
-	ws.log.Info("A new player has connected", zap.String("playerID", req.PlayerId))
+	L.Info("A new player has connected")
 	return &v1.ConnectResponse{
 		Approved: true,
 	}, nil
@@ -130,12 +134,7 @@ func (ws *WorldService) StartExpedition(ctx context.Context, req *v1.StartExpedi
 		return &v1.StartExpeditionResponse{}, status.Error(codes.NotFound, "expedition could not be found")
 	}
 
-	err := ws.resourcesMan.SpendResources(req.PlayerId, []*v1.Resource{
-		{
-			Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
-			Value:    ex.PowerCost,
-		},
-	})
+	err := ws.resourcesMan.SpendResources(req.PlayerId, ex.Cost)
 	if err != nil {
 		return &v1.StartExpeditionResponse{}, status.Error(codes.FailedPrecondition, err.Error())
 	}

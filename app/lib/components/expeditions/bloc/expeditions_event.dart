@@ -7,6 +7,15 @@ abstract class ExpeditionsEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class ExpeditionsException extends ExpeditionsEvent {
+  final Exception exception;
+
+  ExpeditionsException(this.exception);
+
+  @override
+  List<Object> get props => [exception];
+}
+
 class RequestExpeditionsUpdate extends ExpeditionsEvent {
   final List<String> expeditionIDs;
 

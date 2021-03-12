@@ -11,7 +11,9 @@ part 'expeditions_state.dart';
 class ExpeditionsBloc extends Bloc<ExpeditionsEvent, ExpeditionsState> {
   ExpeditionsBloc({@required WorldServiceClient repository})
       : _repository = repository,
-        super(ExpeditionsState.loading()) {
+        super(ExpeditionsState._(
+          status: ExpeditionsStateStatus.loading,
+        )) {
     add(RequestExpeditionsUpdate([]));
   }
 
@@ -19,9 +21,15 @@ class ExpeditionsBloc extends Bloc<ExpeditionsEvent, ExpeditionsState> {
 
   @override
   Stream<ExpeditionsState> mapEventToState(ExpeditionsEvent event) async* {
-    if (event is RequestExpeditionsUpdate) {
+    if (event is ExpeditionsException) {
+      yield state.copyWith(
+        exception: event.exception,
+      );
+    } else if (event is RequestExpeditionsUpdate) {
       try {
-        yield ExpeditionsState.loading();
+        yield state.copyWith(
+          status: ExpeditionsStateStatus.loading,
+        );
 
         final resp = await _repository.listExpeditions(ListExpeditionsRequest(
           expeditionIds: event.expeditionIDs,
@@ -30,21 +38,23 @@ class ExpeditionsBloc extends Bloc<ExpeditionsEvent, ExpeditionsState> {
 
         add(ExpeditionsUpdate(resp));
       } catch (e) {
-        print(e);
+        add(ExpeditionsException(e));
       }
     } else if (event is ExpeditionsUpdate) {
-      yield ExpeditionsState.full(event.update);
+      yield state.copyWith(
+        status: ExpeditionsStateStatus.loaded,
+        availableExpeditions: event.update.availableExpeditions,
+        expeditionStates: event.update.expeditionStates,
+      );
     } else if (event is RequestExpeditionStart) {
       try {
         await _repository.startExpedition(StartExpeditionRequest(
-          playerId: 'peto',
-          expeditionId: event.expeditionId
-        ));
+            playerId: 'peto', expeditionId: event.expeditionId));
 
         // request an update of expeditions after the start
         add(RequestExpeditionsUpdate([]));
       } catch (e) {
-        print(e);
+        add(ExpeditionsException(e));
       }
     }
   }

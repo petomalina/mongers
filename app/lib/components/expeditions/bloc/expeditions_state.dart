@@ -1,27 +1,36 @@
 part of 'expeditions_bloc.dart';
 
-enum ExpeditionsStateStatus { loading, full }
+enum ExpeditionsStateStatus { loading, loaded }
 
 class ExpeditionsState extends Equatable {
   final List<Expedition> availableExpeditions;
   final List<ExpeditionState> expeditionStates;
 
   final ExpeditionsStateStatus status;
+  final Exception exception;
 
   ExpeditionsState._({
     this.availableExpeditions = const [],
     this.expeditionStates = const [],
     this.status = ExpeditionsStateStatus.loading,
+    this.exception,
   });
 
-  ExpeditionsState.loading() : this._(status: ExpeditionsStateStatus.loading);
-
-  ExpeditionsState.full(ListExpeditionsResponse res)
-      : this._(
-          availableExpeditions: res.availableExpeditions,
-          expeditionStates: res.expeditionStates,
-          status: ExpeditionsStateStatus.full,
-        );
+  ExpeditionsState copyWith({
+    List<Expedition> availableExpeditions,
+    List<ExpeditionState> expeditionStates,
+    status,
+    exception,
+  }) {
+    return ExpeditionsState._(
+      availableExpeditions: availableExpeditions ?? this.availableExpeditions,
+      expeditionStates: expeditionStates ?? this.expeditionStates,
+      status: status ?? this.status,
+      // exceptions are being deleted automatically, as they are only used
+      // within snackbars and other volatile UI objects
+      exception: exception ?? null,
+    );
+  }
 
   @override
   List<Object> get props => [availableExpeditions, status];

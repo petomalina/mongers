@@ -27,21 +27,36 @@ func NewExpeditionService() *ExpeditionService {
 				Category:     v1.ExpeditionCategory_EXPEDITION_CATEGORY_QUICK_SEARCH,
 				Name:         "I saw something!",
 				BaseDuration: durationpb.New(time.Second * 30),
-				PowerCost:    1000,
+				Cost: []*v1.Resource{
+					{
+						Value:    1000,
+						Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
+					},
+				},
 			},
 			{
 				ExpeditionId: "12346",
 				Category:     v1.ExpeditionCategory_EXPEDITION_CATEGORY_NEARBY_EXPLORATION,
 				Name:         "Is it a mine?",
 				BaseDuration: durationpb.New(time.Minute * 6),
-				PowerCost:    6000,
+				Cost: []*v1.Resource{
+					{
+						Value:    6000,
+						Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
+					},
+				},
 			},
 			{
 				ExpeditionId: "12347",
 				Category:     v1.ExpeditionCategory_EXPEDITION_CATEGORY_NEW_HORIZONS,
 				Name:         "Look! An island!",
 				BaseDuration: durationpb.New(time.Minute * 60),
-				PowerCost:    60000,
+				Cost: []*v1.Resource{
+					{
+						Value:    60000,
+						Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
+					},
+				},
 			},
 		},
 	}
