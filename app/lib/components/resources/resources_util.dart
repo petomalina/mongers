@@ -16,6 +16,8 @@ String getResourceCategory(ResourceCategory cat) {
     ResourceCategory.RESOURCE_CATEGORY_IRON: "Iron",
     ResourceCategory.RESOURCE_CATEGORY_CLAY: "Clay",
     ResourceCategory.RESOURCE_CATEGORY_OIL: "Oil",
+
+    ResourceCategory.RESOURCE_CATEGORY_EXPERIENCE: "XP",
   };
 
   return categories[cat];

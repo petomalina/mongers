@@ -736,6 +736,9 @@ class Expedition extends $pb.GeneratedMessage {
     ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
     ..aOM<$3.Duration>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'baseDuration', subBuilder: $3.Duration.create)
     ..pc<Resource>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'cost', $pb.PbFieldType.PM, subBuilder: Resource.create)
+    ..pc<Resource>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rewards', $pb.PbFieldType.PM, subBuilder: Resource.create)
+    ..e<ResourceCategory>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resourceTarget', $pb.PbFieldType.OE, defaultOrMaker: ResourceCategory.RESOURCE_CATEGORY_UNSPECIFIED, valueOf: ResourceCategory.valueOf, enumValues: ResourceCategory.values)
+    ..aOM<$2.Timestamp>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expiresAt', subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -746,6 +749,9 @@ class Expedition extends $pb.GeneratedMessage {
     $core.String? name,
     $3.Duration? baseDuration,
     $core.Iterable<Resource>? cost,
+    $core.Iterable<Resource>? rewards,
+    ResourceCategory? resourceTarget,
+    $2.Timestamp? expiresAt,
   }) {
     final _result = create();
     if (expeditionId != null) {
@@ -762,6 +768,15 @@ class Expedition extends $pb.GeneratedMessage {
     }
     if (cost != null) {
       _result.cost.addAll(cost);
+    }
+    if (rewards != null) {
+      _result.rewards.addAll(rewards);
+    }
+    if (resourceTarget != null) {
+      _result.resourceTarget = resourceTarget;
+    }
+    if (expiresAt != null) {
+      _result.expiresAt = expiresAt;
     }
     return _result;
   }
@@ -826,6 +841,29 @@ class Expedition extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(5)
   $core.List<Resource> get cost => $_getList(4);
+
+  @$pb.TagNumber(6)
+  $core.List<Resource> get rewards => $_getList(5);
+
+  @$pb.TagNumber(7)
+  ResourceCategory get resourceTarget => $_getN(6);
+  @$pb.TagNumber(7)
+  set resourceTarget(ResourceCategory v) { setField(7, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasResourceTarget() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearResourceTarget() => clearField(7);
+
+  @$pb.TagNumber(10)
+  $2.Timestamp get expiresAt => $_getN(7);
+  @$pb.TagNumber(10)
+  set expiresAt($2.Timestamp v) { setField(10, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasExpiresAt() => $_has(7);
+  @$pb.TagNumber(10)
+  void clearExpiresAt() => clearField(10);
+  @$pb.TagNumber(10)
+  $2.Timestamp ensureExpiresAt() => $_ensure(7);
 }
 
 class ExpeditionState extends $pb.GeneratedMessage {

@@ -16,6 +16,7 @@ class ResourceCategory extends $pb.ProtobufEnum {
   static const ResourceCategory RESOURCE_CATEGORY_IRON = ResourceCategory._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESOURCE_CATEGORY_IRON');
   static const ResourceCategory RESOURCE_CATEGORY_CLAY = ResourceCategory._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESOURCE_CATEGORY_CLAY');
   static const ResourceCategory RESOURCE_CATEGORY_OIL = ResourceCategory._(5, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESOURCE_CATEGORY_OIL');
+  static const ResourceCategory RESOURCE_CATEGORY_EXPERIENCE = ResourceCategory._(100, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESOURCE_CATEGORY_EXPERIENCE');
 
   static const $core.List<ResourceCategory> values = <ResourceCategory> [
     RESOURCE_CATEGORY_UNSPECIFIED,
@@ -24,6 +25,7 @@ class ResourceCategory extends $pb.ProtobufEnum {
     RESOURCE_CATEGORY_IRON,
     RESOURCE_CATEGORY_CLAY,
     RESOURCE_CATEGORY_OIL,
+    RESOURCE_CATEGORY_EXPERIENCE,
   ];
 
   static final $core.Map<$core.int, ResourceCategory> _byValue = $pb.ProtobufEnum.initByValue(values);

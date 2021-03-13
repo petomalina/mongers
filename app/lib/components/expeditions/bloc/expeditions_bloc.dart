@@ -56,6 +56,17 @@ class ExpeditionsBloc extends Bloc<ExpeditionsEvent, ExpeditionsState> {
       } catch (e) {
         add(ExpeditionsException(e));
       }
+    } else if (event is RequestExpeditionCollect) {
+      try {
+        await _repository.collectExpedition(CollectExpeditionRequest(
+          playerId: 'peto',
+          expeditionId: event.expeditionId,
+        ));
+
+        add(RequestExpeditionsUpdate([]));
+      } catch (e) {
+        add(ExpeditionsException(e));
+      }
     }
   }
 }

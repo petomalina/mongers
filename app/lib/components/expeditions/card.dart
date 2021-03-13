@@ -4,44 +4,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
 class StartedExpeditionCard extends StatelessWidget {
-  final ExpeditionState data;
+  final ExpeditionState state;
 
-  StartedExpeditionCard(this.data);
+  StartedExpeditionCard(this.state);
 
   @override
   Widget build(BuildContext context) {
     return ExpeditionCard(
-      expedition: data.expedition,
-      trailer: _buildProgress(),
+      expedition: state.expedition,
+      onTap: _onTap(context),
     );
   }
 
-  Widget _buildProgress() {
-    switch (data.status) {
-      case ExpeditionStatus.EXPEDITION_STATUS_AVAILABLE:
-        return TextButton(onPressed: () => {}, child: Text('Start'));
-      case ExpeditionStatus.EXPEDITION_STATUS_IN_PROGRESS:
-        return Padding(
-          padding: const EdgeInsets.only(
-            right: 20,
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                child: Icon(Icons.assistant_photo),
-                width: 20,
-                height: 20,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text('29s'),
-            ],
-          ),
-        );
-      case ExpeditionStatus.EXPEDITION_STATUS_DONE:
-        return TextButton(child: Text('Collect'));
-    }
+  _onTap(BuildContext context) {
+    return () {
+      context.read<ExpeditionsBloc>().add(RequestExpeditionCollect(
+        state.expedition.expeditionId,
+      ));
+    };
   }
 }
 
@@ -54,14 +34,16 @@ class AvailableExpeditionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExpeditionCard(
       expedition: expedition,
-      trailer: TextButton(
-          onPressed: () {
-            context.read<ExpeditionsBloc>().add(
-                  RequestExpeditionStart(expedition.expeditionId),
-                );
-          },
-          child: Text('Start')),
+      onTap: _onTap(context),
     );
+  }
+
+  _onTap(BuildContext context) {
+    return () {
+      context.read<ExpeditionsBloc>().add(RequestExpeditionStart(
+            expedition.expeditionId,
+          ));
+    };
   }
 }
 
@@ -69,50 +51,60 @@ class AvailableExpeditionCard extends StatelessWidget {
 // AvailableExpeditionCard and StartedExpeditionCard
 class ExpeditionCard extends StatelessWidget {
   final Expedition expedition;
-  final Widget trailer;
+  final GestureTapCallback onTap;
 
-  ExpeditionCard({this.expedition, this.trailer});
+  ExpeditionCard({this.expedition, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Column(
-              children: [
-                Icon(Icons.search_outlined),
-                Text(Duration(seconds: expedition.baseDuration.seconds.toInt())
-                    .toString()),
-              ],
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(_expeditionName(expedition.category)),
-                Row(
-                  children: [
-                    Text('100'),
-                    SizedBox(
-                      width: 2,
-                    ),
-                    Text(
-                      'XP',
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      ),
-                    ),
-                  ],
+    return InkWell(
+      onTap: this.onTap,
+      child: Container(
+        height: 60,
+        child: Card(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black87,
+                  ),
+                  child: Icon(
+                    Icons.search_outlined,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
-              ],
-            ),
-            Spacer(),
-            if (trailer != null) trailer,
-          ],
+              ),
+              Expanded(
+                flex: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(_expeditionName(expedition.category)),
+                      Row(
+                        children: [
+                          Text('100'),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            'XP',
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

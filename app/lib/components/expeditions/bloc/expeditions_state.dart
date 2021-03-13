@@ -33,5 +33,6 @@ class ExpeditionsState extends Equatable {
   }
 
   @override
-  List<Object> get props => [availableExpeditions, status];
+  List<Object> get props =>
+      [availableExpeditions, expeditionStates, status, exception];
 }

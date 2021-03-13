@@ -44,3 +44,14 @@ class RequestExpeditionStart extends ExpeditionsEvent {
 }
 
 class RequestExpeditionStartResponse extends ExpeditionsEvent {}
+
+class RequestExpeditionCollect extends ExpeditionsEvent {
+  final String expeditionId;
+
+  RequestExpeditionCollect(this.expeditionId);
+
+  @override
+  List<Object> get props => [expeditionId];
+}
+
+class RequestExpeditionCollectResponse extends ExpeditionsEvent {}

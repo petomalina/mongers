@@ -3,6 +3,7 @@ package world
 import (
 	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
 	"google.golang.org/protobuf/types/known/durationpb"
+	"sort"
 	"sync"
 	"time"
 )
@@ -26,38 +27,63 @@ func NewExpeditionService() *ExpeditionService {
 		timeSource: DefaultTimeSource{},
 		availableExpeditions: []*v1.Expedition{
 			{
-				ExpeditionId: "12345",
-				Category:     v1.ExpeditionCategory_EXPEDITION_CATEGORY_QUICK_SEARCH,
-				Name:         "I saw something!",
-				BaseDuration: durationpb.New(time.Second * 30),
+				ExpeditionId:   "12345",
+				Category:       v1.ExpeditionCategory_EXPEDITION_CATEGORY_QUICK_SEARCH,
+				ResourceTarget: v1.ResourceCategory_RESOURCE_CATEGORY_IRON,
+				Name:           "I saw something!",
+				BaseDuration:   durationpb.New(time.Second * 30),
 				Cost: []*v1.Resource{
 					{
 						Value:    1000,
 						Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
 					},
 				},
+				Rewards: []*v1.Resource{
+					{
+						Value:    100 * ResourceMagnifierInt,
+						Category: v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE,
+					},
+					{
+						Value: 50 * ResourceMagnifierInt,
+						Category: v1.ResourceCategory_RESOURCE_CATEGORY_IRON,
+					},
+				},
 			},
 			{
-				ExpeditionId: "12346",
-				Category:     v1.ExpeditionCategory_EXPEDITION_CATEGORY_NEARBY_EXPLORATION,
-				Name:         "Is it a mine?",
-				BaseDuration: durationpb.New(time.Minute * 6),
+				ExpeditionId:   "12346",
+				Category:       v1.ExpeditionCategory_EXPEDITION_CATEGORY_NEARBY_EXPLORATION,
+				ResourceTarget: v1.ResourceCategory_RESOURCE_CATEGORY_CLAY,
+				Name:           "Is it a mine?",
+				BaseDuration:   durationpb.New(time.Minute * 6),
 				Cost: []*v1.Resource{
 					{
 						Value:    6000,
 						Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
 					},
 				},
+				Rewards: []*v1.Resource{
+					{
+						Value:    600 * 1000,
+						Category: v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE,
+					},
+				},
 			},
 			{
-				ExpeditionId: "12347",
-				Category:     v1.ExpeditionCategory_EXPEDITION_CATEGORY_NEW_HORIZONS,
-				Name:         "Look! An island!",
-				BaseDuration: durationpb.New(time.Minute * 60),
+				ExpeditionId:   "12347",
+				Category:       v1.ExpeditionCategory_EXPEDITION_CATEGORY_NEW_HORIZONS,
+				ResourceTarget: v1.ResourceCategory_RESOURCE_CATEGORY_OIL,
+				Name:           "Look! An island!",
+				BaseDuration:   durationpb.New(time.Minute * 60),
 				Cost: []*v1.Resource{
 					{
 						Value:    60000,
 						Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
+					},
+				},
+				Rewards: []*v1.Resource{
+					{
+						Value:    6000 * 1000,
+						Category: v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE,
 					},
 				},
 			},
@@ -78,11 +104,11 @@ func (es *ExpeditionService) DisposePlayer(player string) error {
 	return nil
 }
 
+// ListExpeditions returns available expeditions as well as reconciled expeditions that
+// are in progress or ready to collect (done).
 func (es *ExpeditionService) ListExpeditions(playerID string, filter v1.ListExpeditionFilter) ([]*v1.Expedition, []*v1.ExpeditionState, error) {
 	es.dataMutex.RLock()
-	defer func() {
-		es.dataMutex.RUnlock()
-	}()
+	defer es.dataMutex.RUnlock()
 
 	var expeditions []*v1.Expedition
 	var expeditionStates []*v1.ExpeditionState
@@ -109,9 +135,7 @@ func (es *ExpeditionService) ListExpeditions(playerID string, filter v1.ListExpe
 // or nil if unavailable.
 func (es *ExpeditionService) SelectAvailableExpedition(expeditionID string) *v1.Expedition {
 	es.dataMutex.RLock()
-	defer func() {
-		es.dataMutex.RUnlock()
-	}()
+	defer es.dataMutex.RUnlock()
 
 	for _, ex := range es.availableExpeditions {
 		if ex.ExpeditionId == expeditionID {
@@ -125,15 +149,33 @@ func (es *ExpeditionService) SelectAvailableExpedition(expeditionID string) *v1.
 // StartExpedition starts the given expedition for the player. The expedition does not need to be
 // in the availableExpeditions for this method to work. This is in case an expedition expired
 // while the request was fulfilling. It also enables custom expeditions to be registered for a player.
-func (es *ExpeditionService) StartExpedition(playerID string, expedition *v1.ExpeditionState) *v1.ExpeditionState {
+func (es *ExpeditionService) StartExpedition(playerID string, expedition *v1.ExpeditionState) (*v1.ExpeditionState, error) {
 	es.dataMutex.Lock()
-	defer func() {
-		es.dataMutex.Unlock()
-	}()
+	defer es.dataMutex.Unlock()
 
 	es.data[playerID] = append(es.data[playerID], expedition)
 
-	return expedition
+	return expedition, nil
+}
+
+func (es *ExpeditionService) CollectExpedition(playerID string, state *v1.ExpeditionState) error {
+	es.dataMutex.Lock()
+	defer es.dataMutex.Unlock()
+
+	expeditions := es.data[playerID]
+
+	i := sort.Search(len(expeditions), func(i int) bool {
+		return expeditions[0].Expedition.ExpeditionId == state.Expedition.ExpeditionId
+	})
+
+	// reslice without the collected expedition
+	es.data[playerID] = append(expeditions[:i], expeditions[i+1:]...)
+
+	return nil
+}
+
+func generateExpedition() *v1.Expedition {
+	return nil
 }
 
 // reconcileExpedition updates the state of the expedition to the current time

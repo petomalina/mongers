@@ -86,6 +86,10 @@ enum ResourceCategory {
   RESOURCE_CATEGORY_IRON = 3;
   RESOURCE_CATEGORY_CLAY = 4;
   RESOURCE_CATEGORY_OIL = 5;
+
+  // a special category that is bound to some game objects, such as Expeditions,
+  // Buildings, or Player Level
+  RESOURCE_CATEGORY_EXPERIENCE = 100;
 }
 
 // Resource is used to specify costs of in-game entities, static spend, etc.
@@ -145,6 +149,16 @@ message Expedition {
 
   // The cost the player needs to pay for the expedition to start
   repeated Resource cost = 5;
+
+  // rewards is a list of rewards that the player gets for finishing the expedition. In case
+  // experience is rewarded, the experience goes towards the resource_target of the Expedition
+  repeated Resource rewards = 6;
+
+  // resource_target specifies which resource the Expedition explores
+  ResourceCategory resource_target = 7;
+
+  // epxires_at defines when the expedition becomes unavailable
+  google.protobuf.Timestamp expires_at = 10;
 }
 
 message ExpeditionState {

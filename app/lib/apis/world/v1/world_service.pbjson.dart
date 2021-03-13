@@ -18,11 +18,12 @@ const ResourceCategory$json = const {
     const {'1': 'RESOURCE_CATEGORY_IRON', '2': 3},
     const {'1': 'RESOURCE_CATEGORY_CLAY', '2': 4},
     const {'1': 'RESOURCE_CATEGORY_OIL', '2': 5},
+    const {'1': 'RESOURCE_CATEGORY_EXPERIENCE', '2': 100},
   ],
 };
 
 /// Descriptor for `ResourceCategory`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List resourceCategoryDescriptor = $convert.base64Decode('ChBSZXNvdXJjZUNhdGVnb3J5EiEKHVJFU09VUkNFX0NBVEVHT1JZX1VOU1BFQ0lGSUVEEAASGwoXUkVTT1VSQ0VfQ0FURUdPUllfUE9XRVIQARIbChdSRVNPVVJDRV9DQVRFR09SWV9NT05FWRACEhoKFlJFU09VUkNFX0NBVEVHT1JZX0lST04QAxIaChZSRVNPVVJDRV9DQVRFR09SWV9DTEFZEAQSGQoVUkVTT1VSQ0VfQ0FURUdPUllfT0lMEAU=');
+final $typed_data.Uint8List resourceCategoryDescriptor = $convert.base64Decode('ChBSZXNvdXJjZUNhdGVnb3J5EiEKHVJFU09VUkNFX0NBVEVHT1JZX1VOU1BFQ0lGSUVEEAASGwoXUkVTT1VSQ0VfQ0FURUdPUllfUE9XRVIQARIbChdSRVNPVVJDRV9DQVRFR09SWV9NT05FWRACEhoKFlJFU09VUkNFX0NBVEVHT1JZX0lST04QAxIaChZSRVNPVVJDRV9DQVRFR09SWV9DTEFZEAQSGQoVUkVTT1VSQ0VfQ0FURUdPUllfT0lMEAUSIAocUkVTT1VSQ0VfQ0FURUdPUllfRVhQRVJJRU5DRRBk');
 @$core.Deprecated('Use expeditionCategoryDescriptor instead')
 const ExpeditionCategory$json = const {
   '1': 'ExpeditionCategory',
@@ -191,11 +192,14 @@ const Expedition$json = const {
     const {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
     const {'1': 'base_duration', '3': 4, '4': 1, '5': 11, '6': '.google.protobuf.Duration', '10': 'baseDuration'},
     const {'1': 'cost', '3': 5, '4': 3, '5': 11, '6': '.v1.Resource', '10': 'cost'},
+    const {'1': 'rewards', '3': 6, '4': 3, '5': 11, '6': '.v1.Resource', '10': 'rewards'},
+    const {'1': 'resource_target', '3': 7, '4': 1, '5': 14, '6': '.v1.ResourceCategory', '10': 'resourceTarget'},
+    const {'1': 'expires_at', '3': 10, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'expiresAt'},
   ],
 };
 
 /// Descriptor for `Expedition`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List expeditionDescriptor = $convert.base64Decode('CgpFeHBlZGl0aW9uEiMKDWV4cGVkaXRpb25faWQYASABKAlSDGV4cGVkaXRpb25JZBIyCghjYXRlZ29yeRgCIAEoDjIWLnYxLkV4cGVkaXRpb25DYXRlZ29yeVIIY2F0ZWdvcnkSEgoEbmFtZRgDIAEoCVIEbmFtZRI+Cg1iYXNlX2R1cmF0aW9uGAQgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uUgxiYXNlRHVyYXRpb24SIAoEY29zdBgFIAMoCzIMLnYxLlJlc291cmNlUgRjb3N0');
+final $typed_data.Uint8List expeditionDescriptor = $convert.base64Decode('CgpFeHBlZGl0aW9uEiMKDWV4cGVkaXRpb25faWQYASABKAlSDGV4cGVkaXRpb25JZBIyCghjYXRlZ29yeRgCIAEoDjIWLnYxLkV4cGVkaXRpb25DYXRlZ29yeVIIY2F0ZWdvcnkSEgoEbmFtZRgDIAEoCVIEbmFtZRI+Cg1iYXNlX2R1cmF0aW9uGAQgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uUgxiYXNlRHVyYXRpb24SIAoEY29zdBgFIAMoCzIMLnYxLlJlc291cmNlUgRjb3N0EiYKB3Jld2FyZHMYBiADKAsyDC52MS5SZXNvdXJjZVIHcmV3YXJkcxI9Cg9yZXNvdXJjZV90YXJnZXQYByABKA4yFC52MS5SZXNvdXJjZUNhdGVnb3J5Ug5yZXNvdXJjZVRhcmdldBI5CgpleHBpcmVzX2F0GAogASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJZXhwaXJlc0F0');
 @$core.Deprecated('Use expeditionStateDescriptor instead')
 const ExpeditionState$json = const {
   '1': 'ExpeditionState',
