@@ -3,56 +3,6 @@ import 'package:app/components/expeditions/bloc/expeditions_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
-enum StartedExpeditionCardAction {
-  boost, cancel, collect
-}
-
-class StartedExpeditionCard extends StatelessWidget {
-  final ExpeditionState state;
-
-  StartedExpeditionCard(this.state);
-
-  @override
-  Widget build(BuildContext context) {
-    return ExpeditionCard(
-      expedition: state.expedition,
-      onTap: _onTap(context),
-    );
-  }
-
-  _onTap(BuildContext context) {
-    return () async {
-      final result = await _buildStartDialog(context);
-      switch (result) {
-        case StartedExpeditionCardAction.collect:
-          context.read<ExpeditionsBloc>().add(RequestExpeditionCollect(
-            state.expedition.expeditionId,
-          ));
-          break;
-        default:
-          break;
-      }
-    };
-  }
-
-  _buildStartDialog(BuildContext context) async {
-    return showDialog<StartedExpeditionCardAction>(
-      context: context,
-      builder: (context) {
-        return SimpleDialog(
-          children: [
-            TextButton(onPressed: () {
-              Navigator.pop(context, StartedExpeditionCardAction.collect);
-            }, child: Text(
-                'Collect'
-            )),
-          ],
-        );
-      },
-    );
-  }
-}
-
 enum AvailableExpeditionCardAction {
   start,
 }

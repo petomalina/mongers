@@ -39,50 +39,33 @@ class ResourcesBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(height);
 }
 
-class SingleResourceStatus extends StatefulWidget {
+class SingleResourceStatus extends StatelessWidget {
   final ResourceState resourceState;
 
   SingleResourceStatus(this.resourceState);
 
   @override
-  _SingleResourceStatusState createState() => _SingleResourceStatusState();
-}
-
-class _SingleResourceStatusState extends State<SingleResourceStatus> {
-  Timer _updater;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _updater = Timer.periodic(Duration(milliseconds: 5000), (timer) {
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    _updater.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          calculateCurrentResourceValue(widget.resourceState).toString(),
-          style: TextStyle(
-            color: Theme.of(context).accentColor,
-          ),
-        ),
-        SizedBox(
-          width: 4,
-        ),
-        Text(
-          getResourceCategory(widget.resourceState.resource.category),
-        ),
-      ],
+    return StreamBuilder(
+      stream: Stream.periodic(Duration(seconds: 1)),
+      builder: (context, snapshot) {
+        return Row(
+          children: [
+            Text(
+              calculateCurrentResourceValue(resourceState).toString(),
+              style: TextStyle(
+                color: Theme.of(context).accentColor,
+              ),
+            ),
+            SizedBox(
+              width: 4,
+            ),
+            Text(
+              getResourceCategory(resourceState.resource.category),
+            ),
+          ],
+        );
+      },
     );
   }
 }
