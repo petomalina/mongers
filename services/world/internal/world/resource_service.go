@@ -14,7 +14,8 @@ var (
 )
 
 const (
-	ResourceMagnifier float64 = 1000
+	ResourceMagnifier    float64 = 1000
+	ResourceMagnifierInt int64   = 1000
 )
 
 type ResourceService struct {
@@ -120,13 +121,14 @@ func (rs *ResourceService) SpendResources(playerID string, spenders []*v1.Resour
 
 // AddResources does not validate any resources and simply add them. In case the resource
 // would be above its cap, it caps the resource.
-func (rs *ResourceService) AddResources(playerID string, adders []*v1.Resource) {
+func (rs *ResourceService) AddResources(playerID string, adders []*v1.Resource) error {
 	rs.dataMutex.Lock()
 	defer func() {
 		rs.dataMutex.Unlock()
 	}()
 
 	rs.data[playerID] = addResources(rs.data[playerID], adders)
+	return nil
 }
 
 // UpdateResourceRPM updates the RPM of a given category of a resource for the given player.
@@ -200,14 +202,16 @@ func addResources(pool []*v1.ResourceState, adders []*v1.Resource) []*v1.Resourc
 
 		// if the resource cannot be found, this will create it instead (auto-registration)
 		if !found {
-			pool = append(pool, &v1.ResourceState{
-				Resource: &v1.Resource{
-					Category: adder.Category,
-					Value:    adder.Value,
+			pool = append(
+				pool, &v1.ResourceState{
+					Resource: &v1.Resource{
+						Category: adder.Category,
+						Value:    adder.Value,
+					},
+					Timestamp: timestamppb.Now(),
+					Rpm:       0,
 				},
-				Timestamp: timestamppb.Now(),
-				Rpm:       0,
-			})
+			)
 		}
 	}
 

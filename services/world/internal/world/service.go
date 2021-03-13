@@ -51,7 +51,10 @@ type PlayerRegister interface {
 }
 
 func (ws *WorldService) Connect(ctx context.Context, req *v1.ConnectRequest) (*v1.ConnectResponse, error) {
-	L := ws.log.With(zap.String("playerID", req.PlayerId), zap.String("method", "/v1.WorldService/Connect"))
+	L := ws.log.With(
+		zap.String("playerID", req.PlayerId),
+		zap.String("method", "/v1.WorldService/Connect"),
+	)
 	L.Info("New Connect request")
 
 	// early return if the player is already connected (the session has his data)
@@ -113,15 +116,20 @@ func (ws *WorldService) notifyResourceStateChange(playerID string) {
 
 	rr := ws.resourcesMan.ListResources(playerID)
 
-	err := stream.Send(&v1.ServerPlayMessage{
-		Res: &v1.ServerPlayMessage_ListResources{
-			ListResources: &v1.ListResourcesStateResponse{
-				Resources: rr,
+	err := stream.Send(
+		&v1.ServerPlayMessage{
+			Res: &v1.ServerPlayMessage_ListResources{
+				ListResources: &v1.ListResourcesStateResponse{
+					Resources: rr,
+				},
 			},
 		},
-	})
+	)
 	if err != nil {
-		ws.log.Warn("watch stream broken for a player, cleaning up the stream", zap.String("playerID", playerID))
+		ws.log.Warn(
+			"watch stream broken for a player, cleaning up the stream",
+			zap.String("playerID", playerID),
+		)
 		ws.playerManager.StopWatch(playerID)
 	}
 }
@@ -129,9 +137,19 @@ func (ws *WorldService) notifyResourceStateChange(playerID string) {
 // StartExpedition starts a new expedition for a player if they have enough resources
 // and the expedition is currently available.
 func (ws *WorldService) StartExpedition(ctx context.Context, req *v1.StartExpeditionRequest) (*v1.StartExpeditionResponse, error) {
+	L := ws.log.With(
+		zap.String("playerID", req.PlayerId),
+		zap.String("expeditionID", req.ExpeditionId),
+		zap.String("method", "/v1.WorldService/StartExpedition"),
+	)
+	L.Info("New StartExpedition request")
+
 	ex := ws.expeditionsMan.SelectAvailableExpedition(req.ExpeditionId)
 	if ex == nil {
-		return &v1.StartExpeditionResponse{}, status.Error(codes.NotFound, "expedition could not be found")
+		return &v1.StartExpeditionResponse{}, status.Error(
+			codes.NotFound,
+			"expedition could not be found",
+		)
 	}
 
 	err := ws.resourcesMan.SpendResources(req.PlayerId, ex.Cost)
@@ -149,15 +167,71 @@ func (ws *WorldService) StartExpedition(ctx context.Context, req *v1.StartExpedi
 	ws.expeditionsMan.StartExpedition(req.PlayerId, state)
 	ws.notifyResourceStateChange(req.PlayerId)
 
+	L.Info("New Expedition started")
 	return &v1.StartExpeditionResponse{}, nil
 }
 
 func (ws *WorldService) CollectExpedition(ctx context.Context, req *v1.CollectExpeditionRequest) (*v1.CollectExpeditionResponse, error) {
+	L := ws.log.With(
+		zap.String("playerID", req.PlayerId),
+		zap.String("expeditionID", req.ExpeditionId),
+		zap.String("method", "/v1.WorldService/CollectExpedition"),
+	)
+	L.Info("New CollectExpedition request")
+
+	_, exs, err := ws.expeditionsMan.ListExpeditions(
+		req.PlayerId,
+		v1.ListExpeditionFilter_LIST_EXPEDITION_FILTER_PLAYER_ONLY,
+	)
+	if err != nil {
+		L.Info("Cannot list expeditions", zap.Error(err))
+		return &v1.CollectExpeditionResponse{}, status.Error(codes.Canceled, err.Error())
+	}
+
+	var expedition *v1.ExpeditionState
+	for _, e := range exs {
+		if e.Expedition.ExpeditionId == req.ExpeditionId {
+			expedition = e
+		}
+	}
+	if expedition == nil {
+		err := status.Error(
+			codes.NotFound,
+			"Expedition not found",
+		)
+		L.Info("Expedition not found", zap.Error(err))
+		return &v1.CollectExpeditionResponse{}, err
+	}
+	if expedition.Status != v1.ExpeditionStatus_EXPEDITION_STATUS_DONE {
+		err := status.Error(
+			codes.FailedPrecondition,
+			"Expedition not done yet",
+		)
+		L.Info("Expedition not done yet")
+		return &v1.CollectExpeditionResponse{}, err
+	}
+
+	err = ws.expeditionsMan.CollectExpedition(req.PlayerId, expedition)
+	if err != nil {
+		L.Info("Cannot collect expedition", zap.Error(err))
+		return &v1.CollectExpeditionResponse{}, status.Error(codes.Internal, err.Error())
+	}
+
+	err = ws.resourcesMan.AddResources(req.PlayerId, expedition.Expedition.Rewards)
+	if err != nil {
+		L.Info("Cannot add expedition reward", zap.Error(err))
+		return &v1.CollectExpeditionResponse{}, status.Error(codes.Internal, err.Error())
+	}
+
+	L.Info("Expedition collected")
 	return &v1.CollectExpeditionResponse{}, nil
 }
 
 func (ws *WorldService) ListExpeditions(ctx context.Context, req *v1.ListExpeditionsRequest) (*v1.ListExpeditionsResponse, error) {
-	expeditions, states, err := ws.expeditionsMan.ListExpeditions(req.PlayerId, req.ExpeditionFilter)
+	expeditions, states, err := ws.expeditionsMan.ListExpeditions(
+		req.PlayerId,
+		req.ExpeditionFilter,
+	)
 	if err != nil {
 		return &v1.ListExpeditionsResponse{}, err
 	}
@@ -191,11 +265,13 @@ func (ws *WorldService) Play(s v1.WorldService_PlayServer) error {
 			if err != nil {
 				return err
 			}
-			err = s.Send(&v1.ServerPlayMessage{
-				Res: &v1.ServerPlayMessage_ListResources{
-					ListResources: res,
+			err = s.Send(
+				&v1.ServerPlayMessage{
+					Res: &v1.ServerPlayMessage_ListResources{
+						ListResources: res,
+					},
 				},
-			})
+			)
 			if err != nil {
 				return err
 			}
@@ -204,11 +280,13 @@ func (ws *WorldService) Play(s v1.WorldService_PlayServer) error {
 			if err != nil {
 				return err
 			}
-			err = s.Send(&v1.ServerPlayMessage{
-				Res: &v1.ServerPlayMessage_ListExpeditions{
-					ListExpeditions: res,
+			err = s.Send(
+				&v1.ServerPlayMessage{
+					Res: &v1.ServerPlayMessage_ListExpeditions{
+						ListExpeditions: res,
+					},
 				},
-			})
+			)
 			if err != nil {
 				return err
 			}
@@ -217,11 +295,13 @@ func (ws *WorldService) Play(s v1.WorldService_PlayServer) error {
 			if err != nil {
 				return err
 			}
-			err = s.Send(&v1.ServerPlayMessage{
-				Res: &v1.ServerPlayMessage_StartExpedition{
-					StartExpedition: res,
+			err = s.Send(
+				&v1.ServerPlayMessage{
+					Res: &v1.ServerPlayMessage_StartExpedition{
+						StartExpedition: res,
+					},
 				},
-			})
+			)
 			if err != nil {
 				return err
 			}
