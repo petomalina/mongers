@@ -3,6 +3,10 @@ import 'package:app/components/expeditions/bloc/expeditions_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
+enum StartedExpeditionCardAction {
+  boost, cancel, collect
+}
+
 class StartedExpeditionCard extends StatelessWidget {
   final ExpeditionState state;
 
@@ -17,12 +21,40 @@ class StartedExpeditionCard extends StatelessWidget {
   }
 
   _onTap(BuildContext context) {
-    return () {
-      context.read<ExpeditionsBloc>().add(RequestExpeditionCollect(
-        state.expedition.expeditionId,
-      ));
+    return () async {
+      final result = await _buildStartDialog(context);
+      switch (result) {
+        case StartedExpeditionCardAction.collect:
+          context.read<ExpeditionsBloc>().add(RequestExpeditionCollect(
+            state.expedition.expeditionId,
+          ));
+          break;
+        default:
+          break;
+      }
     };
   }
+
+  _buildStartDialog(BuildContext context) async {
+    return showDialog<StartedExpeditionCardAction>(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          children: [
+            TextButton(onPressed: () {
+              Navigator.pop(context, StartedExpeditionCardAction.collect);
+            }, child: Text(
+                'Collect'
+            )),
+          ],
+        );
+      },
+    );
+  }
+}
+
+enum AvailableExpeditionCardAction {
+  start,
 }
 
 class AvailableExpeditionCard extends StatelessWidget {
@@ -39,11 +71,35 @@ class AvailableExpeditionCard extends StatelessWidget {
   }
 
   _onTap(BuildContext context) {
-    return () {
-      context.read<ExpeditionsBloc>().add(RequestExpeditionStart(
+    return () async {
+      final result = await _buildStartDialog(context);
+      switch (result) {
+        case AvailableExpeditionCardAction.start:
+          context.read<ExpeditionsBloc>().add(RequestExpeditionStart(
             expedition.expeditionId,
           ));
+          break;
+        default:
+          break;
+      }
     };
+  }
+
+  _buildStartDialog(BuildContext context) async {
+    return showDialog<AvailableExpeditionCardAction>(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          children: [
+            TextButton(onPressed: () {
+              Navigator.pop(context, AvailableExpeditionCardAction.start);
+            }, child: Text(
+                'Start Expedition'
+            )),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -73,7 +129,9 @@ class ExpeditionCard extends StatelessWidget {
                   ),
                   child: Icon(
                     Icons.search_outlined,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme
+                        .of(context)
+                        .primaryColor,
                   ),
                 ),
               ),
@@ -94,7 +152,9 @@ class ExpeditionCard extends StatelessWidget {
                           Text(
                             'XP',
                             style: TextStyle(
-                              color: Theme.of(context).accentColor,
+                              color: Theme
+                                  .of(context)
+                                  .accentColor,
                             ),
                           ),
                         ],
