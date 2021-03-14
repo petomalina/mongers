@@ -25,7 +25,14 @@ class GameExpeditionsView extends StatelessWidget {
           children: [
             Text('Available Expeditions'),
             ...state.availableExpeditions.map((e) {
-              return AvailableExpeditionCard(e);
+              return AvailableExpeditionCard(
+                expedition: e,
+                onExpeditionStart: () {
+                  context.read<ExpeditionsBloc>().add(RequestExpeditionStart(
+                        e.expeditionId,
+                      ));
+                },
+              );
             }).toList(),
           ],
         );
@@ -38,10 +45,17 @@ class GameExpeditionsView extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: [
-            if (state.expeditionStates.length > 0 )
+            if (state.expeditionStates.length > 0)
               Text('Expeditions in Progress'),
             ...state.expeditionStates.map((e) {
-              return StartedExpeditionCard(e);
+              return StartedExpeditionCard(
+                state: e,
+                onExpeditionCollect: () {
+                  context.read<ExpeditionsBloc>().add(RequestExpeditionCollect(
+                        e.expedition.expeditionId,
+                      ));
+                },
+              );
             }).toList(),
           ],
         );

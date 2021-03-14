@@ -1,6 +1,4 @@
-import 'package:app/state/expeditions/expeditions_bloc.dart';
 import 'package:app/state/models/models.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
 enum AvailableExpeditionCardAction {
@@ -9,8 +7,9 @@ enum AvailableExpeditionCardAction {
 
 class AvailableExpeditionCard extends StatelessWidget {
   final Expedition expedition;
+  final VoidCallback onExpeditionStart;
 
-  AvailableExpeditionCard(this.expedition);
+  AvailableExpeditionCard({this.expedition, this.onExpeditionStart});
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +24,7 @@ class AvailableExpeditionCard extends StatelessWidget {
       final result = await _buildStartDialog(context);
       switch (result) {
         case AvailableExpeditionCardAction.start:
-          context.read<ExpeditionsBloc>().add(RequestExpeditionStart(
-                expedition.expeditionId,
-              ));
+          onExpeditionStart();
           break;
         default:
           break;

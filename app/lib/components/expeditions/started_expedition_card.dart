@@ -1,14 +1,13 @@
-import 'package:app/state/expeditions/expeditions_bloc.dart';
 import 'package:app/state/models/models.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum StartedExpeditionCardAction { boost, cancel, collect }
 
 class StartedExpeditionCard extends StatelessWidget {
   final ExpeditionState state;
+  final VoidCallback onExpeditionCollect;
 
-  StartedExpeditionCard(this.state);
+  StartedExpeditionCard({this.state, this.onExpeditionCollect});
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +74,7 @@ class StartedExpeditionCard extends StatelessWidget {
       final result = await _buildStartDialog(context);
       switch (result) {
         case StartedExpeditionCardAction.collect:
-          context.read<ExpeditionsBloc>().add(RequestExpeditionCollect(
-                state.expedition.expeditionId,
-              ));
+          onExpeditionCollect();
           break;
         default:
           break;
