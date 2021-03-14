@@ -1,6 +1,5 @@
-import 'package:app/apis/world/v1/world_service.pb.dart';
-import 'package:app/components/expeditions/expeditions_util.dart';
 import 'package:app/state/expeditions/expeditions_bloc.dart';
+import 'package:app/state/models/models.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
@@ -91,7 +90,7 @@ class ExpeditionCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(_expeditionName(expedition.category)),
+                      Text(expedition.niceName),
                       Row(
                         children: [
                           Text('100'),
@@ -116,10 +115,7 @@ class ExpeditionCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Icon(Icons.access_time),
-                    Text(timeUntilDoneToText(
-                      Duration(
-                          seconds: expedition.baseDuration.seconds.toInt()),
-                    )),
+                    Text(expedition.baseDuration.toDuration().niceTime),
                   ],
                 ),
               ),
@@ -128,16 +124,5 @@ class ExpeditionCard extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-String _expeditionName(ExpeditionCategory category) {
-  switch (category) {
-    case ExpeditionCategory.EXPEDITION_CATEGORY_QUICK_SEARCH:
-      return 'Quick Search';
-    case ExpeditionCategory.EXPEDITION_CATEGORY_NEARBY_EXPLORATION:
-      return 'Nearby Exploration';
-    case ExpeditionCategory.EXPEDITION_CATEGORY_NEW_HORIZONS:
-      return 'New Horizons';
   }
 }
