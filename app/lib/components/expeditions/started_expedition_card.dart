@@ -1,5 +1,6 @@
 import 'package:app/apis/world/v1/world_service.pb.dart';
-import 'package:app/components/expeditions/bloc/expeditions_bloc.dart';
+import 'package:app/components/expeditions/expeditions_util.dart';
+import 'package:app/state/expeditions/expeditions_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,20 +35,32 @@ class StartedExpeditionCard extends StatelessWidget {
               ),
               Expanded(
                 flex: 4,
-                child: Container(),
+                child: Row(
+                  children: [
+
+                  ],
+                ),
               ),
               Expanded(
                 flex: 1,
                 child: StreamBuilder(
                   stream: Stream.periodic(Duration(seconds: 1)),
                   builder: (context, snapshot) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Icon(Icons.access_time),
-                        Text(_timeUntilDone()),
-                      ],
-                    );
+                    final currentDuration = _currentDuration();
+                    if (currentDuration.inSeconds > 0) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Icon(Icons.access_time),
+                          Text(timeUntilDoneToText(currentDuration)),
+                        ],
+                      );
+                    } else {
+                      return Container(
+                        color: Colors.green,
+                        child: Center(child: Icon(Icons.done)),
+                      );
+                    }
                   },
                 ),
               )
@@ -57,25 +70,14 @@ class StartedExpeditionCard extends StatelessWidget {
       ),
     );
   }
-
-  String _timeUntilDone() {
+  
+  Duration _currentDuration() {
     final seconds = this.state.duration.seconds.toInt() -
         DateTime.now().difference(this.state.startedAt.toDateTime()).inSeconds;
-    final duration = Duration(seconds: seconds);
-
-    String textTime = '';
-    if (duration.inHours != 0) {
-      textTime += '${duration.inHours}h ';
-    }
-    if (duration.inHours == 0 && duration.inMinutes != 0) {
-      textTime += '${duration.inMinutes.remainder(Duration.minutesPerHour)}m ';
-    }
-    if (duration.inHours == 0 && duration.inMinutes == 0) {
-      textTime += '${duration.inSeconds.remainder(Duration.secondsPerMinute)}s';
-    }
-
-    return textTime;
+    return Duration(seconds: seconds);
   }
+
+
 
   _onTap(BuildContext context) {
     return () async {

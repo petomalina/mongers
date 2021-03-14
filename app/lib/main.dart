@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:app/components/expeditions/bloc/expeditions_bloc.dart';
-import 'package:app/components/resources/bloc/resources_bloc.dart';
+import 'package:app/state/expeditions/expeditions_bloc.dart';
+import 'package:app/state/resources/resources_bloc.dart';
 import 'package:app/views/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

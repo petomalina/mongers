@@ -33,7 +33,7 @@ class ResourcesBloc extends Bloc<ResourcesEvent, ResourcesState> {
         print(e);
       }
     } else if (event is ResourcesUpdate) {
-      yield ResourcesState.full(event.resources);
+      yield ResourcesState.ready(event.resources);
     }
   }
 }

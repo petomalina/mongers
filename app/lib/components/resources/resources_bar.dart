@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:app/apis/world/v1/world_service.pb.dart';
-import 'package:app/components/resources/bloc/resources_bloc.dart';
 import 'package:app/components/resources/resources_util.dart';
+import 'package:app/state/resources/resources_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,6 +1,6 @@
-import 'package:app/components/expeditions/bloc/expeditions_bloc.dart';
 import 'package:app/components/expeditions/available_expedition_card.dart';
 import 'package:app/components/expeditions/started_expedition_card.dart';
+import 'package:app/state/expeditions/expeditions_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

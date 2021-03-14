@@ -1,6 +1,6 @@
 part of 'resources_bloc.dart';
 
-enum ResourcesStateStatus { loading, full }
+enum ResourcesStateStatus { loading, ready }
 
 class ResourcesState extends Equatable {
   final List<ResourceState> resources;
@@ -11,8 +11,18 @@ class ResourcesState extends Equatable {
 
   ResourcesState.loading() : this._(status: ResourcesStateStatus.loading);
 
-  ResourcesState.full(List<ResourceState> rr)
-      : this._(resources: rr, status: ResourcesStateStatus.full);
+  ResourcesState.ready(List<ResourceState> rr)
+      : this._(resources: rr, status: ResourcesStateStatus.ready);
+
+  ResourcesState copyWith({
+    List<ResourceState> resources,
+    ResourcesStateStatus status,
+  }) {
+    return ResourcesState._(
+      resources: resources ?? this.resources,
+      status: status ?? this.status,
+    );
+  }
 
   @override
   List<Object> get props => [resources, status];
