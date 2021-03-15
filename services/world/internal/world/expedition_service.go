@@ -1,11 +1,15 @@
 package world
 
 import (
+	"errors"
 	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
 	"google.golang.org/protobuf/types/known/durationpb"
-	"sort"
 	"sync"
 	"time"
+)
+
+var (
+	ErrExpeditionNotFound = errors.New("expedition not found")
 )
 
 type ExpeditionService struct {
@@ -44,7 +48,7 @@ func NewExpeditionService() *ExpeditionService {
 						Category: v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE,
 					},
 					{
-						Value: 50 * ResourceMagnifierInt,
+						Value:    50 * ResourceMagnifierInt,
 						Category: v1.ResourceCategory_RESOURCE_CATEGORY_IRON,
 					},
 				},
@@ -164,14 +168,30 @@ func (es *ExpeditionService) CollectExpedition(playerID string, state *v1.Expedi
 
 	expeditions := es.data[playerID]
 
-	i := sort.Search(len(expeditions), func(i int) bool {
-		return expeditions[0].Expedition.ExpeditionId == state.Expedition.ExpeditionId
-	})
+	var err error
+	es.data[playerID], err = removeExpedition(expeditions, state)
 
-	// reslice without the collected expedition
-	es.data[playerID] = append(expeditions[:i], expeditions[i+1:]...)
+	return err
+}
 
-	return nil
+func removeExpedition(expeditions []*v1.ExpeditionState, rm *v1.ExpeditionState) ([]*v1.ExpeditionState, error) {
+	var i int
+	for i = 0; i < len(expeditions); i++ {
+		if expeditions[i].Expedition.ExpeditionId == rm.Expedition.ExpeditionId {
+			break
+		}
+	}
+	if i == len(expeditions) {
+		return expeditions, ErrExpeditionNotFound
+	}
+
+	// last element of the slice
+	if i+1 == len(expeditions) {
+		return expeditions[:i], nil
+	}
+
+	// in the middle of the slice
+	return append(expeditions[:i], expeditions[i+1:]...), nil
 }
 
 func generateExpedition() *v1.Expedition {
