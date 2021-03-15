@@ -12,14 +12,14 @@ class ResourcesBloc extends Bloc<ResourcesEvent, ResourcesState> {
   ResourcesBloc({@required WorldServiceClient repository})
       : _repository = repository,
         super(ResourcesState.loading()) {
-    add(RequestResourcesUpdate([]));
+    add(UpdateResources([]));
   }
 
   final WorldServiceClient _repository;
 
   @override
   Stream<ResourcesState> mapEventToState(ResourcesEvent event) async* {
-    if (event is RequestResourcesUpdate) {
+    if (event is UpdateResources) {
       try {
         yield ResourcesState.loading();
 
@@ -28,11 +28,11 @@ class ResourcesBloc extends Bloc<ResourcesEvent, ResourcesState> {
           playerId: 'peto',
         ));
 
-        add(ResourcesUpdate(resp.resources));
+        add(ResourcesUpdated(resp.resources));
       } catch (e) {
         print(e);
       }
-    } else if (event is ResourcesUpdate) {
+    } else if (event is ResourcesUpdated) {
       yield ResourcesState.ready(event.resources);
     }
   }

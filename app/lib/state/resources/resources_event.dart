@@ -7,19 +7,19 @@ abstract class ResourcesEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class RequestResourcesUpdate extends ResourcesEvent {
+class UpdateResources extends ResourcesEvent {
   final List<String> resourceIDs;
 
-  RequestResourcesUpdate(this.resourceIDs);
+  UpdateResources(this.resourceIDs);
 
   @override
   List<Object> get props => [resourceIDs];
 }
 
-class ResourcesUpdate extends ResourcesEvent {
+class ResourcesUpdated extends ResourcesEvent {
   final List<ResourceState> resources;
 
-  ResourcesUpdate(this.resources);
+  ResourcesUpdated(this.resources);
 
   @override
   List<Object> get props => [resources];

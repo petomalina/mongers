@@ -28,7 +28,7 @@ class GameExpeditionsView extends StatelessWidget {
               return AvailableExpeditionCard(
                 expedition: e,
                 onExpeditionStart: () {
-                  context.read<ExpeditionsBloc>().add(RequestExpeditionStart(
+                  context.read<ExpeditionsBloc>().add(StartExpedition(
                         e.expeditionId,
                       ));
                 },
@@ -51,7 +51,7 @@ class GameExpeditionsView extends StatelessWidget {
               return StartedExpeditionCard(
                 state: e,
                 onExpeditionCollect: () {
-                  context.read<ExpeditionsBloc>().add(RequestExpeditionCollect(
+                  context.read<ExpeditionsBloc>().add(CollectExpedition(
                         e.expedition.expeditionId,
                       ));
                 },

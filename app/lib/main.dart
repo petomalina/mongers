@@ -54,38 +54,47 @@ void main() async {
     connectType: 'play',
   ));
 
-  print(connectResult);
-
   runApp(MyApp(
-    ResourcesBloc(repository: worldServerClient),
-    ExpeditionsBloc(repository: worldServerClient),
+    worldServerClient,
+    null, null,
   ));
 }
 
 class MyApp extends StatelessWidget {
+  final world.WorldServiceClient client;
   final ResourcesBloc resourcesBloc;
   final ExpeditionsBloc expeditionsBloc;
 
-  MyApp(this.resourcesBloc, this.expeditionsBloc);
+  MyApp(this.client, this.resourcesBloc, this.expeditionsBloc);
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => resourcesBloc,
-        ),
-        BlocProvider(
-          create: (_) =>  expeditionsBloc,
-        ),
-      ],
-      child: MaterialApp(
-        title: 'Mongers',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: GameView(),
+    return BlocProvider(
+      create: (_) => ResourcesBloc(repository: client),
+      // the builder needs to be here to create a new internal
+      // context for the ResourceBloc, otherwise the ResourceBloc
+      // is being read from the outer context, which does not contain it
+      child: Builder(
+        builder: (context) {
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => ExpeditionsBloc(
+                  repository: client,
+                  resourcesBloc: context.read<ResourcesBloc>(),
+                ),
+              ),
+            ],
+            child: MaterialApp(
+              title: 'Mongers',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: GameView(),
+            ),
+          );
+        }
       ),
     );
   }

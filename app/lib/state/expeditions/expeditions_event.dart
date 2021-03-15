@@ -16,28 +16,28 @@ class ExpeditionsException extends ExpeditionsEvent {
   List<Object> get props => [exception];
 }
 
-class RequestExpeditionsUpdate extends ExpeditionsEvent {
+class ListExpeditions extends ExpeditionsEvent {
   final List<String> expeditionIDs;
 
-  RequestExpeditionsUpdate(this.expeditionIDs);
+  ListExpeditions(this.expeditionIDs);
 
   @override
   List<Object> get props => [expeditionIDs];
 }
 
-class ExpeditionsUpdate extends ExpeditionsEvent {
+class ExpeditionsUpdated extends ExpeditionsEvent {
   final ListExpeditionsResponse update;
 
-  ExpeditionsUpdate(this.update);
+  ExpeditionsUpdated(this.update);
 
   @override
   List<Object> get props => [update];
 }
 
-class RequestExpeditionStart extends ExpeditionsEvent {
+class StartExpedition extends ExpeditionsEvent {
   final String expeditionId;
 
-  RequestExpeditionStart(this.expeditionId);
+  StartExpedition(this.expeditionId);
 
   @override
   List<Object> get props => [expeditionId];
@@ -45,10 +45,10 @@ class RequestExpeditionStart extends ExpeditionsEvent {
 
 class RequestExpeditionStartResponse extends ExpeditionsEvent {}
 
-class RequestExpeditionCollect extends ExpeditionsEvent {
+class CollectExpedition extends ExpeditionsEvent {
   final String expeditionId;
 
-  RequestExpeditionCollect(this.expeditionId);
+  CollectExpedition(this.expeditionId);
 
   @override
   List<Object> get props => [expeditionId];
