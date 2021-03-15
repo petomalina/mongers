@@ -1032,15 +1032,15 @@ class ListExpeditionsRequest extends $pb.GeneratedMessage {
 
 class ListExpeditionsResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListExpeditionsResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
-    ..pc<Expedition>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'availableExpeditions', $pb.PbFieldType.PM, subBuilder: Expedition.create)
-    ..pc<ExpeditionState>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditionStates', $pb.PbFieldType.PM, subBuilder: ExpeditionState.create)
+    ..m<$core.String, Expedition>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'availableExpeditions', entryClassName: 'ListExpeditionsResponse.AvailableExpeditionsEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: Expedition.create, packageName: const $pb.PackageName('v1'))
+    ..m<$core.String, ExpeditionState>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expeditionStates', entryClassName: 'ListExpeditionsResponse.ExpeditionStatesEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: ExpeditionState.create, packageName: const $pb.PackageName('v1'))
     ..hasRequiredFields = false
   ;
 
   ListExpeditionsResponse._() : super();
   factory ListExpeditionsResponse({
-    $core.Iterable<Expedition>? availableExpeditions,
-    $core.Iterable<ExpeditionState>? expeditionStates,
+    $core.Map<$core.String, Expedition>? availableExpeditions,
+    $core.Map<$core.String, ExpeditionState>? expeditionStates,
   }) {
     final _result = create();
     if (availableExpeditions != null) {
@@ -1073,10 +1073,10 @@ class ListExpeditionsResponse extends $pb.GeneratedMessage {
   static ListExpeditionsResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<Expedition> get availableExpeditions => $_getList(0);
+  $core.Map<$core.String, Expedition> get availableExpeditions => $_getMap(0);
 
   @$pb.TagNumber(2)
-  $core.List<ExpeditionState> get expeditionStates => $_getList(1);
+  $core.Map<$core.String, ExpeditionState> get expeditionStates => $_getMap(1);
 }
 
 class StartExpeditionRequest extends $pb.GeneratedMessage {

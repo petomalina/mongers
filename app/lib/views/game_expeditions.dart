@@ -3,6 +3,7 @@ import 'package:app/components/expeditions/started_expedition_card.dart';
 import 'package:app/state/expeditions/expeditions_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:app/state/models/models.dart';
 
 class GameExpeditionsView extends StatelessWidget {
   @override
@@ -21,10 +22,15 @@ class GameExpeditionsView extends StatelessWidget {
   _buildAvailableExpeditions() {
     return BlocBuilder<ExpeditionsBloc, ExpeditionsState>(
       builder: (context, state) {
+        final expeditions = state.availableExpeditions.values.toList();
+        expeditions.sort(
+              (a, b) => a.baseDuration.toDuration().compareTo(b.baseDuration.toDuration()),
+        );
+
         return Column(
           children: [
             Text('Available Expeditions'),
-            ...state.availableExpeditions.map((e) {
+            ...expeditions.map((e) {
               return AvailableExpeditionCard(
                 expedition: e,
                 onExpeditionStart: () {
@@ -43,11 +49,15 @@ class GameExpeditionsView extends StatelessWidget {
   _buildStartedExpeditions() {
     return BlocBuilder<ExpeditionsBloc, ExpeditionsState>(
       builder: (context, state) {
+        final expeditions = state.expeditionStates.values.toList();
+        expeditions.sort(
+          (a, b) => a.duration.toDuration().compareTo(b.duration.toDuration()),
+        );
+
         return Column(
           children: [
-            if (state.expeditionStates.length > 0)
-              Text('Expeditions in Progress'),
-            ...state.expeditionStates.map((e) {
+            if (expeditions.length > 0) Text('Expeditions in Progress'),
+            ...expeditions.map((e) {
               return StartedExpeditionCard(
                 state: e,
                 onExpeditionCollect: () {

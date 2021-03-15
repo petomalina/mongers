@@ -229,13 +229,34 @@ final $typed_data.Uint8List listExpeditionsRequestDescriptor = $convert.base64De
 const ListExpeditionsResponse$json = const {
   '1': 'ListExpeditionsResponse',
   '2': const [
-    const {'1': 'available_expeditions', '3': 1, '4': 3, '5': 11, '6': '.v1.Expedition', '10': 'availableExpeditions'},
-    const {'1': 'expedition_states', '3': 2, '4': 3, '5': 11, '6': '.v1.ExpeditionState', '10': 'expeditionStates'},
+    const {'1': 'available_expeditions', '3': 1, '4': 3, '5': 11, '6': '.v1.ListExpeditionsResponse.AvailableExpeditionsEntry', '10': 'availableExpeditions'},
+    const {'1': 'expedition_states', '3': 2, '4': 3, '5': 11, '6': '.v1.ListExpeditionsResponse.ExpeditionStatesEntry', '10': 'expeditionStates'},
   ],
+  '3': const [ListExpeditionsResponse_AvailableExpeditionsEntry$json, ListExpeditionsResponse_ExpeditionStatesEntry$json],
+};
+
+@$core.Deprecated('Use listExpeditionsResponseDescriptor instead')
+const ListExpeditionsResponse_AvailableExpeditionsEntry$json = const {
+  '1': 'AvailableExpeditionsEntry',
+  '2': const [
+    const {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 11, '6': '.v1.Expedition', '10': 'value'},
+  ],
+  '7': const {'7': true},
+};
+
+@$core.Deprecated('Use listExpeditionsResponseDescriptor instead')
+const ListExpeditionsResponse_ExpeditionStatesEntry$json = const {
+  '1': 'ExpeditionStatesEntry',
+  '2': const [
+    const {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 11, '6': '.v1.ExpeditionState', '10': 'value'},
+  ],
+  '7': const {'7': true},
 };
 
 /// Descriptor for `ListExpeditionsResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listExpeditionsResponseDescriptor = $convert.base64Decode('ChdMaXN0RXhwZWRpdGlvbnNSZXNwb25zZRJDChVhdmFpbGFibGVfZXhwZWRpdGlvbnMYASADKAsyDi52MS5FeHBlZGl0aW9uUhRhdmFpbGFibGVFeHBlZGl0aW9ucxJAChFleHBlZGl0aW9uX3N0YXRlcxgCIAMoCzITLnYxLkV4cGVkaXRpb25TdGF0ZVIQZXhwZWRpdGlvblN0YXRlcw==');
+final $typed_data.Uint8List listExpeditionsResponseDescriptor = $convert.base64Decode('ChdMaXN0RXhwZWRpdGlvbnNSZXNwb25zZRJqChVhdmFpbGFibGVfZXhwZWRpdGlvbnMYASADKAsyNS52MS5MaXN0RXhwZWRpdGlvbnNSZXNwb25zZS5BdmFpbGFibGVFeHBlZGl0aW9uc0VudHJ5UhRhdmFpbGFibGVFeHBlZGl0aW9ucxJeChFleHBlZGl0aW9uX3N0YXRlcxgCIAMoCzIxLnYxLkxpc3RFeHBlZGl0aW9uc1Jlc3BvbnNlLkV4cGVkaXRpb25TdGF0ZXNFbnRyeVIQZXhwZWRpdGlvblN0YXRlcxpXChlBdmFpbGFibGVFeHBlZGl0aW9uc0VudHJ5EhAKA2tleRgBIAEoCVIDa2V5EiQKBXZhbHVlGAIgASgLMg4udjEuRXhwZWRpdGlvblIFdmFsdWU6AjgBGlgKFUV4cGVkaXRpb25TdGF0ZXNFbnRyeRIQCgNrZXkYASABKAlSA2tleRIpCgV2YWx1ZRgCIAEoCzITLnYxLkV4cGVkaXRpb25TdGF0ZVIFdmFsdWU6AjgB');
 @$core.Deprecated('Use startExpeditionRequestDescriptor instead')
 const StartExpeditionRequest$json = const {
   '1': 'StartExpeditionRequest',

@@ -189,8 +189,8 @@ message ListExpeditionsRequest {
 }
 
 message ListExpeditionsResponse {
-  repeated Expedition available_expeditions = 1;
-  repeated ExpeditionState expedition_states = 2;
+  map<string, Expedition> available_expeditions = 1;
+  map<string, ExpeditionState> expedition_states = 2;
 }
 
 message StartExpeditionRequest {

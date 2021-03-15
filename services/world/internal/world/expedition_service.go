@@ -13,8 +13,8 @@ var (
 )
 
 type ExpeditionService struct {
-	// data is a map of [player_id][]Expedition
-	data map[string][]*v1.ExpeditionState
+	// data is a map of [player_id][expedition_id]Expedition
+	data map[string]map[string]*v1.ExpeditionState
 
 	dataMutex sync.RWMutex
 
@@ -22,15 +22,15 @@ type ExpeditionService struct {
 
 	// availableExpeditions is the list of currently available
 	// expeditions to all players in the world
-	availableExpeditions []*v1.Expedition
+	availableExpeditions map[string]*v1.Expedition
 }
 
 func NewExpeditionService() *ExpeditionService {
 	return &ExpeditionService{
-		data:       map[string][]*v1.ExpeditionState{},
+		data:       map[string]map[string]*v1.ExpeditionState{},
 		timeSource: DefaultTimeSource{},
-		availableExpeditions: []*v1.Expedition{
-			{
+		availableExpeditions: map[string]*v1.Expedition{
+			"12345": {
 				ExpeditionId:   "12345",
 				Category:       v1.ExpeditionCategory_EXPEDITION_CATEGORY_QUICK_SEARCH,
 				ResourceTarget: v1.ResourceCategory_RESOURCE_CATEGORY_IRON,
@@ -53,7 +53,7 @@ func NewExpeditionService() *ExpeditionService {
 					},
 				},
 			},
-			{
+			"12346": {
 				ExpeditionId:   "12346",
 				Category:       v1.ExpeditionCategory_EXPEDITION_CATEGORY_NEARBY_EXPLORATION,
 				ResourceTarget: v1.ResourceCategory_RESOURCE_CATEGORY_CLAY,
@@ -72,7 +72,7 @@ func NewExpeditionService() *ExpeditionService {
 					},
 				},
 			},
-			{
+			"12347": {
 				ExpeditionId:   "12347",
 				Category:       v1.ExpeditionCategory_EXPEDITION_CATEGORY_NEW_HORIZONS,
 				ResourceTarget: v1.ResourceCategory_RESOURCE_CATEGORY_OIL,
@@ -99,37 +99,34 @@ func (es *ExpeditionService) RegisterPlayer(player string) error {
 	// TODO: the players should be in a storage and we should look there first
 
 	// register a new player to the game
-	es.data[player] = []*v1.ExpeditionState{}
+	es.data[player] = map[string]*v1.ExpeditionState{}
 
 	return nil
 }
 
 func (es *ExpeditionService) DisposePlayer(player string) error {
+	delete(es.data, player)
 	return nil
 }
 
 // ListExpeditions returns available expeditions as well as reconciled expeditions that
 // are in progress or ready to collect (done).
-func (es *ExpeditionService) ListExpeditions(playerID string, filter v1.ListExpeditionFilter) ([]*v1.Expedition, []*v1.ExpeditionState, error) {
-	es.dataMutex.RLock()
-	defer es.dataMutex.RUnlock()
+func (es *ExpeditionService) ListExpeditions(playerID string, filter v1.ListExpeditionFilter) (map[string]*v1.Expedition, map[string]*v1.ExpeditionState, error) {
+	es.dataMutex.Lock()
+	defer es.dataMutex.Unlock()
 
-	var expeditions []*v1.Expedition
-	var expeditionStates []*v1.ExpeditionState
+	var expeditions map[string]*v1.Expedition
+	var expeditionStates map[string]*v1.ExpeditionState
 
 	if filter == v1.ListExpeditionFilter_LIST_EXPEDITION_FILTER_ALL ||
 		filter == v1.ListExpeditionFilter_LIST_EXPEDITION_FILTER_PLAYER_ONLY {
-		// reconcile all states before they are sent
-		for i := 0; i < len(es.data[playerID]); i++ {
-			es.data[playerID][i] = reconcileExpedition(es.data[playerID][i], es.timeSource)
-		}
 
-		expeditionStates = append(expeditionStates, es.data[playerID]...)
+		expeditionStates = es.data[playerID]
 	}
 
 	if filter == v1.ListExpeditionFilter_LIST_EXPEDITION_FILTER_ALL ||
 		filter == v1.ListExpeditionFilter_LIST_EXPEDITION_FILTER_AVAILABLE_ONLY {
-		expeditions = append(expeditions, es.availableExpeditions...)
+		expeditions = es.availableExpeditions
 	}
 
 	return expeditions, expeditionStates, nil
@@ -141,13 +138,7 @@ func (es *ExpeditionService) SelectAvailableExpedition(expeditionID string) *v1.
 	es.dataMutex.RLock()
 	defer es.dataMutex.RUnlock()
 
-	for _, ex := range es.availableExpeditions {
-		if ex.ExpeditionId == expeditionID {
-			return ex
-		}
-	}
-
-	return nil
+	return es.availableExpeditions[expeditionID]
 }
 
 // StartExpedition starts the given expedition for the player. The expedition does not need to be
@@ -157,7 +148,7 @@ func (es *ExpeditionService) StartExpedition(playerID string, expedition *v1.Exp
 	es.dataMutex.Lock()
 	defer es.dataMutex.Unlock()
 
-	es.data[playerID] = append(es.data[playerID], expedition)
+	es.data[playerID][expedition.Expedition.ExpeditionId] = expedition
 
 	return expedition, nil
 }
@@ -166,32 +157,12 @@ func (es *ExpeditionService) CollectExpedition(playerID string, state *v1.Expedi
 	es.dataMutex.Lock()
 	defer es.dataMutex.Unlock()
 
-	expeditions := es.data[playerID]
-
-	var err error
-	es.data[playerID], err = removeExpedition(expeditions, state)
-
-	return err
-}
-
-func removeExpedition(expeditions []*v1.ExpeditionState, rm *v1.ExpeditionState) ([]*v1.ExpeditionState, error) {
-	var i int
-	for i = 0; i < len(expeditions); i++ {
-		if expeditions[i].Expedition.ExpeditionId == rm.Expedition.ExpeditionId {
-			break
-		}
-	}
-	if i == len(expeditions) {
-		return expeditions, ErrExpeditionNotFound
+	if _, ok := es.data[playerID][state.Expedition.ExpeditionId]; !ok {
+		return ErrExpeditionNotFound
 	}
 
-	// last element of the slice
-	if i+1 == len(expeditions) {
-		return expeditions[:i], nil
-	}
-
-	// in the middle of the slice
-	return append(expeditions[:i], expeditions[i+1:]...), nil
+	delete(es.data[playerID], state.Expedition.ExpeditionId)
+	return nil
 }
 
 func generateExpedition() *v1.Expedition {

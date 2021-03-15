@@ -3,22 +3,22 @@ part of 'expeditions_bloc.dart';
 enum ExpeditionsStateStatus { loading, loaded }
 
 class ExpeditionsState extends Equatable {
-  final List<Expedition> availableExpeditions;
-  final List<ExpeditionState> expeditionStates;
+  final Map<String, Expedition> availableExpeditions;
+  final Map<String, ExpeditionState> expeditionStates;
 
   final ExpeditionsStateStatus status;
   final Exception exception;
 
   ExpeditionsState._({
-    this.availableExpeditions = const [],
-    this.expeditionStates = const [],
+    this.availableExpeditions = const {},
+    this.expeditionStates = const {},
     this.status = ExpeditionsStateStatus.loading,
     this.exception,
   });
 
   ExpeditionsState copyWith({
-    List<Expedition> availableExpeditions,
-    List<ExpeditionState> expeditionStates,
+    Map<String, Expedition> availableExpeditions,
+    Map<String, ExpeditionState> expeditionStates,
     status,
     exception,
   }) {

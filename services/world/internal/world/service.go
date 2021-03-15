@@ -202,6 +202,9 @@ func (ws *WorldService) CollectExpedition(ctx context.Context, req *v1.CollectEx
 		L.Info("Expedition not found", zap.Error(err))
 		return &v1.CollectExpeditionResponse{}, err
 	}
+
+	expedition = reconcileExpedition(expedition, DefaultTimeSource{})
+
 	if expedition.Status != v1.ExpeditionStatus_EXPEDITION_STATUS_DONE {
 		err := status.Error(
 			codes.FailedPrecondition,
