@@ -1,8 +1,11 @@
-import 'package:app/apis/world/v1/world_service.pb.dart';
 import 'package:app/apis/world/v1/world_service.pbgrpc.dart';
+import 'package:app/state/models/models.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:fixnum/fixnum.dart' as $fixnum;
+import '../../google/protobuf/timestamp.pb.dart' as $timestamp;
+
 
 part 'resources_event.dart';
 
@@ -23,7 +26,8 @@ class ResourcesBloc extends Bloc<ResourcesEvent, ResourcesState> {
       try {
         yield ResourcesState.loading();
 
-        final resp = await _repository.listResourcesState(ListResourcesStateRequest(
+        final resp =
+            await _repository.listResourcesState(ListResourcesStateRequest(
           ids: event.resourceIDs,
           playerId: 'peto',
         ));

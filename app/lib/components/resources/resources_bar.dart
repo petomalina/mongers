@@ -26,8 +26,12 @@ class ResourcesBar extends StatelessWidget implements PreferredSizeWidget {
             builder: (context, state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children:
-                state.resources.map((e) => SingleResourceStatus(e)).toList(),
+            children: [
+              SingleResourceStatus(state.getResource(ResourceCategory.RESOURCE_CATEGORY_POWER)),
+              SingleResourceStatus(state.getResource(ResourceCategory.RESOURCE_CATEGORY_IRON)),
+              SingleResourceStatus(state.getResource(ResourceCategory.RESOURCE_CATEGORY_CLAY)),
+              SingleResourceStatus(state.getResource(ResourceCategory.RESOURCE_CATEGORY_OIL)),
+            ]
           );
         }),
       ),

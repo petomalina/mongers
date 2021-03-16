@@ -17,7 +17,7 @@ class UpdateResources extends ResourcesEvent {
 }
 
 class ResourcesUpdated extends ResourcesEvent {
-  final List<ResourceState> resources;
+  final Map<String, ResourceState> resources;
 
   ResourcesUpdated(this.resources);
 

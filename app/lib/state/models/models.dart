@@ -40,7 +40,14 @@ extension ResourceExtension on $pb.Resource {
       $pb.ResourceCategory.RESOURCE_CATEGORY_EXPERIENCE: "XP",
     };
 
-    return categories[category];
+    return categories[$pb.ResourceCategory.valueOf(int.parse(resourceId))];
+  }
+}
+
+extension ResourceCategoryExtension on $pb.ResourceCategory {
+  // toID returns the value of the category as a String
+  String toID() {
+    return value.toString();
   }
 }
 
