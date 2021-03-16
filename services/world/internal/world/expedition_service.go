@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	ErrExpeditionNotFound = errors.New("expedition not found")
+	ErrExpeditionNotFound       = errors.New("expedition not found")
+	ErrExpeditionAlreadyStarted = errors.New("expedition already started")
 )
 
 type ExpeditionService struct {
@@ -149,9 +150,21 @@ func (es *ExpeditionService) StartExpedition(playerID string, expedition *v1.Exp
 	es.dataMutex.Lock()
 	defer es.dataMutex.Unlock()
 
-	es.data[playerID][expedition.Expedition.ExpeditionId] = expedition
+	if _, ok := es.data[playerID][expedition.Expedition.ExpeditionId]; ok {
+		return nil, ErrExpeditionAlreadyStarted
+	}
 
+	es.data[playerID][expedition.Expedition.ExpeditionId] = expedition
 	return expedition, nil
+}
+
+// IsPlayerOnExpedition returns true if the player is on a given expedition, otherwise returns false
+func (es *ExpeditionService) IsPlayerOnExpedition(playerID, expeditionID string) bool {
+	es.dataMutex.RLock()
+	defer es.dataMutex.RUnlock()
+
+	_, ok := es.data[playerID][expeditionID]
+	return ok
 }
 
 func (es *ExpeditionService) CollectExpedition(playerID string, state *v1.ExpeditionState) error {

@@ -152,6 +152,13 @@ func (ws *WorldService) StartExpedition(ctx context.Context, req *v1.StartExpedi
 		)
 	}
 
+	if ws.expeditionsMan.IsPlayerOnExpedition(req.PlayerId, req.ExpeditionId) {
+		return &v1.StartExpeditionResponse{}, status.Error(
+			codes.FailedPrecondition,
+			ErrExpeditionAlreadyStarted.Error(),
+		)
+	}
+
 	err := ws.resourcesMan.SpendResources(req.PlayerId, ex.Cost)
 	if err != nil {
 		return &v1.StartExpeditionResponse{}, status.Error(codes.FailedPrecondition, err.Error())
