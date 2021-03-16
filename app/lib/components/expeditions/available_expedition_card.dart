@@ -74,9 +74,18 @@ class ExpeditionCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.black87,
                   ),
-                  child: Icon(
-                    Icons.search_outlined,
-                    color: Theme.of(context).primaryColor,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black87,
+                    ),
+                    child: Center(
+                      child: Text(
+                        expedition.resourceTarget.nice,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

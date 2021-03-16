@@ -24,7 +24,9 @@ class ResourcesBloc extends Bloc<ResourcesEvent, ResourcesState> {
   Stream<ResourcesState> mapEventToState(ResourcesEvent event) async* {
     if (event is UpdateResources) {
       try {
-        yield ResourcesState.loading();
+        yield state.copyWith(
+          status: ResourcesStateStatus.loading,
+        );
 
         final resp =
             await _repository.listResourcesState(ListResourcesStateRequest(

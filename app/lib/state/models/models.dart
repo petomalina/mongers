@@ -33,21 +33,24 @@ extension ResourceCategoryExtension on $pb.ResourceCategory {
   String toID() {
     return value.toString();
   }
-}
 
-extension ResourceExtension on $pb.Resource {
-  String get niceCategory {
+  String get nice {
     const categories = const {
       $pb.ResourceCategory.RESOURCE_CATEGORY_POWER: "Pwr",
       $pb.ResourceCategory.RESOURCE_CATEGORY_MONEY: "\$",
       $pb.ResourceCategory.RESOURCE_CATEGORY_IRON: "Iron",
       $pb.ResourceCategory.RESOURCE_CATEGORY_CLAY: "Clay",
       $pb.ResourceCategory.RESOURCE_CATEGORY_OIL: "Oil",
-
       $pb.ResourceCategory.RESOURCE_CATEGORY_EXPERIENCE: "XP",
     };
 
-    return categories[$pb.ResourceCategory.valueOf(int.parse(resourceId))];
+    return categories[this];
+  }
+}
+
+extension ResourceExtension on $pb.Resource {
+  $pb.ResourceCategory get category {
+    return $pb.ResourceCategory.valueOf(int.parse(resourceId.substring(resourceId.indexOf('_') + 1)));
   }
 
   int currentValue() {
@@ -57,12 +60,19 @@ extension ResourceExtension on $pb.Resource {
 
 extension ResourceStateExtension on $pb.ResourceState {
   int currentValue() {
-    final diff = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(timestamp.seconds.toInt() * 1000));
+    final diff = DateTime.now().difference(
+        DateTime.fromMillisecondsSinceEpoch(timestamp.seconds.toInt() * 1000));
 
     // this creates an rpm diff in seconds and then makes minutes again, so we don't
     // need to wait a full minute for the RPM to pass. It also normalizes the number
     // so the player won't see thousands (every 1 resource has 1000 units).
-    return ((resource.value.toInt() + (diff.inSeconds * rpm.toInt()) / 60) / 1000).round();
+    return ((resource.value.toInt() + (diff.inSeconds * rpm.toInt()) / 60) /
+            1000)
+        .round();
+  }
+
+  String niceRPM() {
+    return (rpm.toInt() / 1000).toStringAsFixed(2);
   }
 }
 
@@ -86,4 +96,3 @@ extension ExpeditionStateExtension on $pb.ExpeditionState {
     return Duration(seconds: seconds);
   }
 }
-

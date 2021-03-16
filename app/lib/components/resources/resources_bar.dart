@@ -21,7 +21,7 @@ class ResourcesBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(top: 16, bottom: 16),
+        padding: const EdgeInsets.only(top: 8),
         child: BlocBuilder<ResourcesBloc, ResourcesState>(
             builder: (context, state) {
           return Row(
@@ -52,20 +52,29 @@ class SingleResourceStatus extends StatelessWidget {
     return StreamBuilder(
       stream: Stream.periodic(Duration(seconds: 1)),
       builder: (context, snapshot) {
-        return Row(
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              resourceState.currentValue().toString(),
-              style: TextStyle(
-                color: Theme.of(context).accentColor,
-              ),
+            Row(
+              children: [
+                Text(
+                  resourceState.currentValue().toString(),
+                  style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Text(
+                  resourceState.resource.category.nice,
+                ),
+              ],
             ),
-            SizedBox(
-              width: 4,
-            ),
-            Text(
-              resourceState.resource.niceCategory,
-            ),
+            // Text(
+            //   '+' + resourceState.niceRPM(),
+            // )
           ],
         );
       },

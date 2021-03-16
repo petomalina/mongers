@@ -25,9 +25,13 @@ class StartedExpeditionCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.black87,
                   ),
-                  child: Icon(
-                    Icons.search_outlined,
-                    color: Theme.of(context).primaryColor,
+                  child: Center(
+                    child: Text(
+                      state.expedition.resourceTarget.nice,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -46,7 +50,7 @@ class StartedExpeditionCard extends StatelessWidget {
                               padding: const EdgeInsets.only(right:6.0),
                               child: Text(e.currentValue().toString() +
                                   ' ' +
-                                  e.niceCategory),
+                                  e.category.nice),
                             );
                           }),
                         ],
