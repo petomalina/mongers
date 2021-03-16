@@ -28,6 +28,13 @@ extension DurationExtension on Duration {
   }
 }
 
+extension ResourceCategoryExtension on $pb.ResourceCategory {
+  // toID returns the value of the category as a String
+  String toID() {
+    return value.toString();
+  }
+}
+
 extension ResourceExtension on $pb.Resource {
   String get niceCategory {
     const categories = const {
@@ -42,12 +49,9 @@ extension ResourceExtension on $pb.Resource {
 
     return categories[$pb.ResourceCategory.valueOf(int.parse(resourceId))];
   }
-}
 
-extension ResourceCategoryExtension on $pb.ResourceCategory {
-  // toID returns the value of the category as a String
-  String toID() {
-    return value.toString();
+  int currentValue() {
+    return (value.toInt() / 1000).round();
   }
 }
 

@@ -33,10 +33,26 @@ class StartedExpeditionCard extends StatelessWidget {
               ),
               Expanded(
                 flex: 4,
-                child: Row(
-                  children: [
-
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(state.expedition.name),
+                      Row(
+                        children: [
+                          ...state.expedition.rewards.map((e) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right:6.0),
+                              child: Text(e.currentValue().toString() +
+                                  ' ' +
+                                  e.niceCategory),
+                            );
+                          }),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Expanded(
