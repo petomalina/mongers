@@ -224,9 +224,9 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 		// #00 basic spend use-case
 		{
 			pool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      1000,
 					},
 					Timestamp: timestamppb.Now(),
@@ -235,14 +235,14 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 			},
 			spenders: []*v1.Resource{
 				{
-					ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+					ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 					Value:      500,
 				},
 			},
 			resultPool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      500,
 					},
 					Timestamp: timestamppb.Now(),
@@ -254,9 +254,9 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 		// #01 returning an error when there are not enough resources
 		{
 			pool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      1000,
 					},
 					Timestamp: timestamppb.Now(),
@@ -265,14 +265,14 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 			},
 			spenders: []*v1.Resource{
 				{
-					ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+					ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 					Value:      1500,
 				},
 			},
 			resultPool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      1000,
 					},
 					Timestamp: timestamppb.Now(),
@@ -284,17 +284,17 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 		// #02 spending only one of multiple available resources should not affect other resources
 		{
 			pool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      1000,
 					},
 					Timestamp: timestamppb.Now(),
 					Rpm:       0,
 				},
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_MONEY): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_MONEY): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_MONEY),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_MONEY),
 						Value:      10000,
 					},
 					Timestamp: timestamppb.Now(),
@@ -303,22 +303,22 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 			},
 			spenders: []*v1.Resource{
 				{
-					ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+					ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 					Value:      500,
 				},
 			},
 			resultPool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      500,
 					},
 					Timestamp: timestamppb.Now(),
 					Rpm:       0,
 				},
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_MONEY): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_MONEY): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_MONEY),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_MONEY),
 						Value:      10000,
 					},
 					Timestamp: timestamppb.Now(),
@@ -330,9 +330,9 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 		// #03 spending should calculate with the current resource value even if updated in the past
 		{
 			pool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      1000,
 					},
 					Timestamp: timestamppb.New(time.Now().Add(-time.Minute * 30)),
@@ -341,14 +341,14 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 			},
 			spenders: []*v1.Resource{
 				{
-					ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+					ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 					Value:      31000,
 				},
 			},
 			resultPool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      0,
 					},
 					Timestamp: timestamppb.Now(),
@@ -360,9 +360,9 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 		// #04 one more resource is needed, so the pool and timestamps should not be updated
 		{
 			pool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      1000,
 					},
 					Timestamp: timestamppb.New(time.Now().Add(-time.Minute * 30)),
@@ -371,14 +371,14 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 			},
 			spenders: []*v1.Resource{
 				{
-					ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+					ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 					Value:      31001,
 				},
 			},
 			resultPool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      1000,
 					},
 					Timestamp: timestamppb.New(time.Now().Add(-time.Minute * 30)),
@@ -391,9 +391,9 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 		// to get that resource
 		{
 			pool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      1000,
 					},
 					Timestamp: timestamppb.New(time.Now().Add(-time.Second * 59)),
@@ -402,14 +402,14 @@ func (s *ResourceServiceSuite) TestSpendResources() {
 			},
 			spenders: []*v1.Resource{
 				{
-					ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+					ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 					Value:      1001,
 				},
 			},
 			resultPool: map[string]*v1.ResourceState{
-				getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
+				GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL): {
 					Resource: &v1.Resource{
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_OIL),
 						Value:      1000,
 					},
 					Timestamp: timestamppb.New(time.Now().Add(-time.Second * 59)),

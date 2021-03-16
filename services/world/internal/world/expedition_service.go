@@ -2,6 +2,7 @@ package world
 
 import (
 	"errors"
+	"fmt"
 	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"sync"
@@ -39,17 +40,17 @@ func NewExpeditionService() *ExpeditionService {
 				Cost: []*v1.Resource{
 					{
 						Value:      1000,
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_POWER),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_POWER),
 					},
 				},
 				Rewards: []*v1.Resource{
 					{
 						Value:      100 * ResourceMagnifierInt,
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE),
+						ResourceId: GetResourceExperienceID(v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE),
 					},
 					{
 						Value:      50 * ResourceMagnifierInt,
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_IRON),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_IRON),
 					},
 				},
 			},
@@ -62,13 +63,13 @@ func NewExpeditionService() *ExpeditionService {
 				Cost: []*v1.Resource{
 					{
 						Value:      6000,
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_POWER),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_POWER),
 					},
 				},
 				Rewards: []*v1.Resource{
 					{
 						Value:      600 * 1000,
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE),
+						ResourceId: GetResourceExperienceID(v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE),
 					},
 				},
 			},
@@ -81,13 +82,13 @@ func NewExpeditionService() *ExpeditionService {
 				Cost: []*v1.Resource{
 					{
 						Value:      60000,
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_POWER),
+						ResourceId: GetResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_POWER),
 					},
 				},
 				Rewards: []*v1.Resource{
 					{
 						Value:      6000 * 1000,
-						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE),
+						ResourceId: GetResourceExperienceID(v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE),
 					},
 				},
 			},
@@ -176,4 +177,10 @@ func reconcileExpedition(state *v1.ExpeditionState, tsource ...TimeSource) *v1.E
 	}
 
 	return state
+}
+
+// GetResourceExperienceID returns an ID that is used to store experience that the player
+// has gained during expeditions for a certain resource
+func GetResourceExperienceID(cat v1.ResourceCategory) string {
+	return fmt.Sprintf("exp_%d", cat)
 }

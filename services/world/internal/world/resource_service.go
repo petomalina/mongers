@@ -36,7 +36,7 @@ func (rs *ResourceService) RegisterPlayer(playerID string) error {
 	rs.dataMutex.Lock()
 	defer rs.dataMutex.Unlock()
 
-	powerID := getResourceID(
+	powerID := GetResourceID(
 		v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
 	)
 
@@ -75,7 +75,7 @@ func (rs *ResourceService) ListResource(playerID string, cat v1.ResourceCategory
 		rs.dataMutex.RUnlock()
 	}()
 
-	return rs.data[playerID][getResourceID(cat)]
+	return rs.data[playerID][GetResourceID(cat)]
 }
 
 // SpendResources validates that the player has enough resources and if so, spends them.
@@ -110,7 +110,7 @@ func (rs *ResourceService) UpdateResourceRPM(playerID string, cat v1.ResourceCat
 		rs.dataMutex.Unlock()
 	}()
 
-	resourceID := getResourceID(cat)
+	resourceID := GetResourceID(cat)
 
 	// select and create the resource if it does not exist
 	res := rs.data[playerID][resourceID]
@@ -216,7 +216,7 @@ func reconcileResource(state *v1.ResourceState, tsource ...TimeSource) *v1.Resou
 	return state
 }
 
-// getResourceID returns a string ID of the given category resource
-func getResourceID(category v1.ResourceCategory) string {
+// GetResourceID returns a string ID of the given category resource
+func GetResourceID(category v1.ResourceCategory) string {
 	return fmt.Sprintf("%d", category)
 }
