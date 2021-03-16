@@ -38,18 +38,18 @@ func NewExpeditionService() *ExpeditionService {
 				BaseDuration:   durationpb.New(time.Second * 30),
 				Cost: []*v1.Resource{
 					{
-						Value:    1000,
-						Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
+						Value:      1000,
+						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_POWER),
 					},
 				},
 				Rewards: []*v1.Resource{
 					{
-						Value:    100 * ResourceMagnifierInt,
-						Category: v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE,
+						Value:      100 * ResourceMagnifierInt,
+						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE),
 					},
 					{
-						Value:    50 * ResourceMagnifierInt,
-						Category: v1.ResourceCategory_RESOURCE_CATEGORY_IRON,
+						Value:      50 * ResourceMagnifierInt,
+						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_IRON),
 					},
 				},
 			},
@@ -61,14 +61,14 @@ func NewExpeditionService() *ExpeditionService {
 				BaseDuration:   durationpb.New(time.Minute * 6),
 				Cost: []*v1.Resource{
 					{
-						Value:    6000,
-						Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
+						Value:      6000,
+						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_POWER),
 					},
 				},
 				Rewards: []*v1.Resource{
 					{
-						Value:    600 * 1000,
-						Category: v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE,
+						Value:      600 * 1000,
+						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE),
 					},
 				},
 			},
@@ -80,14 +80,14 @@ func NewExpeditionService() *ExpeditionService {
 				BaseDuration:   durationpb.New(time.Minute * 60),
 				Cost: []*v1.Resource{
 					{
-						Value:    60000,
-						Category: v1.ResourceCategory_RESOURCE_CATEGORY_POWER,
+						Value:      60000,
+						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_POWER),
 					},
 				},
 				Rewards: []*v1.Resource{
 					{
-						Value:    6000 * 1000,
-						Category: v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE,
+						Value:      6000 * 1000,
+						ResourceId: getResourceID(v1.ResourceCategory_RESOURCE_CATEGORY_EXPERIENCE),
 					},
 				},
 			},

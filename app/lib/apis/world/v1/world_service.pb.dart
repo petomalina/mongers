@@ -495,19 +495,19 @@ class Player extends $pb.GeneratedMessage {
 
 class Resource extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Resource', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
-    ..e<ResourceCategory>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'category', $pb.PbFieldType.OE, defaultOrMaker: ResourceCategory.RESOURCE_CATEGORY_UNSPECIFIED, valueOf: ResourceCategory.valueOf, enumValues: ResourceCategory.values)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resourceId')
     ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'value')
     ..hasRequiredFields = false
   ;
 
   Resource._() : super();
   factory Resource({
-    ResourceCategory? category,
+    $core.String? resourceId,
     $fixnum.Int64? value,
   }) {
     final _result = create();
-    if (category != null) {
-      _result.category = category;
+    if (resourceId != null) {
+      _result.resourceId = resourceId;
     }
     if (value != null) {
       _result.value = value;
@@ -536,13 +536,13 @@ class Resource extends $pb.GeneratedMessage {
   static Resource? _defaultInstance;
 
   @$pb.TagNumber(1)
-  ResourceCategory get category => $_getN(0);
+  $core.String get resourceId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set category(ResourceCategory v) { setField(1, v); }
+  set resourceId($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasCategory() => $_has(0);
+  $core.bool hasResourceId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCategory() => clearField(1);
+  void clearResourceId() => clearField(1);
 
   @$pb.TagNumber(2)
   $fixnum.Int64 get value => $_getI64(1);
@@ -690,13 +690,13 @@ class ListResourcesStateRequest extends $pb.GeneratedMessage {
 
 class ListResourcesStateResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListResourcesStateResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
-    ..pc<ResourceState>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resources', $pb.PbFieldType.PM, subBuilder: ResourceState.create)
+    ..m<$core.String, ResourceState>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resources', entryClassName: 'ListResourcesStateResponse.ResourcesEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: ResourceState.create, packageName: const $pb.PackageName('v1'))
     ..hasRequiredFields = false
   ;
 
   ListResourcesStateResponse._() : super();
   factory ListResourcesStateResponse({
-    $core.Iterable<ResourceState>? resources,
+    $core.Map<$core.String, ResourceState>? resources,
   }) {
     final _result = create();
     if (resources != null) {
@@ -726,7 +726,7 @@ class ListResourcesStateResponse extends $pb.GeneratedMessage {
   static ListResourcesStateResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<ResourceState> get resources => $_getList(0);
+  $core.Map<$core.String, ResourceState> get resources => $_getMap(0);
 }
 
 class Expedition extends $pb.GeneratedMessage {

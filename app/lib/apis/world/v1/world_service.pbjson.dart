@@ -143,13 +143,13 @@ final $typed_data.Uint8List playerDescriptor = $convert.base64Decode('CgZQbGF5ZX
 const Resource$json = const {
   '1': 'Resource',
   '2': const [
-    const {'1': 'category', '3': 1, '4': 1, '5': 14, '6': '.v1.ResourceCategory', '10': 'category'},
+    const {'1': 'resource_id', '3': 1, '4': 1, '5': 9, '10': 'resourceId'},
     const {'1': 'value', '3': 2, '4': 1, '5': 3, '10': 'value'},
   ],
 };
 
 /// Descriptor for `Resource`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List resourceDescriptor = $convert.base64Decode('CghSZXNvdXJjZRIwCghjYXRlZ29yeRgBIAEoDjIULnYxLlJlc291cmNlQ2F0ZWdvcnlSCGNhdGVnb3J5EhQKBXZhbHVlGAIgASgDUgV2YWx1ZQ==');
+final $typed_data.Uint8List resourceDescriptor = $convert.base64Decode('CghSZXNvdXJjZRIfCgtyZXNvdXJjZV9pZBgBIAEoCVIKcmVzb3VyY2VJZBIUCgV2YWx1ZRgCIAEoA1IFdmFsdWU=');
 @$core.Deprecated('Use resourceStateDescriptor instead')
 const ResourceState$json = const {
   '1': 'ResourceState',
@@ -177,12 +177,23 @@ final $typed_data.Uint8List listResourcesStateRequestDescriptor = $convert.base6
 const ListResourcesStateResponse$json = const {
   '1': 'ListResourcesStateResponse',
   '2': const [
-    const {'1': 'resources', '3': 1, '4': 3, '5': 11, '6': '.v1.ResourceState', '10': 'resources'},
+    const {'1': 'resources', '3': 1, '4': 3, '5': 11, '6': '.v1.ListResourcesStateResponse.ResourcesEntry', '10': 'resources'},
   ],
+  '3': const [ListResourcesStateResponse_ResourcesEntry$json],
+};
+
+@$core.Deprecated('Use listResourcesStateResponseDescriptor instead')
+const ListResourcesStateResponse_ResourcesEntry$json = const {
+  '1': 'ResourcesEntry',
+  '2': const [
+    const {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 11, '6': '.v1.ResourceState', '10': 'value'},
+  ],
+  '7': const {'7': true},
 };
 
 /// Descriptor for `ListResourcesStateResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List listResourcesStateResponseDescriptor = $convert.base64Decode('ChpMaXN0UmVzb3VyY2VzU3RhdGVSZXNwb25zZRIvCglyZXNvdXJjZXMYASADKAsyES52MS5SZXNvdXJjZVN0YXRlUglyZXNvdXJjZXM=');
+final $typed_data.Uint8List listResourcesStateResponseDescriptor = $convert.base64Decode('ChpMaXN0UmVzb3VyY2VzU3RhdGVSZXNwb25zZRJLCglyZXNvdXJjZXMYASADKAsyLS52MS5MaXN0UmVzb3VyY2VzU3RhdGVSZXNwb25zZS5SZXNvdXJjZXNFbnRyeVIJcmVzb3VyY2VzGk8KDlJlc291cmNlc0VudHJ5EhAKA2tleRgBIAEoCVIDa2V5EicKBXZhbHVlGAIgASgLMhEudjEuUmVzb3VyY2VTdGF0ZVIFdmFsdWU6AjgB');
 @$core.Deprecated('Use expeditionDescriptor instead')
 const Expedition$json = const {
   '1': 'Expedition',

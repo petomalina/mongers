@@ -94,7 +94,15 @@ enum ResourceCategory {
 
 // Resource is used to specify costs of in-game entities, static spend, etc.
 message Resource {
-  ResourceCategory category = 1;
+  // resource_id defines an exact ID for the resource. A resource may have multiple references
+  // and thus the player can have a single resource category on multiple places, e.g. on him,
+  // on the market, etc.
+  //
+  // It's best to encode the resource category into it's ID, so it can be easily parsed from a map
+  string resource_id = 1;
+
+  // value is an actual value of the resource with a particular resource_id. The value can be
+  // negative in case this represents a cost.
   int64 value = 2;
 }
 
@@ -121,7 +129,7 @@ message ListResourcesStateRequest {
 }
 
 message ListResourcesStateResponse {
-  repeated ResourceState resources = 1;
+  map<string, ResourceState> resources = 1;
 }
 
 enum ExpeditionCategory {
