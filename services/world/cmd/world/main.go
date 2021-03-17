@@ -1,6 +1,8 @@
 package main
 
 import (
+	"cloud.google.com/go/compute/metadata"
+	"cloud.google.com/go/profiler"
 	"github.com/blendle/zapdriver"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	v1 "github.com/petomalina/mongers/mongersapis/pkg/world/v1"
@@ -32,6 +34,16 @@ func main() {
 	viper.AutomaticEnv()
 
 	viper.SetDefault("port", "8080")
+
+	if metadata.OnGCE() {
+		cfg := profiler.Config{
+			Service:        "mongers-world",
+			ServiceVersion: "1.0.0",
+		}
+		if err := profiler.Start(cfg); err != nil {
+			logger.Fatal("The profiler cannot be started")
+		}
+	}
 
 	// playerManager is an umbrella service that shares player info with interceptors
 	playerManager := world.NewPlayerManager(40)
